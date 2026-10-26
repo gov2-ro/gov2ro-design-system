@@ -1,4 +1,4 @@
-/* gov2 — stilul comun pentru proiectele gov2.ro · v0.8.0 · 26.10.2026
+/* gov2 — stilul comun pentru proiectele gov2.ro · v0.9.0 · 26.10.2026
 
    Shared stylesheet for gov2.ro projects.
    Inspired by igov.ro's GOV.UK-derived theme (brand.css, 2026-10): Inter + Fragment Mono,
@@ -93,10 +93,30 @@
   --g2-font-sans:                      "Inter", -apple-system, "Segoe UI", Arial, sans-serif;
   --g2-font-mono:                      "Fragment Mono", ui-monospace, SFMono-Regular, monospace;
 
+  /* Type scale: starting treatments, in rem so that they follow the reader's text size (px at a 16px root) */
+  --g2-font-size-heading-page:         2rem; /* 32px  page title */
+  --g2-font-size-heading-section:      1.5rem; /* 24px  section title */
+  --g2-font-size-heading-item:         1.1875rem; /* 19px  item title and its link */
+  --g2-font-size-body:                 1.0625rem; /* 17px  body text, buttons and fields */
+  --g2-font-size-meta:                 .9375rem; /* 15px  metadata, navigation and chips */
+  --g2-font-size-label:                .875rem; /* 14px  short labels, field labels and tags */
+  --g2-line-height-heading:            1.25; /* headings: stay within 1.2 to 1.3 */
+  --g2-line-height-body:               1.55; /* running text */
+
+  /* Spacing: a compact scale in rem (px at a 16px root) */
+  --g2-space-1:                        .25rem; /* 4px  label to hint to field */
+  --g2-space-2:                        .5rem; /* 8px  between items in a row */
+  --g2-space-3:                        .75rem; /* 12px  inline padding of a navigation link */
+  --g2-space-4:                        1rem; /* 16px  between related blocks */
+  --g2-space-5:                        1.5rem; /* 24px  between groups, header columns */
+  --g2-space-6:                        2rem; /* 32px  between page sections */
+  --g2-space-7:                        3rem; /* 48px  above and below the page content */
+
   /* Metrics: square, flat */
   --g2-radius:                         0;
   --g2-border-width-control:           2px;
-  --g2-container-max:                  1280px;
+  --g2-container-max:                  80rem; /* 1280px  maximum width of .g2-container, padding included */
+  --g2-gutter:                         clamp(1rem, 3vw, 2rem); /* inline padding of .g2-container */
 }
 }
 
@@ -104,7 +124,7 @@
    A rule in a later layer wins over these, whatever its specificity.
    Unlayered rules outrank every layer, gov2 states included. */
 @layer gov2.base {
-body{margin:0;background:rgb(var(--g2-color-page));color:rgb(var(--g2-color-text));font:17px/1.55 var(--g2-font-sans);-webkit-font-smoothing:antialiased}
+body{margin:0;background:rgb(var(--g2-color-page));color:rgb(var(--g2-color-text));font:var(--g2-font-size-body)/var(--g2-line-height-body) var(--g2-font-sans);-webkit-font-smoothing:antialiased}
 a{color:rgb(var(--g2-color-link));text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.15em}
 a:where(:visited){color:rgb(var(--g2-color-link-visited))}
 a:where(:hover){text-decoration-thickness:3px}
@@ -118,21 +138,32 @@ a:where(:hover){text-decoration-thickness:3px}
 /* ---- Component sizing: independent of the host reset ---- */
 :where(.g2-btn,.g2-chip,.g2-input){box-sizing:border-box}
 
+/* ---- Page container: full width up to --g2-container-max, with a gutter that fits a 320px viewport ---- */
+.g2-container{box-sizing:border-box;width:100%;max-width:var(--g2-container-max);margin-inline:auto;padding-inline:var(--g2-gutter)}
+
+/* ---- Type roles: size, weight and line height only (headings also break a word that is wider than the line).
+   The heading level (h1 to h6) and the margins stay with the page. ---- */
+.g2-heading-page{font-size:var(--g2-font-size-heading-page);font-weight:700;line-height:var(--g2-line-height-heading);overflow-wrap:break-word}
+.g2-heading-section{font-size:var(--g2-font-size-heading-section);font-weight:700;line-height:var(--g2-line-height-heading);overflow-wrap:break-word}
+.g2-heading-item{font-size:var(--g2-font-size-heading-item);font-weight:700;line-height:var(--g2-line-height-heading);overflow-wrap:break-word}
+.g2-text-meta{font-size:var(--g2-font-size-meta);color:rgb(var(--g2-color-text-muted))}
+
 /* ---- Links: defaults for common roles (GUIDELINES.md) ----
    Plain <a> = in-text link (base layer). Visited and hover use :where() to keep one specificity. */
-.g2-link-title{color:rgb(var(--g2-color-link));font-weight:700;font-size:19px;line-height:1.3;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.15em}
+.g2-link-title{color:rgb(var(--g2-color-link));font-weight:700;font-size:var(--g2-font-size-heading-item);line-height:1.3;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.15em}
 .g2-link-title:where(:visited){color:rgb(var(--g2-color-link-visited))}
 .g2-link-quiet{color:rgb(var(--g2-color-text));text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.15em}
 .g2-link-inverse{color:rgb(var(--g2-color-on-header));text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.15em}
 .g2-link-title:where(:hover),.g2-link-quiet:where(:hover),.g2-link-inverse:where(:hover){text-decoration-thickness:3px}
 /* Chip: a shortcut or filter link. The selected chip (aria-current or aria-pressed="true") is in the states layer. */
-.g2-chip{display:inline-flex;align-items:baseline;gap:6px;min-height:36px;padding:6px 10px;border:var(--g2-border-width-control) solid transparent;border-radius:var(--g2-radius);background:rgb(var(--g2-color-surface-sunken));color:rgb(var(--g2-color-text));font:500 15px/1.3 var(--g2-font-sans);text-decoration:none}
+.g2-chip{display:inline-flex;align-items:baseline;gap:6px;min-height:36px;padding:6px 10px;border:var(--g2-border-width-control) solid transparent;border-radius:var(--g2-radius);background:rgb(var(--g2-color-surface-sunken));color:rgb(var(--g2-color-text));font:500 var(--g2-font-size-meta)/1.3 var(--g2-font-sans);text-decoration:none}
 .g2-chip:where(:hover){background:rgb(var(--g2-color-neutral-bg))}
-.g2-chip-count{font:14px/1.3 var(--g2-font-mono);color:rgb(var(--g2-color-text-muted))}
+.g2-chip-count{font:var(--g2-font-size-label)/1.3 var(--g2-font-mono);color:rgb(var(--g2-color-text-muted))}
 
 /* ---- Header, band, footer ---- */
 .g2-header{background:rgb(var(--g2-color-header-bg));color:rgb(var(--g2-color-on-header));border-bottom:8px solid rgb(var(--g2-color-brand))}
-.g2-header-in{min-height:52px;display:flex;align-items:center;gap:24px}
+/* Header content: wraps at narrow widths, with no script and no menu button. Put it in .g2-container for the side gutters. */
+.g2-header-in{box-sizing:border-box;min-height:52px;display:flex;flex-wrap:wrap;align-items:center;gap:var(--g2-space-2) var(--g2-space-5);padding-block:var(--g2-space-1)}
 /* Tricolour variant: the stripe sits above everything (notice bar included); the header drops its blue band. */
 .g2-ro-bar{height:6px;background:linear-gradient(90deg,rgb(var(--g2-color-ro-blue)) 33.33%,rgb(var(--g2-color-ro-yellow)) 33.33% 66.66%,rgb(var(--g2-color-ro-red)) 66.66%)}
 .g2-header.g2-tricolor{border-bottom:0}
@@ -146,30 +177,36 @@ a:where(:hover){text-decoration-thickness:3px}
 .g2-ro-dots>i{background:rgb(var(--g2-color-ro-yellow))}
 .g2-ro-dots::after{background:rgb(var(--g2-color-ro-red))}
 /* Notice bar: above the header, dismissible (store the choice, e.g. localStorage). */
-.g2-notice-bar{display:flex;align-items:center;gap:10px;padding:6px 8px 6px 24px;background:rgb(var(--g2-color-surface-sunken));border-bottom:1px solid rgb(var(--g2-color-line));font-size:15px}
+.g2-notice-bar{display:flex;align-items:center;gap:10px;padding:6px 8px 6px 24px;background:rgb(var(--g2-color-surface-sunken));border-bottom:1px solid rgb(var(--g2-color-line));font-size:var(--g2-font-size-meta)}
 .g2-notice-bar>button{flex:none;width:44px;height:36px;border:0;background:transparent;color:rgb(var(--g2-color-text));font-size:22px;cursor:pointer}
 .g2-wordmark{display:inline-flex;align-items:center;gap:10px;color:rgb(var(--g2-color-on-header));font-size:19px;font-weight:700;letter-spacing:-.03em;text-decoration:none}
 .g2-wordmark em{font-style:normal;font-weight:500;color:rgb(var(--g2-color-on-header-muted))}
 .g2-logo{display:block;height:28px;width:auto}
-.g2-nav a{color:#fff;text-decoration:none;font-weight:600;font-size:15px;padding:0 12px}
+.g2-nav{display:flex;flex-wrap:wrap;column-gap:var(--g2-space-1)}
+.g2-nav a{box-sizing:border-box;display:inline-flex;align-items:center;min-height:44px;padding:var(--g2-space-2) var(--g2-space-3);color:#fff;text-decoration:none;font-weight:600;font-size:var(--g2-font-size-meta)}
 .g2-nav a:hover{text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:6px}
 .g2-nav a[aria-current=page]{box-shadow:inset 0 -4px rgb(var(--g2-color-header-accent))}
+/* Forced colours remove box-shadow: mark the current page with a system colour instead. */
+@media(forced-colors:active){.g2-nav a[aria-current=page]{background:Highlight;color:HighlightText}}
 .g2-footer{background:rgb(var(--g2-color-surface-sunken));color:rgb(var(--g2-color-text));border-top:10px solid rgb(var(--g2-color-brand))}
 .g2-footer a{color:rgb(var(--g2-color-text))}
+/* Footer content: groups wrap at narrow widths. Put it in .g2-container for the side gutters. */
+.g2-footer-in{display:flex;flex-wrap:wrap;gap:var(--g2-space-4) var(--g2-space-6);padding-block:var(--g2-space-5)}
+.g2-footer-in>*{margin:0;min-width:0}
 
 /* Short tricolour dash for section titles */
 .g2-dash{display:block;width:48px;height:4px;background:linear-gradient(90deg,rgb(var(--g2-color-ro-blue)) 33.33%,rgb(var(--g2-color-ro-yellow)) 33.33% 66.66%,rgb(var(--g2-color-ro-red)) 66.66%)}
 .g2-dash.g2-red{background:rgb(var(--g2-color-ro-red))}
 
 /* ---- Buttons ---- */
-.g2-btn{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:8px 16px;border:var(--g2-border-width-control) solid transparent;border-radius:var(--g2-radius);background:rgb(var(--g2-color-action));color:#fff;font:600 17px/1.2 var(--g2-font-sans);box-shadow:0 2px rgb(var(--g2-color-action-shadow));cursor:pointer;text-decoration:none}
+.g2-btn{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:8px 16px;border:var(--g2-border-width-control) solid transparent;border-radius:var(--g2-radius);background:rgb(var(--g2-color-action));color:#fff;font:600 var(--g2-font-size-body)/1.2 var(--g2-font-sans);box-shadow:0 2px rgb(var(--g2-color-action-shadow));cursor:pointer;text-decoration:none}
 .g2-btn:hover{background:rgb(var(--g2-color-action-hover))}
 .g2-btn.g2-secondary{background:rgb(var(--g2-color-surface-sunken));color:rgb(var(--g2-color-text));box-shadow:0 2px rgb(var(--g2-color-action-secondary-shadow))}
 .g2-btn.g2-secondary:where(:hover){background:#dbdad9}
 .g2-btn.g2-warning{background:rgb(var(--g2-color-danger-solid));box-shadow:0 2px rgb(var(--g2-color-danger-shadow))}
 
 /* ---- Tags: square, the text names the state ---- */
-.g2-tag{display:inline-block;padding:2px 8px;border-radius:var(--g2-radius);font:600 14px/1.35 var(--g2-font-sans);background:rgb(var(--g2-color-neutral-bg));color:rgb(var(--g2-color-neutral-ink))}
+.g2-tag{display:inline-block;padding:2px 8px;border-radius:var(--g2-radius);font:600 var(--g2-font-size-label)/1.35 var(--g2-font-sans);background:rgb(var(--g2-color-neutral-bg));color:rgb(var(--g2-color-neutral-ink))}
 .g2-tag[data-tone=info]{background:rgb(var(--g2-color-info-bg));color:rgb(var(--g2-color-info-ink))}
 .g2-tag[data-tone=progress]{background:rgb(var(--g2-color-progress-bg));color:rgb(var(--g2-color-progress-ink))}
 .g2-tag[data-tone=warning]{background:rgb(var(--g2-color-warning-bg));color:rgb(var(--g2-color-warning-ink))}
@@ -177,7 +214,14 @@ a:where(:hover){text-decoration-thickness:3px}
 .g2-tag[data-tone=danger]{background:rgb(var(--g2-color-danger-bg));color:rgb(var(--g2-color-danger-ink))}
 
 /* ---- Fields ---- */
-.g2-input{min-height:40px;padding:5px 8px;border:var(--g2-border-width-control) solid rgb(var(--g2-color-control-border));border-radius:var(--g2-radius);font:17px var(--g2-font-sans);background:#fff;color:rgb(var(--g2-color-text))}
+.g2-input{min-height:40px;padding:5px 8px;border:var(--g2-border-width-control) solid rgb(var(--g2-color-control-border));border-radius:var(--g2-radius);font:var(--g2-font-size-body) var(--g2-font-sans);background:#fff;color:rgb(var(--g2-color-text))}
+/* Field: label, hint, error message and input stacked. The form sets the space between fields.
+   The 12rem scroll margin keeps the label, hint and error in view when a recovery link (href="#id") jumps to the input. */
+.g2-field{display:grid;gap:var(--g2-space-1);justify-items:start;min-width:0;overflow-wrap:anywhere}
+.g2-field>*{margin:0;min-width:0}
+.g2-field>.g2-input{width:100%;scroll-margin-block-start:12rem}
+.g2-label{display:block;font-size:var(--g2-font-size-label);font-weight:600}
+.g2-hint{color:rgb(var(--g2-color-text-muted));font-size:var(--g2-font-size-meta)}
 .g2-field-error{padding-left:15px;border-left:5px solid rgb(var(--g2-color-danger-solid))}
 .g2-error-msg{color:rgb(var(--g2-color-danger-solid));font-weight:700}
 
@@ -196,7 +240,11 @@ a:where(:hover){text-decoration-thickness:3px}
 @layer gov2.states {
 .g2-chip:where([aria-current]:not([aria-current=false],[aria-current=""]),[aria-pressed=true]){border-color:rgb(var(--g2-color-text))}
 .g2-btn:disabled{opacity:.5;cursor:not-allowed}
+.g2-input:disabled{background:rgb(var(--g2-color-surface-sunken));border-color:rgb(var(--g2-color-text-muted));color:rgb(var(--g2-color-text-muted));cursor:not-allowed}
 .g2-field-error .g2-input{border-color:rgb(var(--g2-color-danger-solid))}
+/* Forced colours give every chip the same border: show the selected chip with the system selection colours. */
+@media(forced-colors:active){.g2-chip:where([aria-current]:not([aria-current=false],[aria-current=""]),[aria-pressed=true]){background:Highlight;color:HighlightText}
+.g2-chip:where([aria-current]:not([aria-current=false],[aria-current=""]),[aria-pressed=true]) .g2-chip-count{color:HighlightText}}
 :focus-visible{outline:3px solid transparent;background:rgb(var(--g2-color-focus));color:rgb(var(--g2-color-on-focus));box-shadow:0 -2px rgb(var(--g2-color-focus)),0 4px rgb(var(--g2-color-on-focus));text-decoration:none}
 :is(input,textarea,select):focus-visible{background:#fff;outline:3px solid rgb(var(--g2-color-focus));outline-offset:0;box-shadow:inset 0 0 0 2px rgb(var(--g2-color-text))}
 .g2-btn:focus-visible{background:rgb(var(--g2-color-focus));color:rgb(var(--g2-color-on-focus));box-shadow:0 2px rgb(var(--g2-color-text))}

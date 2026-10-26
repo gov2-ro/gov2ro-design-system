@@ -56,11 +56,13 @@ Each group has `-bg`, `-line` and `-ink` tokens. For example, `--c-note-bg` beco
 
 ## Tokens
 
-Every token keeps its value. The tables show the 0.6.0 value.
+Every token keeps its value, with one exception: `--g2-container-max` was `1280px` and is now `80rem` (see *Changes after 0.8.0*).
+The tables show the current value.
 The tests compare each value in these tables with `gov2.css`, so the tables cannot drift from the stylesheet.
 Colour tokens stay bare RGB channels: `rgb(var(--g2-color-text))`, or `rgb(var(--g2-color-text) / .5)`.
 
-The DS had 62 tokens. It has 57. Five tokens are removed, each with a reason in the table.
+The DS had 62 tokens. Version 0.8.0 has 57. Five tokens are removed, each with a reason in the table.
+Tokens added after 0.8.0 have no 0.6.0 name, so they have no row. See *Changes after 0.8.0*.
 
 #### Surfaces
 
@@ -177,7 +179,7 @@ The DS had 62 tokens. It has 57. Five tokens are removed, each with a reason in 
 | `--radius-pill` | none | `0` | **Removed.** Same as `--radius-md`. Use `--g2-radius`. |
 | `--border-ink` | `--g2-border-width-control` | `2px` | Border width of buttons, chips and fields. Renamed to the role it serves. `.g2-btn`, `.g2-chip` and `.g2-input` now read it; before, each used a literal `2px`. |
 | `--shadow-lift` | none | `none` | **Removed.** The value was `none` and no component has a lift state. "No decorative shadows" stays a design default (`GUIDELINES.md`). A project that needs a shadow token declares its own. |
-| `--shell` | `--g2-container-max` | `1280px` | Maximum page width, for the project container. No class reads it yet. A project container reads it: `max-width: var(--g2-container-max)`. |
+| `--shell` | `--g2-container-max` | `80rem` | Maximum page width. The value was `1280px` and is now `80rem`: the same width at a 16px root, and it follows the root text size. `.g2-container` reads it, and so can a project container: `max-width: var(--g2-container-max)`. |
 
 ## Classes, attributes and selectors
 
@@ -406,6 +408,36 @@ Open a `ds-proposal` issue when a variation recurs in several projects.
 - Keep a local class prefix for project components.
 
 Project rules can still break accessibility. The DS cannot guarantee a result under arbitrary overrides.
+
+## Changes after 0.8.0
+
+These changes need no migration step. They are in the unreleased version after 0.8.0. A project that uses 0.8.0 reads this section when it updates.
+
+- `--g2-container-max` is `80rem`, not `1280px`. The width is the same at a 16px root. A project that sets the root font size above 16px gets a wider maximum.
+- New tokens, with no old name: `--g2-font-size-heading-page`, `--g2-font-size-heading-section`, `--g2-font-size-heading-item`, `--g2-font-size-body`, `--g2-font-size-meta`, `--g2-font-size-label`,
+  `--g2-line-height-heading`, `--g2-line-height-body`, `--g2-gutter` and `--g2-space-1` to `--g2-space-7`. `COMPONENTS.md` documents each one.
+- New classes: `.g2-container`, `.g2-heading-page`, `.g2-heading-section`, `.g2-heading-item`, `.g2-text-meta`, `.g2-field`, `.g2-label`, `.g2-hint` and `.g2-footer-in`.
+  A project class with the same name in your own CSS now meets the gov2 rule: rename it or move it to the `app` layer.
+- Text of `body`, `.g2-btn`, `.g2-input`, `.g2-link-title`, `.g2-nav a`, `.g2-chip`, `.g2-chip-count`, `.g2-tag` and `.g2-notice-bar` is in rem. At a 16px root the computed sizes are the same as before.
+  A project that raises the browser's default font size now sees these components grow. Before, they stayed fixed.
+- `.g2-header-in` wraps and has 4px padding above and below. `.g2-nav` is a wrapping flex row, and each link is at least 44px high (it was about 23px). The current-page bar is at the bottom of that taller link.
+  A project that already arranged these classes with its own flex or padding rules in the `app` layer keeps winning, but check the header height.
+- A disabled `.g2-input` now shows the sunken surface and muted text. Before, it looked the same as an enabled input.
+- With forced colours, the current navigation link and the selected chip use the system selection colours. Before, both looked the same as the other links and chips.
+
+Width and density customization works as before: override the tokens, or add a rule in the `app` layer. The tests run this example on the directory page:
+
+<!-- example: foundation-css -->
+```css
+@layer app {
+  /* Page width and side padding: .g2-container reads both tokens. */
+  :root { --g2-container-max: 60rem; --g2-gutter: 1rem; }
+
+  /* Roomier fields: more space between label, hint and control, and a taller control. */
+  .g2-field { gap: var(--g2-space-2); }
+  .g2-field > .g2-input { min-height: 48px; }
+}
+```
 
 ## Checklist
 

@@ -83,6 +83,8 @@ See [testing instructions](docs/testing.md) for coverage, screenshots and manual
 - `docs/guide.css` and `docs/guide.js` — documentation layout and optional helpers
 - `docs/testing.md` — repeatable browser checks and manual verification procedures
 - `docs/migration-from-0.6.0.md` — old-to-new names, layer integration and verified customization examples
+- `docs/examples/` — two representative pages (directory/results and form/detail) with local composition in `examples.css`
+- `docs/compat-analysis.md` — compatibility reports from the project sessions
 - `logo/` — project marks (SVG, monochrome, white on the header)
 - `CHANGELOG.md`
 - `docs/briefs/` — decision sequence and implementation briefs

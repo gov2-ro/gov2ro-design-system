@@ -65,12 +65,10 @@
 /* A project rule in the app layer outranks the gov2 focus colours: recolour only while the control has no keyboard focus. */
 .guide-copy:not(:focus-visible){background:rgb(var(--g2-color-surface));color:rgb(var(--g2-color-text))}
 .guide-live-status{min-height:1.55em;margin-block:8px;color:rgb(var(--g2-color-text-muted));font-size:14px}
-.guide-field-layout{display:grid;gap:8px;min-width:0}
-.guide-field-layout label{font-weight:600}
-.guide-field-layout p{margin:0}
-.guide-field-layout input{max-width:100%;width:100%}
-.guide-header-layout{box-sizing:border-box;padding:12px 20px;flex-wrap:wrap}
-.guide-footer-layout{padding:20px}
+.guide-header-layout{padding:12px 20px}
+.guide-container-demo{padding-block:var(--g2-space-4);background:rgb(var(--g2-color-surface-sunken))}
+.guide-container-content{padding:var(--g2-space-4);border:1px dashed rgb(var(--g2-color-text-muted));background:rgb(var(--g2-color-surface))}
+.guide-space{display:block;height:.75rem;width:var(--guide-space);background:rgb(var(--g2-color-brand))}
 .guide-logo-slot{display:inline-flex;align-items:center;gap:10px}
 .guide-identity-preview{min-width:0}
 .guide-identity-preview>p{font:12px/1.5 var(--g2-font-mono);margin:8px 0 20px}

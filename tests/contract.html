@@ -15,19 +15,46 @@
 </head>
 <body>
   <header class="g2-header">
-    <div class="g2-header-in">
+    <div class="g2-header-in g2-container" id="header-in">
       <a class="g2-wordmark" id="wordmark" href="#content">proiect<em>.gov2.ro</em></a>
       <nav class="g2-nav" aria-label="Principal"><a id="current" href="#content" aria-current="page">Acasă</a><a id="nav" href="#content">Despre</a></nav>
     </div>
   </header>
   <main id="content">
-    <h1>Contract: componente fără CSS de documentație</h1>
+    <h1 class="g2-heading-page" id="heading-page">Contract: componente fără CSS de documentație</h1>
     <p><a id="plain" href="#content">Link în text</a> <a class="g2-link-title" id="title" href="#content">Titlul instituției</a> <a class="g2-link-quiet" id="quiet" href="#content">Metadate</a></p>
     <p><button class="g2-btn" id="primary" type="button">Caută</button> <a class="g2-btn" id="link-button" href="#content">Caută</a> <button class="g2-btn g2-secondary" id="secondary" type="button">Înapoi</button> <button class="g2-btn g2-warning" id="danger" type="button">Șterge</button> <button class="g2-btn" id="disabled" type="button" disabled>Indisponibil</button></p>
     <p><a class="g2-chip" id="chip" href="#content">Filtru <span class="g2-chip-count">76</span></a> <button class="g2-chip" id="chip-button" type="button" aria-pressed="false">Filtru</button> <a class="g2-chip" id="chip-current" href="#content" aria-current="true">Curent</a> <a class="g2-chip" id="chip-false" href="#content" aria-current="false">Fals</a> <a class="g2-chip" id="chip-empty" href="#content" aria-current="">Gol</a></p>
     <p><label for="input">Nume</label> <input class="g2-input" id="input" type="text"></p>
     <div class="g2-field-error"><label for="invalid">E-mail</label><p class="g2-error-msg" id="email-error">Scrieți o adresă completă.</p><input class="g2-input" id="invalid" aria-describedby="email-error" aria-invalid="true" type="email"></div>
     <p><strong class="g2-tag">Arhivat</strong> <strong class="g2-tag" data-tone="info">Nou</strong> <strong class="g2-tag" data-tone="progress">În lucru</strong> <strong class="g2-tag" data-tone="warning">Atenție</strong> <strong class="g2-tag" data-tone="success">Activ</strong> <strong class="g2-tag" data-tone="danger">Închis</strong></p>
+    <div class="g2-container" id="container">
+      <h2 class="g2-heading-section" id="heading-section">Titlu de secțiune</h2>
+      <h3 class="g2-heading-item" id="heading-item">Titlu de element</h3>
+      <p class="g2-text-meta" id="meta">Metadate: actualizat la 17.10.2026</p>
+      <div class="g2-field" id="field">
+        <label class="g2-label" for="field-input">Numele instituției</label>
+        <p class="g2-hint" id="field-hint">Așa cum apare în sursă.</p>
+        <input class="g2-input" id="field-input" type="text" aria-describedby="field-hint">
+      </div>
+      <div class="g2-field g2-field-error" id="field-invalid">
+        <label class="g2-label" for="field-bad">Adresa de e-mail</label>
+        <p class="g2-hint" id="field-bad-hint">De exemplu nume@institutie.ro.</p>
+        <p class="g2-error-msg" id="field-bad-error">Eroare: scrieți o adresă completă.</p>
+        <input class="g2-input" id="field-bad" type="email" value="nume@" aria-describedby="field-bad-hint field-bad-error" aria-invalid="true">
+      </div>
+      <div class="g2-field" id="field-off">
+        <label class="g2-label" for="field-disabled">Cod înregistrare</label>
+        <p class="g2-hint" id="field-disabled-hint">Completat automat; nu se poate modifica.</p>
+        <input class="g2-input" id="field-disabled" type="text" value="DEMO-BC-0127" aria-describedby="field-disabled-hint" disabled>
+      </div>
+    </div>
   </main>
+  <footer class="g2-footer" id="footer">
+    <div class="g2-footer-in g2-container" id="footer-in">
+      <div><p><strong>proiect.gov2.ro</strong></p><p>Date demonstrative.</p></div>
+      <nav aria-label="Subsol"><a id="footer-link" href="#content">Metodologie și limite</a></nav>
+    </div>
+  </footer>
 </body>
 </html>

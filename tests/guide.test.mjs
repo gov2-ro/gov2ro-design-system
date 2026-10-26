@@ -1,102 +1,11 @@
-import { test, before, after } from 'node:test';
+import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFile, mkdir } from 'node:fs/promises';
+import { mkdir } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
-import { chromium } from 'playwright';
-import { createServer } from '../scripts/serve.mjs';
+import { useBrowser, base, read, css, migration, reference, artifacts, withPage, fixture, example, withSite,
+  standaloneSite, layeredSite, styles, assertFocusReadable, contrast, keyboardFocus } from './helpers.mjs';
 
-let browser, server, base;
-const root = new URL('../', import.meta.url);
-const read = path => readFile(new URL(path, root), 'utf8');
-const css = await read('gov2.css');
-const migration = await read('docs/migration-from-0.6.0.md');
-const reference = await read('COMPONENTS.md');
-const artifacts = process.env.GUIDE_ARTIFACT_DIR;
-
-before(async () => {
-  server = createServer();
-  await new Promise((resolve, reject) => {
-    server.once('error', reject);
-    server.listen(0, '127.0.0.1', resolve);
-  });
-  base = `http://127.0.0.1:${server.address().port}`;
-  browser = await chromium.launch({ channel: process.env.PLAYWRIGHT_CHANNEL || undefined });
-  console.log(`Browser: ${await browser.version()}; external requests blocked for reproducible fallback checks.`);
-});
-after(async () => {
-  await browser?.close();
-  if (server) await new Promise(resolve => server.close(resolve));
-});
-
-async function withPage(run, { path = '/docs/', ...options } = {}) {
-  const context = await browser.newContext({ viewport: { width: 1280, height: 900 }, ...options });
-  await context.route('**/*', route => route.request().url().startsWith(base) ? route.continue() : route.abort());
-  const page = await context.newPage();
-  try {
-    const response = await page.goto(base + path, { waitUntil: 'networkidle' });
-    assert.equal(response.status(), 200, `Fixture unavailable: ${path}`);
-    await run(page, context);
-  } finally { await context.close(); }
-}
-const fixture = run => withPage(run, { path: '/tests/contract.html' });
-// A code block of docs/migration-from-0.6.0.md, marked with <!-- example: name -->. The tests run the documented text.
-function example(name) {
-  const fence = '`'.repeat(3);
-  const match = migration.match(new RegExp(`<!-- example: ${name} -->\\s*${fence}\\w+\\n([\\s\\S]*?)${fence}`));
-  assert.ok(match, `docs/migration-from-0.6.0.md has no example "${name}"`);
-  return match[1];
-}
-// Serves in-memory files (by path) on the test origin. Other local paths come from the repository.
-async function withSite(files, run, { entry = '/index.html', ...options } = {}) {
-  const context = await browser.newContext({ viewport: { width: 1280, height: 900 }, ...options });
-  await context.route('**/*', route => {
-    const url = new URL(route.request().url());
-    if (url.origin !== base) return route.abort();
-    if (!(url.pathname in files)) return route.continue();
-    return route.fulfill({ contentType: url.pathname.endsWith('.css') ? 'text/css' : 'text/html', body: files[url.pathname] });
-  });
-  const page = await context.newPage();
-  try {
-    const response = await page.goto(base + entry, { waitUntil: 'networkidle' });
-    assert.equal(response.status(), 200, `Page unavailable: ${entry}`);
-    await run(page, context);
-  } finally { await context.close(); }
-}
-const standaloneSite = () => ({ '/index.html': example('standalone-page'), '/assets/gov2.css': css });
-const layeredSite = () => ({ '/index.html': example('layered-page'), '/assets/reset.css': example('reset-css'), '/assets/app.css': example('app-css'), '/assets/gov2.css': css });
-const styles = (page, selector) => page.locator(selector).evaluate(el => {
-  const s = getComputedStyle(el), r = el.getBoundingClientRect();
-  return { color: s.color, background: s.backgroundColor, border: s.borderColor, height: r.height, width: r.width,
-    outline: s.outlineStyle, outlineWidth: s.outlineWidth, outlineColor: s.outlineColor,
-    shadow: s.boxShadow, decoration: s.textDecorationThickness, focused: el.matches(':focus-visible'),
-    opacity: s.opacity, cursor: s.cursor, paddingLeft: s.paddingLeft, fontSize: s.fontSize };
-});
-// Keyboard focus, then keyboard focus with the pointer over the control: both must show the gov2 focus treatment.
-async function assertFocusReadable(page, selector) {
-  await keyboardFocus(page, selector);
-  for (let state = 0; state < 2; state++) {
-    if (state) await page.locator(selector).hover();
-    const s = await styles(page, selector);
-    assert.equal(s.background, 'rgb(255, 221, 0)', `${selector} loses the focus background${state ? ' on hover' : ''}`);
-    assert.ok(contrast(s.color, s.background) >= 4.5, `${selector} focus text is unreadable${state ? ' on hover' : ''}`);
-  }
-}
-function contrast(a, b) {
-  const luminance = value => {
-    const channels = value.match(/[\d.]+/g).slice(0, 3).map(Number).map(v => {
-      v /= 255;
-      return v <= .04045 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4;
-    });
-    return channels.reduce((sum, v, i) => sum + v * [.2126, .7152, .0722][i], 0);
-  };
-  const [low, high] = [luminance(a), luminance(b)].sort((x, y) => x - y);
-  return (high + .05) / (low + .05);
-}
-async function keyboardFocus(page, selector) {
-  await page.keyboard.press('Tab');
-  await page.locator(selector).focus();
-  assert.equal(await page.locator(selector).evaluate(el => el.matches(':focus-visible')), true);
-}
+useBrowser();
 
 // Documentation integrity and useful behaviour.
 test('archive is linked and labels the preserved guide as historical', () => withPage(async page => {
@@ -109,7 +18,7 @@ test('archive is linked and labels the preserved guide as historical', () => wit
   const hash = createHash('sha256').update(await snapshot.body()).digest('hex');
   assert.equal(hash, '3cdbe56f9a4bec755eb6b03e7c44344b38d5e0009a48dc2e89b3116607451952');
   await page.getByRole('link', { name: 'Înapoi la ghidul viu' }).click();
-  assert.equal(await page.locator('main section').count(), 14);
+  assert.equal(await page.locator('main section').count(), 15);
 }));
 
 test('archived original still renders its bundled reference content', () => withPage(async page => {
@@ -156,7 +65,7 @@ test('no duplicate IDs, broken fragment links, missing local links or missing la
 }));
 
 test('guide reads without JavaScript and code remains available in native details', () => withPage(async page => {
-  assert.equal(await page.locator('main section').count(), 14);
+  assert.equal(await page.locator('main section').count(), 15);
   const details = page.locator('details').first();
   await details.locator('summary').click();
   assert.ok(await details.locator('pre').isVisible());
@@ -326,9 +235,13 @@ const tokenDefinitions = source => Object.fromEntries([...source.matchAll(/^\s*(
 const tokens = tokenDefinitions(css);
 const classes = [...new Set(css.match(/\.g2-[\w-]+/g))];
 const statuses = ['neutral', 'info', 'progress', 'warning', 'success', 'danger'];
+// Tokens added after 0.8.0 (brief 04): the type scale, the spacing scale and the gutter.
+const foundationTokens = ['--g2-font-size-heading-page', '--g2-font-size-heading-section', '--g2-font-size-heading-item', '--g2-font-size-body', '--g2-font-size-meta', '--g2-font-size-label',
+  '--g2-line-height-heading', '--g2-line-height-body', '--g2-gutter', '--g2-space-1', '--g2-space-2', '--g2-space-3', '--g2-space-4', '--g2-space-5', '--g2-space-6', '--g2-space-7'];
 // Files that describe the current API. History (changelog, activity, ADRs, briefs, migration) may name old identifiers.
 const currentFiles = ['gov2.css', 'COMPONENTS.md', 'GUIDELINES.md', 'README.md', 'AGENTS.md', 'CLAUDE.md', 'patterns/README.md', 'docs/index.html', 'docs/guide.css', 'docs/guide.js',
-  'docs/archive/index.html', 'docs/project-block.md', 'docs/connect-a-project.md', 'docs/testing.md', 'tests/contract.html'];
+  'docs/archive/index.html', 'docs/project-block.md', 'docs/connect-a-project.md', 'docs/testing.md', 'tests/contract.html',
+  'docs/examples/directory.html', 'docs/examples/form.html', 'docs/examples/examples.css'];
 
 test('contract: stylesheet has no activation gate, consumer reference or un-namespaced token, and every var() resolves', () => {
   assert.doesNotMatch(css, /data-skin/);
@@ -349,7 +262,7 @@ test('contract: current files use no activation attribute, legacy token or legac
 });
 
 test('contract: guide, archive page and fixtures resolve every var() against gov2.css', async () => {
-  const files = ['docs/guide.css', 'docs/index.html', 'docs/archive/index.html', 'tests/contract.html'];
+  const files = ['docs/guide.css', 'docs/index.html', 'docs/archive/index.html', 'tests/contract.html', 'docs/examples/directory.html', 'docs/examples/form.html', 'docs/examples/examples.css'];
   const texts = await Promise.all(files.map(read));
   const local = new Set(texts.flatMap(text => [...text.matchAll(/(--[\w-]+)\s*:/g)].map(m => m[1])));
   texts.forEach((text, i) => {
@@ -368,7 +281,10 @@ test('contract: the migration tables cover every 0.6.0 token with its exact valu
   assert.equal(rows.length, 62, 'the 0.6.0 stylesheet defined 62 tokens');
   assert.equal(new Set(rows.map(r => r.old)).size, 62);
   const retained = rows.filter(r => r.next);
-  assert.equal(retained.length, Object.keys(tokens).length, 'every token of gov2.css needs one row');
+  assert.equal(retained.length, 57, 'the 0.8.0 stylesheet defined 57 tokens');
+  // Tokens added after 0.8.0 have no 0.6.0 name, so they have no row. COMPONENTS.md documents them.
+  const added = Object.keys(tokens).filter(name => !retained.some(row => row.next === name)).sort();
+  assert.deepEqual(added, [...foundationTokens].sort(), 'a token without a migration row must be a documented foundation token');
   for (const row of retained) assert.equal(tokens[row.next], row.value, `${row.old} -> ${row.next}: the value changed`);
   for (const row of rows) assert.equal(row.old in tokens, false, `${row.old} is still defined`);
   for (const row of rows.filter(r => !r.next)) assert.equal(row.next, null);
@@ -431,7 +347,7 @@ test('contract: a minimal page gets the whole-site defaults from the stylesheet 
   assert.deepEqual(state.bodyChildren, ['MAIN']);
   assert.equal(state.links, 1);
   assert.equal(state.text, '11 12 12');
-  assert.equal(state.container, '1280px');
+  assert.equal(state.container, '80rem');
   assert.match(state.font, /^Inter,/);
   assert.equal(state.size, '17px');
   assert.equal(state.line, '26.35px');

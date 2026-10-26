@@ -12,7 +12,7 @@ A project that uses 0.6.0 or 0.7.0 reads `docs/migration-from-0.6.0.md`.
 - The `.g2-` classes are opt-in. A component appears only where the markup has its class.
 - `gov2.css` declares four layers, in this order: `reset`, `gov2`, `utilities`, `app`. See *Layers and project CSS*.
 - `gov2.css` loads Inter and Fragment Mono from Google Fonts with `@import`. Optional local fonts are approved (ADR 0005) but not implemented yet.
-- The DS has no container class. The project sets the page width and the side padding. The token `--g2-container-max` (1280px) gives the maximum width.
+- `.g2-container` sets the page width and the side padding. See *Container*. Spacing and type roles have tokens and classes: see *Spacing* and *Type roles*.
 
 ## Layers and project CSS
 
@@ -47,7 +47,7 @@ Inside `gov2`, the sublayers are `tokens`, `base`, `components` and `states`.
 ## Tokens
 
 Colour tokens are RGB channels. Use them as `rgb(var(--g2-color-text))` or `rgb(var(--g2-color-text) / .5)`. The values are in `gov2.css`.
-Override a token in your own `app` layer. Check contrast and focus after each change.
+Length and font tokens are plain values, not RGB channels. Override a token in your own `app` layer. Check contrast and focus after each change.
 
 | Group | Tokens | Use |
 |---|---|---|
@@ -61,13 +61,15 @@ Override a token in your own `app` layer. Check contrast and focus after each ch
 | Tricolour | `--g2-color-ro-blue`, `--g2-color-ro-yellow`, `--g2-color-ro-red` | Decorative marks only. Never use them for text. |
 | Charts | `--g2-color-chart-1`, `--g2-color-chart-2`, `--g2-color-chart-3`, `--g2-color-chart-4`, `--g2-color-chart-selected` | Blue series, then greys. `--g2-color-chart-selected` marks the selection. |
 | Type | `--g2-font-sans`, `--g2-font-mono` | Text family. Family for codes and aligned numbers. |
-| Metrics | `--g2-radius` (0), `--g2-border-width-control` (2px), `--g2-container-max` (1280px) | `--g2-radius` is read by buttons, chips, fields, tags, tiles and notices. `--g2-border-width-control` is the border width of buttons, chips and fields. `--g2-container-max` is for the project container. |
+| Type scale | `--g2-font-size-heading-page`, `--g2-font-size-heading-section`, `--g2-font-size-heading-item`, `--g2-font-size-body`, `--g2-font-size-meta`, `--g2-font-size-label`, `--g2-line-height-heading`, `--g2-line-height-body` | Font sizes in rem and two line heights. See *Type roles*. |
+| Spacing | `--g2-space-1`, `--g2-space-2`, `--g2-space-3`, `--g2-space-4`, `--g2-space-5`, `--g2-space-6`, `--g2-space-7` | Seven steps in rem, from .25rem to 3rem. See *Spacing*. |
+| Metrics | `--g2-radius` (0), `--g2-border-width-control` (2px), `--g2-container-max` (80rem), `--g2-gutter` (`clamp(1rem, 3vw, 2rem)`) | `--g2-radius` is read by buttons, chips, fields, tags, tiles and notices. `--g2-border-width-control` is the border width of buttons, chips and fields. `--g2-container-max` and `--g2-gutter` are read by `.g2-container`. |
 
 ## Base styles
 
 On every page that loads the stylesheet, these styles apply without a class. They are in the `gov2.base` layer, except focus, which is in `gov2.states`:
 
-- `body`: 17px/1.55 Inter, text colour on page background.
+- `body`: Inter at `--g2-font-size-body` (1.0625rem, 17px at a 16px root) with line height `--g2-line-height-body` (1.55), text colour on page background.
 - Links: underlined, `--g2-color-link`; visited `--g2-color-link-visited`; on hover the underline is 3px.
 - `:focus-visible`: yellow background, ink text, black bar below.
 - `input`, `textarea`, `select` on focus: yellow 3px outline and a 2px ink inset.
@@ -90,7 +92,7 @@ Each link role has one class. `GUIDELINES.md` tells when to use each role.
 | Class | Role | Look |
 |---|---|---|
 | (none) | In-text link | Blue, underlined, visited colour. |
-| `.g2-link-title` | Item title, to a detail page | Blue, bold, 19px, underlined, visited colour. |
+| `.g2-link-title` | Item title, to a detail page | Blue, bold, `--g2-font-size-heading-item` (19px at a 16px root), line height 1.3, underlined, visited colour. |
 | `.g2-link-quiet` | Secondary link in metadata | Ink, underlined, no visited colour. |
 | `.g2-link-inverse` | Link on the dark bar | White, underlined, no visited colour. For the header navigation, use `.g2-nav`. |
 
@@ -105,11 +107,70 @@ A chip is a shortcut link or a toggle button. Use an anchor for navigation and a
 <a class="g2-chip" href="/?stare=active" aria-current="true">Active</a>
 ```
 
-- `.g2-chip`: grey background, ink text, no underline, at least 36px high. On hover, the background is darker.
+- `.g2-chip`: grey background, ink text, no underline, at least 36px high, text at `--g2-font-size-meta`. On hover, the background is darker.
 - `.g2-chip-count`: the count, in muted mono.
 - `aria-current="false"`, an empty `aria-current`, and `aria-pressed="false"` do not select a chip.
 - Mark the selected chip with `aria-current="true"` (a link) or `aria-pressed="true"` (a button). It gets a 2px ink border. The rule is in `gov2.states`.
 - On keyboard focus, a chip is yellow with ink text, also when hovered and also when selected. The selected border stays.
+- With forced colours, every chip has the same border. The selected chip then uses the system selection colours (`Highlight`, `HighlightText`).
+
+## Container
+
+`.g2-container` sets the page width and the side padding.
+
+```html
+<main class="g2-container" id="content">…</main>
+```
+
+- Border-box sizing, `width: 100%`, automatic inline margins and `max-width: var(--g2-container-max)`. The padding is part of the maximum.
+- The inline padding is `--g2-gutter`: `clamp(1rem, 3vw, 2rem)`. The container, with its padding, fits a 320px viewport.
+- It sets no vertical padding and no vertical margin. The page sets those with the spacing tokens.
+- Put `.g2-container` on `<main>`, on `.g2-header-in` and on `.g2-footer-in`, so that all three align.
+- Customize the width and the gutter with `--g2-container-max` and `--g2-gutter` in the `app` layer. `docs/migration-from-0.6.0.md` has a verified example.
+
+## Spacing
+
+Seven steps in rem. They are for the gaps and padding of your compositions. The DS has no spacing utility classes.
+
+| Token | Value | Use |
+|---|---|---|
+| `--g2-space-1` | .25rem (4px) | Between a label, its hint and its control. Between navigation links. |
+| `--g2-space-2` | .5rem (8px) | Between items in a row. Between rows of a header. |
+| `--g2-space-3` | .75rem (12px) | Inline padding of a navigation link. |
+| `--g2-space-4` | 1rem (16px) | Between related blocks. Between footer rows. |
+| `--g2-space-5` | 1.5rem (24px) | Between groups. Between header columns. Between fields in a form. |
+| `--g2-space-6` | 2rem (32px) | Between page sections. Between footer groups. |
+| `--g2-space-7` | 3rem (48px) | Above and below the page content. |
+
+The px values are for a 16px root. The steps follow the root text size.
+
+## Type roles
+
+Six roles. The sizes are starting treatments, in rem, so that they follow the reader's text size. Use a different size when the content needs it.
+
+| Role | Class | Size token | Size (16px root) | Weight |
+|---|---|---|---|---|
+| Page title | `.g2-heading-page` | `--g2-font-size-heading-page` | 2rem (32px) | bold |
+| Section title | `.g2-heading-section` | `--g2-font-size-heading-section` | 1.5rem (24px) | bold |
+| Item title | `.g2-heading-item` | `--g2-font-size-heading-item` | 1.1875rem (19px) | bold |
+| Body | none: the base style | `--g2-font-size-body` | 1.0625rem (17px) | regular |
+| Metadata | `.g2-text-meta` | `--g2-font-size-meta` | .9375rem (15px) | regular, muted colour |
+| Short label | `.g2-label` | `--g2-font-size-label` | .875rem (14px) | semibold |
+
+```html
+<h1 class="g2-heading-page">Directorul instituțiilor publice</h1>
+<h2 class="g2-heading-section">Rezultate</h2>
+<h3 class="g2-heading-item"><a class="g2-link-title" href="/detaliu">Casa Județeană de Pensii Bacău</a></h3>
+<p class="g2-text-meta">Verificat la 26.10.2026</p>
+```
+
+- The class sets size, weight and line height, and a heading breaks a word that is wider than its line (`overflow-wrap: break-word`). It sets no margin. The page sets the margins.
+- The HTML heading level (`h1` to `h6`) follows the structure of the document. The class chooses the look. An `h3` can look like a page title.
+- Line height: `--g2-line-height-heading` (1.25) for the three heading roles, `--g2-line-height-body` (1.55) for running text.
+- `.g2-link-title` reads `--g2-font-size-heading-item`, so a linked item title and an item heading have the same size. Its line height stays 1.3.
+- No global heading reset: a bare `<h1>` keeps the browser style.
+- These components read a type token: body (`body`, `.g2-btn`, `.g2-input`), item title (`.g2-link-title`), meta (`.g2-nav a`, `.g2-chip`, `.g2-notice-bar`) and label (`.g2-chip-count`, `.g2-tag`, `.g2-label`).
+  `.g2-wordmark` (19px) and the close button of the notice bar (22px) still use px.
 
 ## Header
 
@@ -131,11 +192,16 @@ A black bar with an 8px brand band below it.
 </header>
 ```
 
-- `.g2-header-in`: a flex row, at least 52px high, with a 24px gap. It has no width or padding; put it in the project container.
+- `.g2-header-in`: a flex row that wraps, at least 52px high, with `--g2-space-5` between columns and `--g2-space-2` between rows. It has `--g2-space-1` padding above and below.
+  It sets no width and no side padding: add `.g2-container` to the same element, `class="g2-header-in g2-container"`.
+  The row wraps at narrow widths. The navigation stays visible: there is no menu button and no script.
 - `.g2-wordmark`: the project name, white, 19px bold. Put the domain part in `<em>` to show it muted. On keyboard focus, both parts use ink on yellow.
 - `.g2-logo`: an SVG from `logo/`, 28px high. It is decorative: use `alt=""`.
-- `.g2-nav a`: white, 15px semibold. Set `aria-current="page"` on the current link: it gets a blue bar below. `.g2-nav` itself has no layout.
+- `.g2-nav`: a flex row that wraps, with a 4px gap (`--g2-space-1`) between links.
+- `.g2-nav a`: white, semibold, `--g2-font-size-meta`, at least 44px high, with `--g2-space-2` padding above and below and `--g2-space-3` at the sides. A long label wraps and is not clipped.
+  Set `aria-current="page"` on the current link: it gets a blue bar below.
   A navigation link with keyboard focus shows the standard focus bars (yellow above, ink below) instead of that blue bar, and it is not underlined while hovered.
+  With forced colours, the current link uses the system selection colours (`Highlight`, `HighlightText`), because forced colours remove the bar.
 
 ### Tricolour marks
 
@@ -158,16 +224,24 @@ A grey bar above the header for a short message. The user can close it.
 </div>
 ```
 
-- `.g2-notice-bar`: a flex row on the sunken surface, with 15px text and a 1px rule below. A direct `<button>` child is the close control, 44×36px.
+- `.g2-notice-bar`: a flex row on the sunken surface, with text at `--g2-font-size-meta` and a 1px rule below. A direct `<button>` child is the close control, 44×36px.
 - The project stores the choice to close it, for example in `localStorage`.
 
 ## Footer
 
 ```html
-<footer class="g2-footer">…</footer>
+<footer class="g2-footer">
+  <div class="g2-footer-in g2-container">
+    <div>…</div>
+    <nav aria-label="Subsol">…</nav>
+  </div>
+</footer>
 ```
 
-A grey footer with a 10px brand rule on top. Links in the footer are ink, not blue. The footer has no padding and no layout; the project adds them.
+- `.g2-footer`: the surface. A grey footer with a 10px brand rule on top. Links in the footer are ink, not blue. It has no padding and no layout.
+- `.g2-footer-in`: the content. A flex row that wraps, with `--g2-space-4` between rows, `--g2-space-6` between groups and `--g2-space-5` padding above and below.
+  Each direct child has no margin and can shrink. Add `.g2-container` to the same element for the side gutters.
+- The footer does not require a language switch, an account link or a fixed list of links.
 
 ## Section dash
 
@@ -224,16 +298,39 @@ The class `.g2-btn.g2-warning` is not a status. It is the red destructive button
 ## Fields
 
 ```html
-<div class="g2-field-error">
-  <label for="email">Adresa de e-mail</label>
-  <p class="g2-error-msg" id="email-err">Scrieți o adresă de e-mail validă.</p>
-  <input class="g2-input" id="email" type="email" aria-describedby="email-err" aria-invalid="true">
+<div class="g2-field g2-field-error">
+  <label class="g2-label" for="email">Adresa de e-mail</label>
+  <p class="g2-hint" id="email-hint">Pe această adresă primiți confirmarea.</p>
+  <p class="g2-error-msg" id="email-error">Eroare: scrieți o adresă de e-mail completă, de exemplu nume@institutie.ro.</p>
+  <input class="g2-input" id="email" type="email" aria-describedby="email-hint email-error" aria-invalid="true" autocomplete="email">
 </div>
 ```
 
-- `.g2-input`: at least 40px high, 2px border (`--g2-color-control-border`), 17px text. The focus style is in `gov2.states`.
-- `.g2-field-error`: wraps a field that has an error. It adds a red bar on the left and makes the input border red. The input keeps the red border on hover and on focus.
-- `.g2-error-msg`: the error text, red and bold. Put it before the input, and connect it with `aria-describedby`.
+| Class | Role |
+|---|---|
+| `.g2-field` | Stacks the parts of one field: label, hint, error message and control. The gap is `--g2-space-1`. A direct `.g2-input` fills the width of the field. A word that is wider than the field breaks (`overflow-wrap: anywhere`), so that a long address or code does not overflow a narrow screen. The field sets no outer margin: the form sets the space between fields with the spacing tokens. |
+| `.g2-label` | The field label. Block, `--g2-font-size-label`, semibold. Use `<label for="…">`. |
+| `.g2-hint` | Help before the control: format, example, why the field is locked. Muted, `--g2-font-size-meta`. Connect it with `aria-describedby`. |
+| `.g2-input` | The text control: at least 40px high, 2px border (`--g2-color-control-border`), text at `--g2-font-size-body`. The focus style is in `gov2.states`. |
+| `.g2-field-error` | Wraps a field that has an error. It adds a red bar on the left and makes the input border red. The input keeps the red border on hover and on focus. |
+| `.g2-error-msg` | The error text, red and bold. Start it with "Eroare:", so that the colour does not carry the meaning. |
+
+- Order in the field: label, hint, error message, control.
+- An invalid control has `aria-invalid="true"` and an `aria-describedby` that lists the hint and the error message.
+- Use `autocomplete` tokens for personal data (`name`, `email`, `organization`). Do not set `organization` for a field that is not about the reader's own organization.
+- `.g2-input` works for `type="text"`, `"email"` and `"search"`. A project decides the width of a field with its own rule in the `app` layer.
+- Disabled: the native `disabled` attribute. The control shows the sunken surface and muted text, it is not focusable, and it is skipped by Tab. The rule is in `gov2.states`.
+  A disabled control is not submitted. Say in the hint why the value is locked. Use `readonly` when the reader must be able to select the value.
+- `textarea`, `select`, checkboxes and radios are outside this slice. They have no DS class and no documented sizing. Use the native controls and keep your own styles local.
+  Do not apply `.g2-input` to them and expect a complete result.
+
+### Recovery from an error
+
+An error summary lists each problem with a link to its field. `href="#email"` moves keyboard focus to the control with that `id`, with no script.
+`.g2-field>.g2-input` has a 12rem top `scroll-margin`. Browsers align the target to the top of the window, so this margin keeps the label, the hint and the error message in view after the jump.
+Measured in Chrome 155: a field head of up to 186px (label, two-line hint and three-line error at 320px) stays in view. A longer hint or error can still push the label above the edge.
+The summary itself is a local composition: see `ex-summary` in `docs/examples/examples.css` and the form in `docs/examples/form.html`. It is not a core component.
+A page must not move focus away from its heading on load. Move focus to the summary only after a submission, in the application.
 
 ## Panels
 
@@ -275,9 +372,11 @@ A boxed message with a blue title band. The panel must have exactly two children
 
 These parts are missing. Build a local version with the project prefix, and open a `ds-proposal` issue when another project needs it too.
 
-- Page container and grid (`--g2-container-max` exists, no class uses it).
-- Layout for `.g2-nav` and `.g2-footer`.
-- Classes for `textarea`, `select`, checkboxes and radios.
+- A grid inside the container (columns, sidebars).
+- Classes for `textarea`, `select`, checkboxes and radios. They are outside the page-foundation slice.
 - Tables, pagination, breadcrumbs, tabs and summary lists.
+- A core error summary. The example form has a local composition.
+- A skip link. The example pages have a local one.
+- Icon buttons, complex filters and charts.
 - A hover state for `.g2-btn.g2-warning`.
 - Dark mode.

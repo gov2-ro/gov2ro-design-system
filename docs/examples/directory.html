@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Pagină de exemplu a sistemului de design gov2: căutare și rezultate, cu date demonstrative.">
+  <title>Directorul instituțiilor publice — rezultate · exemplu gov2</title>
+  <link rel="stylesheet" href="../../gov2.css">
+  <link rel="stylesheet" href="examples.css">
+</head>
+<body>
+  <a class="ex-skip" href="#continut">Sari la conținut</a>
+  <header class="g2-header">
+    <span class="g2-ro-corner" aria-hidden="true"></span>
+    <div class="g2-header-in g2-container">
+      <a class="g2-wordmark" href="directory.html">exemplu<em>.gov2.ro</em></a>
+      <nav class="g2-nav" aria-label="Principal">
+        <a href="directory.html" aria-current="page">Căutare instituții</a>
+        <a href="form.html">Propune o corecție</a>
+        <a href="../index.html#pagina">Ghidul de design</a>
+        <a href="#sursa-datelor">Sursa datelor și limitele lor</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="g2-container ex-main ex-stack" id="continut">
+    <h1 class="g2-heading-page">Directorul instituțiilor publice din județul Bacău care publică date despre posturi vacante, achiziții și execuție bugetară</h1>
+
+    <div class="g2-notice" role="region" aria-labelledby="demo-titlu">
+      <h2 class="g2-heading-item" id="demo-titlu">Date demonstrative</h2>
+      <div>
+        <p>Numele instituțiilor sunt reale. Codurile, cifrele și datele de verificare de pe această pagină sunt inventate, ca să arate componentele gov2. Nu le folosiți ca informații despre instituții.</p>
+        <p><a href="#sursa-datelor">Vedeți cum se arată sursa și data verificării.</a></p>
+      </div>
+    </div>
+
+    <section class="ex-stack" aria-labelledby="cautare-titlu">
+      <h2 class="g2-heading-section" id="cautare-titlu">Căutare</h2>
+      <form class="ex-search" action="directory.html" method="get" role="search" aria-labelledby="cautare-titlu">
+        <div class="g2-field ex-grow">
+          <label class="g2-label" for="q">Instituție, cod sau localitate</label>
+          <p class="g2-hint" id="q-hint">De exemplu: „Casa Județeană de Pensii”, „DEMO-BC-0127” sau „Onești”.</p>
+          <input class="g2-input" id="q" name="q" type="search" value="Bacău" aria-describedby="q-hint">
+        </div>
+        <button class="g2-btn" type="submit">Caută</button>
+      </form>
+      <p class="g2-text-meta">Formularul trimite cererea către această pagină statică. Nu există un serviciu de căutare, așa că rezultatele rămân aceleași.</p>
+
+      <div class="ex-stack ex-tight">
+        <p class="g2-label" id="judete-titlu">Județ</p>
+        <ul class="ex-chips" aria-labelledby="judete-titlu">
+          <li><a class="g2-chip" href="directory.html">Toate județele <span class="g2-chip-count">41</span></a></li>
+          <li><a class="g2-chip" href="directory.html?judet=bacau" aria-current="true">Bacău <span class="g2-chip-count">5</span></a></li>
+          <li><a class="g2-chip" href="directory.html?judet=iasi">Iași <span class="g2-chip-count">12</span></a></li>
+          <li><a class="g2-chip" href="directory.html?judet=suceava">Suceava <span class="g2-chip-count">9</span></a></li>
+          <li><a class="g2-chip" href="directory.html?judet=vrancea">Vrancea <span class="g2-chip-count">6</span></a></li>
+        </ul>
+        <p class="g2-text-meta">Filtru activ: județul Bacău. <a class="g2-link-quiet" href="directory.html">Șterge filtrul de județ</a></p>
+      </div>
+    </section>
+
+    <section class="ex-state ex-stack" aria-labelledby="rezultate-titlu">
+      <p class="g2-text-meta g2-mono">Exemplu de stare 1 din 2 · cu rezultate</p>
+      <h2 class="g2-heading-section" id="rezultate-titlu">5 rezultate pentru „Bacău” în județul Bacău</h2>
+      <ol class="ex-results">
+        <li class="ex-result">
+          <article class="ex-stack ex-tight" aria-labelledby="r1">
+            <h3 class="g2-heading-item" id="r1"><a class="g2-link-title" href="form.html">Serviciul Public Comunitar Regim Permise de Conducere și Înmatriculare a Vehiculelor Bacău</a></h3>
+            <p><strong class="g2-tag" data-tone="success">Date verificate</strong></p>
+            <dl class="ex-meta g2-text-meta">
+              <div><dt>Tip</dt><dd>Serviciu public comunitar</dd></div>
+              <div><dt>Cod</dt><dd class="g2-mono">DEMO-BC-0127</dd></div>
+              <div><dt>Posturi vacante</dt><dd>7</dd></div>
+              <div><dt>Verificat la</dt><dd><time datetime="2026-10-26">26.10.2026</time></dd></div>
+            </dl>
+            <p class="g2-text-meta">Coordonator: <a class="g2-link-quiet" href="directory.html?coordonator=mai">Ministerul Afacerilor Interne</a> · <a class="g2-link-quiet" href="form.html">Corectează înregistrarea DEMO-BC-0127</a></p>
+          </article>
+        </li>
+        <li class="ex-result">
+          <article class="ex-stack ex-tight" aria-labelledby="r2">
+            <h3 class="g2-heading-item" id="r2"><a class="g2-link-title" href="form.html">Agenția Județeană pentru Ocuparea Forței de Muncă Bacău</a></h3>
+            <p><strong class="g2-tag" data-tone="success">Date verificate</strong></p>
+            <dl class="ex-meta g2-text-meta">
+              <div><dt>Tip</dt><dd>Agenție județeană</dd></div>
+              <div><dt>Cod</dt><dd class="g2-mono">DEMO-BC-0131</dd></div>
+              <div><dt>Posturi vacante</dt><dd>12</dd></div>
+              <div><dt>Verificat la</dt><dd><time datetime="2026-10-24">24.10.2026</time></dd></div>
+            </dl>
+            <p class="g2-text-meta">Coordonator: <a class="g2-link-quiet" href="directory.html?coordonator=anofm">Agenția Națională pentru Ocuparea Forței de Muncă</a> · <a class="g2-link-quiet" href="form.html">Corectează înregistrarea DEMO-BC-0131</a></p>
+          </article>
+        </li>
+        <li class="ex-result">
+          <article class="ex-stack ex-tight" aria-labelledby="r3">
+            <h3 class="g2-heading-item" id="r3"><a class="g2-link-title" href="form.html">Inspectoratul Școlar Județean Bacău</a></h3>
+            <p><strong class="g2-tag" data-tone="progress">Verificare în curs</strong></p>
+            <dl class="ex-meta g2-text-meta">
+              <div><dt>Tip</dt><dd>Inspectorat școlar</dd></div>
+              <div><dt>Cod</dt><dd class="g2-mono">DEMO-BC-0142</dd></div>
+              <div><dt>Posturi vacante</dt><dd>9</dd></div>
+              <div><dt>Verificat la</dt><dd><time datetime="2026-10-19">19.10.2026</time></dd></div>
+            </dl>
+            <p class="g2-text-meta">Coordonator: <a class="g2-link-quiet" href="directory.html?coordonator=me">Ministerul Educației</a> · <a class="g2-link-quiet" href="form.html">Corectează înregistrarea DEMO-BC-0142</a></p>
+          </article>
+        </li>
+        <li class="ex-result">
+          <article class="ex-stack ex-tight" aria-labelledby="r4">
+            <h3 class="g2-heading-item" id="r4"><a class="g2-link-title" href="form.html">Casa Județeană de Pensii Bacău</a></h3>
+            <p><strong class="g2-tag" data-tone="warning">Date incomplete</strong></p>
+            <dl class="ex-meta g2-text-meta">
+              <div><dt>Tip</dt><dd>Casă de pensii</dd></div>
+              <div><dt>Cod</dt><dd class="g2-mono">DEMO-BC-0156</dd></div>
+              <div><dt>Posturi vacante</dt><dd>3</dd></div>
+              <div><dt>Verificat la</dt><dd><time datetime="2026-10-17">17.10.2026</time></dd></div>
+              <div><dt>Contact</dt><dd><a class="g2-link-quiet" href="mailto:secretariat.cjp.bacau@casa-de-pensii-demo.example">secretariat.cjp.bacau@casa-de-pensii-demo.example</a></dd></div>
+            </dl>
+            <p class="g2-text-meta">Coordonator: <a class="g2-link-quiet" href="directory.html?coordonator=cnpp">Casa Națională de Pensii Publice</a> · <a class="g2-link-quiet" href="form.html">Corectează înregistrarea DEMO-BC-0156</a></p>
+          </article>
+        </li>
+        <li class="ex-result">
+          <article class="ex-stack ex-tight" aria-labelledby="r5">
+            <h3 class="g2-heading-item" id="r5"><a class="g2-link-title" href="form.html">Direcția Generală de Asistență Socială și Protecția Copilului Bacău</a></h3>
+            <p><strong class="g2-tag" data-tone="success">Date verificate</strong></p>
+            <dl class="ex-meta g2-text-meta">
+              <div><dt>Tip</dt><dd>Direcție generală</dd></div>
+              <div><dt>Cod</dt><dd class="g2-mono">DEMO-BC-0163</dd></div>
+              <div><dt>Posturi vacante</dt><dd>21</dd></div>
+              <div><dt>Verificat la</dt><dd><time datetime="2026-10-12">12.10.2026</time></dd></div>
+            </dl>
+            <p class="g2-text-meta">Coordonator: <a class="g2-link-quiet" href="directory.html?coordonator=cj">Consiliul Județean Bacău</a> · <a class="g2-link-quiet" href="form.html">Corectează înregistrarea DEMO-BC-0163</a></p>
+          </article>
+        </li>
+      </ol>
+      <p class="g2-text-meta">Exemplul are o singură pagină de detaliu, <a class="g2-link-quiet" href="form.html">Casa Județeană de Pensii Bacău</a>. Fiecare titlu de mai sus duce la ea.</p>
+    </section>
+
+    <section class="ex-state ex-stack" aria-labelledby="gol-titlu">
+      <p class="g2-text-meta g2-mono">Exemplu de stare 2 din 2 · fără rezultate</p>
+      <h2 class="g2-heading-section" id="gol-titlu">Nicio instituție pentru „Directia Sanitar Veterinara” în județul Bacău</h2>
+      <div class="g2-inset">
+        <p>Nu am găsit nicio instituție care să se potrivească cu această căutare.</p>
+        <ul>
+          <li>Verificați ortografia, inclusiv diacriticele, sau căutați după cod, de exemplu „DEMO-BC-0127”.</li>
+          <li><a href="directory.html">Ștergeți căutarea</a> și păstrați filtrul de județ.</li>
+          <li><a href="directory.html?judet=toate">Căutați în toate județele</a>.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="ex-stack" id="sursa-datelor" aria-labelledby="sursa-titlu">
+      <h2 class="g2-heading-section" id="sursa-titlu">Sursa datelor și data verificării</h2>
+      <p>Pagina folosește un set demonstrativ. Nicio cifră nu vine dintr-o sursă reală.</p>
+      <p class="g2-text-meta">Sursă: set demonstrativ gov2, fără date reale · Verificat la <time datetime="2026-10-26">26 octombrie 2026</time> de echipa exemplului.</p>
+      <div class="g2-inset">
+        <p><strong>Model de atribuire pentru o sursă reală</strong></p>
+        <p class="g2-text-meta">Sursă: Registrul instituțiilor publice, set de date deschise publicat de instituția responsabilă. Descărcat la 24 octombrie 2026. Verificat la 26 octombrie 2026 de echipa proiectului. Limite: lipsesc instituțiile care nu raportează.</p>
+        <p>Textul este un model. Nu afirmă că un astfel de set de date există. Într-un produs real, puneți numele real al sursei, un link către ea și data verificării lângă cifra pe care o susțin.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="g2-footer">
+    <div class="g2-footer-in g2-container">
+      <div class="ex-stack ex-tight">
+        <p><strong>exemplu.gov2.ro</strong></p>
+        <p>Pagină de exemplu a sistemului de design gov2. Datele sunt demonstrative.</p>
+      </div>
+      <nav aria-label="Subsol">
+        <ul class="ex-links">
+          <li><a href="../index.html#pagina">Ghidul de design</a></li>
+          <li><a href="form.html">Propune o corecție</a></li>
+          <li><a href="#sursa-datelor">Sursa datelor și limitele lor</a></li>
+        </ul>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

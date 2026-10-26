@@ -19,17 +19,40 @@ Keep consumer adapters in the consumer. See `docs/decisions/0001-shared-system-b
 Make the page's main task and important content easy to find.
 Size, weight, spacing and placement can establish hierarchy together. Every role does not need a unique appearance.
 
-| Role | Starting point, not an implemented scale |
-|---|---|
-| Page title | 32px, bold |
-| Section title | 24px, bold |
-| Item title | 19px, bold |
-| Body | 17px, regular |
-| Metadata | 15px, regular, muted |
-| Short label | 14px, semibold |
+| Role | Starting point | Class or token |
+|---|---|---|
+| Page title | 2rem (32px), bold | `.g2-heading-page` |
+| Section title | 1.5rem (24px), bold | `.g2-heading-section` |
+| Item title | 1.1875rem (19px), bold | `.g2-heading-item`, `.g2-link-title` |
+| Body | 1.0625rem (17px), regular | the base style, `--g2-font-size-body` |
+| Metadata | .9375rem (15px), regular, muted | `.g2-text-meta` |
+| Short label | .875rem (14px), semibold | `.g2-label` |
 
-These sizes are proposals. The DS does not yet implement a complete type scale.
-Use the content and available space to judge their suitability.
+The type scale is implemented in `gov2.css` (see *Type roles* in `COMPONENTS.md`). The sizes are in rem, so they follow the reader's text size.
+They are starting treatments, not rules. Use the content and available space to judge their suitability.
+Line height: about 1.25 for headings (1.2 to 1.3 reads well) and 1.55 for running text.
+Choose the HTML heading level from the document structure, and the class from the look that the role needs. The two are independent.
+A project that needs another size overrides the token in its `app` layer. A recurring variation can become a shared option.
+
+## Page structure
+
+Put the header content, the main content and the footer content in `.g2-container`, so that their edges align and the side gutters are equal.
+The container, with its gutter, must fit a 320px viewport.
+
+- Use the spacing steps (`--g2-space-1` to `--g2-space-7`) for gaps and padding. Small steps group things that belong together; larger steps separate groups and sections.
+- Let the header and navigation wrap. Wrapping keeps every link visible and needs no script. A disclosure menu adds an interaction that a page may not need.
+- Make navigation targets large enough to use. 44px high is a good aim. Do not clip a long label.
+- Show the current page in the navigation with `aria-current="page"`. Do not rely on one visual cue: forced colours can remove a shadow.
+- Put the source and the date of verification next to a figure. Label demonstration data as demonstration data.
+
+## Fields and errors
+
+- Give each field a visible label, with `for`. Put a hint before the control when the reader needs a format or an example.
+- Tell the reader what is wrong and how to fix it. Start the message with a word such as "Eroare:", so that colour is not the only cue.
+- Mark an invalid control with `aria-invalid="true"` and connect the hint and the message with `aria-describedby`.
+- After a failed submission, list the problems in a summary with a link to each field. The link moves keyboard focus to the field.
+  Do not move focus when the page loads for the first time.
+- Use `disabled` only for a control that cannot be used. Say why in the hint. A disabled control is not focusable and is not submitted.
 
 In a result list, a prominent title usually helps scanning. Metadata can be quieter without becoming difficult to read.
 Use separators, grouping or separate lines as appropriate. Mono type helps align numbers and distinguish codes.

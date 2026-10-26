@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.9.0 — 2026-10-26 (proposal, untested)
+
+Brief 04 (page foundations). Nothing here is a breaking change: no token or class is renamed or removed.
+`docs/migration-from-0.6.0.md` has a section, *Changes after 0.8.0*, for projects that update.
+
+**Added**
+- Tokens (in `gov2.tokens`): the type scale `--g2-font-size-heading-page` (2rem), `--g2-font-size-heading-section` (1.5rem), `--g2-font-size-heading-item` (1.1875rem), `--g2-font-size-body` (1.0625rem), `--g2-font-size-meta` (.9375rem), `--g2-font-size-label` (.875rem), `--g2-line-height-heading` (1.25) and `--g2-line-height-body` (1.55);
+  the spacing scale `--g2-space-1` to `--g2-space-7` (.25, .5, .75, 1, 1.5, 2 and 3rem); and `--g2-gutter` (`clamp(1rem, 3vw, 2rem)`).
+- Classes (in `gov2.components`): `.g2-container`, `.g2-heading-page`, `.g2-heading-section`, `.g2-heading-item`, `.g2-text-meta`, `.g2-field`, `.g2-label`, `.g2-hint` and `.g2-footer-in`.
+- A disabled `.g2-input` now has a style (sunken surface, muted text, `not-allowed` cursor). Before, it looked like an enabled input. The rule is in `gov2.states`.
+- Forced-colours rules: the current `.g2-nav` link and the selected `.g2-chip` use `Highlight` and `HighlightText`. Before, forced colours removed the navigation bar and gave every chip the same border.
+- `docs/examples/directory.html`, `docs/examples/form.html` and `docs/examples/examples.css`: two static Romanian pages with demonstration data, a local `ex-` composition in the `app` layer, native recovery links and no script. The live guide links both.
+- A live-guide section (*Pagină și exemple*) for the container, the spacing scale and the local composition rules; the type roles, the field states, the recovery link and the footer composition in their sections.
+- Browser checks: `tests/foundation.test.mjs` (47 checks) and the shared `tests/helpers.mjs`. They cover the acceptance checks of brief 04: reflow at 320, 390, 768 and 1280px, enlargement, root text size, keyboard order, error recovery and accessibility-API names and descriptions, contrast, hover plus focus, forced colours, no script and no web fonts, and the documented customization.
+
+**Changed**
+- `--g2-container-max` is `80rem`, not `1280px`. The width is the same at a 16px root; it now follows the root text size. This is a correction, not a breaking change.
+- Text sizes of `body`, `.g2-btn`, `.g2-input`, `.g2-link-title`, `.g2-nav a`, `.g2-chip`, `.g2-chip-count`, `.g2-tag` and `.g2-notice-bar` are in rem and read the new type tokens. The computed sizes at a 16px root are the same as before.
+  `.g2-link-title` keeps its line height of 1.3. `.g2-wordmark` and the close button of the notice bar still use px.
+- `.g2-header-in` wraps (`flex-wrap`), uses `--g2-space-2` between rows and `--g2-space-5` between columns, and has `--g2-space-1` padding above and below. It is `box-sizing: border-box`, so a header that is not wrapped keeps its 52px height.
+- `.g2-nav` is a wrapping flex row with a 4px gap. `.g2-nav a` is at least 44px high (it was about 23px) and has `--g2-space-2` padding above and below. The current-page bar is now at the bottom of the taller link. Check the header height in a project that arranged these classes itself.
+- Headings with a role class (`.g2-heading-*`) and `.g2-field` break a word that is wider than the line, so that long words and addresses do not overflow a narrow screen.
+- `.g2-field>.g2-input` has a `scroll-margin` of 12rem above it, so that the label, the hint and the error message stay in view after a recovery link moves focus to the field.
+- The live guide, `tests/contract.html`, `COMPONENTS.md` and `GUIDELINES.md` describe the new API. `GUIDELINES.md` no longer calls the type scale a proposal and has sections for page structure and for fields and errors.
+- The tests moved their shared set-up to `tests/helpers.mjs`. The existing checks are unchanged apart from the new section count (15), the new `--g2-container-max` value and the migration-table check, which now lists the tokens added after 0.8.0.
+- The archived bundle (`docs/archive/2026-10-26-bundled-guide.html`) is unchanged.
+
 ## 0.8.0 — 2026-10-26 (proposal, untested)
 
 Brief 01 (shared CSS contract). ADR 0008 records the token names and the layer placement. Read `docs/migration-from-0.6.0.md` before you update a project.

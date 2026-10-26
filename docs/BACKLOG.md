@@ -20,12 +20,13 @@ See `decisions/0001-shared-system-boundary.md` and `briefs/README.md` for the se
 - [x] Settle D6: the first foundation package and two representative pages. ADR 0007 records the decision; brief 04 is ready after 01.
 - [x] Settle D1–D6 with the owner; finalize the implementation briefs.
 - [x] Preserve the prior guide bundle unchanged, record its provenance and link it from the live guide.
-- [x] Implement brief 01: independent shared CSS contract and migration (Unreleased in `CHANGELOG.md`; 59 browser checks pass in Chrome 155). Opus reviews it, then bumps the version and tags.
+- [x] Implement brief 01: independent shared CSS contract and migration (Unreleased in `CHANGELOG.md`; 59 browser checks pass in Chrome 155). Released as 0.9.0.
 - [ ] Review brief 01 (Opus): record the token inventory (names, five removals, `--g2-radius` use) and the layer structure in an ADR; accept or revise the naming choices listed in `ACTIVITY.md`; bump the version (minor, with **Breaking**) and tag.
 - [ ] Tell the projects that the project block in `project-block.md` changed (layer order, no activation attribute). Publishing is separate.
 - [x] Implement brief 02 against the current API: live guide, raw fixtures, browser checks and manual procedures. Brief 01 owns the two migration TODOs.
 - [ ] Implement brief 03: optional local fonts and reproducible file delivery.
-- [ ] Implement brief 04: the selected page-foundation slice.
+- [x] Implement brief 04: the selected page-foundation slice (container, spacing, type roles, header/nav/footer composition, fields, two example pages; `## Unreleased` in `CHANGELOG.md`). All 12 acceptance checks have executable assertions (106 browser checks pass in Chrome 155); native zoom, screen readers and other engines are recorded as manual in `testing.md`. Opus reviews it, then bumps the version and tags.
+- [x] Review brief 04 (Opus): accepted the 44px navigation targets, `overflow-wrap` on headings and fields, the 12rem scroll margin, the forced-colours rules and the disabled field look. Released as 0.9.0.
 
 The older compatibility findings below are historical evidence, not acceptance criteria for the new core API.
 
@@ -58,7 +59,13 @@ Items:
   - Google Fonts (accepted during the transition): posturi links all skin files on each page, so the `@import` in `gov2.css` loads Google Fonts for each visitor, with each skin. posturi serves its other fonts itself (`@font-face` with files in `/static/fonts/`). Possible DS change: `@font-face` with font files in the DS, or the fonts in a separate file.
 - [ ] **ins.gov2.ro** — repo not confirmed. Several repos mention the domain: `tempo-at`, `tempo-at-ui`, `tempo-at23`, `tempo-landing`, and the project has worktrees. The owner starts a session there with prompt 1 of `docs/connect-a-project.md`.
 - [ ] **civtech.gov2.ro** — repo `awesome-civetch` (confirmed by the owner).
-- [ ] **orgs.gov2.ro** — repo `institutii-publice` (confirmed by the owner).
+- [x] **stiri.gov2.ro** — repo `gov2-ro/stiri`. Report received 2026-10-26 and recorded in `compat-analysis.md`. Adopted v0.6.0 unedited; no conflicts; 12 proposals.
+  - [ ] Fix `.g2-notice-bar`: `display:flex` overrides the `hidden` attribute, and its `> p` keeps its margin and does not grow (stiri proposal 8). Patch fix.
+  - [ ] Ask the owner whether to file stiri proposals 2, 3, 4, 5, 7 and 11 as `ds-proposal` issues (breadcrumbs, pagination, table, summary list, skip link, highlight token).
+- [x] **org.gov2.ro** — repo `gov2-ro/institutii-publice` (the domain is `org.gov2.ro`, not `orgs`). Report received 2026-10-26 against 0.8.0 and recorded in `compat-analysis.md`.
+  - Conflicts are now with `--g2-*` and the layers: all project CSS is unlayered, and a local `:focus-visible` replaces the DS focus. The project moves its CSS into `@layer app`.
+  - [ ] Decide whether the DS offers a shared compact density (body 15px, 32–36px controls), or projects keep it local under ADR 0004.
+  - [ ] Dark mode has one measured request (org) and one assumed (civtech).
 - [ ] Cross-project questions: Is the Google Fonts `@import` permitted in each project? Do the projects need dark mode?
 - [ ] Replace the Google Fonts `@import` with `@font-face` and font files in the DS. Accepted during the transition; fix before 1.0.0.
 
@@ -72,7 +79,7 @@ From the posturi test. `GUIDELINES.md` has the rules.
 - [ ] Check visited states with an explicit history procedure. Hover is testable in headless Chrome; the earlier claimed limitation was incorrect.
 - [ ] Use the link classes in posturi (job title, institution, shortcuts, build stamp). This is posturi work.
 - [ ] Add `.g2-icon-btn` (icon button with a label and a 44px target).
-- [ ] Add a type scale (page title, section title, item title, body, metadata, label).
+- [x] Add a type scale (page title, section title, item title, body, metadata, label) (Unreleased, brief 04).
 - [ ] The owner reviews `GUIDELINES.md` (status: draft).
 
 ## Patterns and kitchen sink
@@ -97,12 +104,26 @@ The owner decides on 1.0.0 when all items are done.
 
 Found while writing `COMPONENTS.md`. Each gap is also listed in `COMPONENTS.md` under *Not in the DS yet*.
 
-- [ ] Page container and grid. The token `--g2-container-max` exists, but no class uses it.
-- [ ] Layout for `.g2-nav` and `.g2-footer` (no flex, no padding).
-- [ ] Classes for `textarea`, `select`, checkboxes and radios.
-- [ ] Tables, pagination, breadcrumbs, tabs and summary lists.
+- [x] Page container. `.g2-container` reads `--g2-container-max` and `--g2-gutter` (Unreleased, brief 04).
+- [ ] A grid inside the container (columns, sidebars). Neither example page needed one.
+- [x] Layout for `.g2-nav` and `.g2-footer`: wrapping header, wrapping navigation, `.g2-footer-in` (Unreleased, brief 04).
+- [ ] Classes for `textarea`, `select`, checkboxes and radios. Outside brief 04: neither example page needs them. Decide with the next concrete task.
+- [ ] A core error summary. The form example has a local composition (`ex-summary`); promote it when a second project needs it.
+- [ ] A core skip link. The example pages have a local one (`ex-skip`).
+- [ ] Icon buttons, complex filters and charts (deferred by ADR 0007).
 - [ ] A hover state for `.g2-btn.g2-warning`.
 - [ ] Dark mode.
+- [ ] Tables, pagination, breadcrumbs, tabs and summary lists. The directory example shows five results with no pagination and a single detail page. Breadcrumbs and tables now have two projects (stiri, org); see `compat-analysis.md`. Each one needs owner approval.
+
+Follow-ups from brief 04 (measured or decided in `ACTIVITY.md`):
+
+- [-] Unify the line height of `.g2-link-title` with `--g2-line-height-heading`. Kept at 1.3: a multi-line underlined link needs room between its underline and the next line. The 0.95px difference per line has no other benefit.
+- [ ] The wrapped header is tall on a narrow screen: 229px at 320px with four navigation links, one link per row (each 44px high). Wrapping was chosen over a menu button (brief 04). Review it with real navigation lists; a compact variant (smaller targets or fewer links) is a later decision.
+- [ ] `.g2-wordmark` (19px) and the close button of `.g2-notice-bar` (22px) still use px. Convert them when the maintainer decides which role they read.
+- [ ] A disabled `.g2-input` is styled with the sunken surface and muted text. Check it in Safari and on iOS, where the browser can add its own disabled style. Not measured.
+- [ ] Manual checks not done for brief 04: screen reader pass on both pages, native browser zoom at 200% and 400%, WCAG 1.4.12 text-spacing override, real forced-colours rendering on Windows, Firefox and Safari. See `testing.md`.
+- [x] `README.md` lists `docs/examples/` (maintainer, 0.9.0).
+- [ ] After brief 03: the fonts-blocked check proves that no web font loads and that an installed font renders. Inter is installed on the test machine, so it does not show a different fallback face. Add a check on a machine without Inter, or with `font-family` forced to the fallback stack.
 
 Defects found during brief 01. They existed in 0.7.0. The migration did not change them, by design: a rendering correction is separate work.
 

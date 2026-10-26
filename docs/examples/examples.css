@@ -1,0 +1,55 @@
+/* Local composition for the example pages in docs/examples. Class prefix: ex-.
+   These rules place gov2 components: layout, spacing and reading width.
+   They set no colour, font or border on a .g2-* class, hide no overflow and use no !important.
+   Every rule is in the app layer, as in a project stylesheet. Load ../../gov2.css first.
+   A project that wants the same arrangement copies the rule it needs and renames the class. */
+@layer app{
+/* Skip link: off screen until it has keyboard focus. The gov2 focus rule colours it. */
+.ex-skip{position:absolute;top:-10rem;left:var(--g2-space-4);z-index:1;padding:var(--g2-space-3)}
+.ex-skip:focus{top:var(--g2-space-2)}
+
+/* Page rhythm: the main element is also the container; children stack with one gap. */
+.ex-main{padding-block:var(--g2-space-6) var(--g2-space-7);overflow-wrap:break-word}
+.ex-stack{display:grid;gap:var(--g2-space-5);min-width:0}
+.ex-stack>*{margin:0;min-width:0}
+.ex-tight{gap:var(--g2-space-2)}
+
+/* A separate state example: a dashed frame and a label above it. */
+.ex-state{padding:var(--g2-space-5);border:1px dashed rgb(var(--g2-color-text-muted))}
+
+/* Search: the field takes the free width, the button wraps below it when the row is full. */
+.ex-search{display:flex;flex-wrap:wrap;align-items:end;gap:var(--g2-space-4)}
+.ex-grow{flex:1 1 20rem}
+
+/* Shortcut chips in a wrapping row. */
+.ex-chips{display:flex;flex-wrap:wrap;gap:var(--g2-space-2);margin:0;padding:0;list-style:none}
+
+/* Results: one item per row, with a rule between items. */
+.ex-results{display:grid;gap:var(--g2-space-5);margin:0;padding:0;list-style:none}
+.ex-result{padding-block-start:var(--g2-space-5);border-top:1px solid rgb(var(--g2-color-line))}
+.ex-result:first-child{padding-block-start:0;border-top:0}
+
+/* Metadata: name and value pairs that wrap as a whole. */
+.ex-meta{display:flex;flex-wrap:wrap;gap:var(--g2-space-1) var(--g2-space-5);margin:0}
+.ex-meta>div{display:flex;flex-wrap:wrap;gap:0 var(--g2-space-2);min-width:0;max-width:100%}
+.ex-meta dt::after{content:":"}
+.ex-meta dd{margin:0;overflow-wrap:anywhere}
+
+/* Record facts: a grid that never needs more than the available width. */
+.ex-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,14rem),1fr));gap:var(--g2-space-4) var(--g2-space-5);margin:0}
+.ex-facts>*{min-width:0}
+.ex-facts dd{margin:0}
+
+/* Error summary: a local composition, not a core component. The links reach the invalid fields. */
+.ex-summary{padding:var(--g2-space-4);border:5px solid rgb(var(--g2-color-danger-solid))}
+.ex-summary ul{margin:0;padding-inline-start:var(--g2-space-5)}
+.ex-summary li+li{margin-block-start:var(--g2-space-2)}
+
+/* Form: a reading width, one gap between fields, actions in a wrapping row. */
+.ex-form{max-width:40rem}
+.ex-fields{display:grid;gap:var(--g2-space-5)}
+.ex-actions{display:flex;flex-wrap:wrap;align-items:center;gap:var(--g2-space-4)}
+
+/* Footer links in a wrapping row. */
+.ex-links{display:flex;flex-wrap:wrap;gap:var(--g2-space-2) var(--g2-space-5);margin:0;padding:0;list-style:none}
+}
