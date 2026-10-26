@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.5.0 — 2026-10-26 (proposal, untested)
+
+No change to the styles in `gov2.css`.
+
+- `GUIDELINES.md` (draft): hierarchy, link roles, colour, contrast, type, actions, and a review checklist. It proposes `.g2-link-title`, `.g2-link-quiet`, `.g2-link-inverse`, `.g2-chip` and `.g2-icon-btn`.
+- `patterns/README.md`: how projects contribute advanced components (contributed → candidate → core).
+- `docs/connect-a-project.md`: known transition issues (Google Fonts, link specificity, no link roles), and a review step in the adoption prompt.
+- Known issue: the base link rule `[data-skin="gov2"] a` is stronger than single utility classes in projects.
+
 ## 0.4.0 — 2026-10-26 (proposal, untested)
 
 No change to the styles in `gov2.css`.

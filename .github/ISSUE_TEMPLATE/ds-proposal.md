@@ -5,8 +5,10 @@ title: "[proposal] "
 labels: ds-proposal
 ---
 
-**Type:** component / variant / token / fix
-<!-- A fix is a correction of a defect. The maintainer can release it without approval. -->
+**Type:** component / variant / token / fix / pattern
+<!-- A fix is a correction of a defect. The maintainer can release it without approval.
+     A pattern is an advanced component from a project for patterns/ (see patterns/README.md). -->
+
 
 **Breaking:** no / yes — <!-- what is renamed, removed or changed in meaning -->
 

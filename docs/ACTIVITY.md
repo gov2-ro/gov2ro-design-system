@@ -1,5 +1,25 @@
 # Activity
 
+## 2026-10-26 — Guidelines for hierarchy and link roles, patterns (0.5.0)
+
+**Done**
+- Wrote `GUIDELINES.md` (draft): hierarchy, link roles, colour, contrast, type, actions, and a review checklist.
+- Wrote `patterns/README.md`: the status of a pattern, the folder, and how to contribute. The kitchen sink is defined, not built.
+- Added "Known transition issues" to `docs/connect-a-project.md`, and a review step to the adoption prompt.
+- Added "pattern" to the issue template.
+
+**Hard**
+- The owner tested 0.4.0 as a skin in posturi.gov2.ro. All links looked the same: header links, job titles, institution links, shortcuts and the build stamp. Measured by reading the CSS, not in devtools: `[data-skin="gov2"] a` has specificity 0,1,1; the Tailwind utility `.text-on-bar-muted` has 0,1,0. The DS rule wins on every link.
+- Measured contrast (WCAG formula): header link `#1d4fbf` on `#0b0c0c` is 2.73:1, visited `#4c2c92` is 1.94:1. The intended `#cccccc` is 12.2:1. The posturi skin check passes, because it checks token pairs, not the rendered page.
+- Even without the specificity problem, the DS has only one link style. So there are no link roles.
+
+**Decided**
+- **The Google Fonts `@import` is accepted during the transition.** Fix before 1.0.0. Cost of the alternative: font files and a font licence check now, before the analysis of the projects.
+- **`GUIDELINES.md` is separate from `COMPONENTS.md`.** One file says what exists; the other says how parts work together. Cost of the alternative: a long `COMPONENTS.md` that mixes facts and proposals.
+- **Link roles follow the GOV.UK link modifiers** (inverse, muted, no visited state). Cost of the alternative: new names that projects must learn.
+- **Patterns keep the prefix of the origin project until they become core.** A `.g2-` class is a promise of the DS; a contributed pattern is not. Cost of the alternative: `.g2-` classes that the DS does not maintain.
+- **No change to `gov2.css` now.** The owner asked for the rules first. The fixes are in the backlog.
+
 ## 2026-10-26 — Prompts for project sessions (0.4.0)
 
 **Done**

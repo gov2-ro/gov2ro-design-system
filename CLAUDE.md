@@ -37,6 +37,8 @@ The file is for GitHub Pages, but Pages is not enabled now, and the repo is priv
 ## How the DS changes
 
 - **`COMPONENTS.md` is the specification** of each `.g2-` class and token group. Change it in the same commit as `gov2.css`.
+- **`GUIDELINES.md` tells how components work together:** hierarchy, link roles, colour, contrast, type, and a review checklist. `COMPONENTS.md` tells what exists. When a proposed class in `GUIDELINES.md` goes into `gov2.css`, add it to `COMPONENTS.md` and remove "proposed".
+- **`patterns/` holds advanced components from projects** (contributed → candidate → core). See `patterns/README.md`.
 - **Proposals are GitHub issues** on `gov2-ro/gov2ro-design-system`, with the label `ds-proposal`. An agent in any project can open one with `gh`. The template is `.github/ISSUE_TEMPLATE/ds-proposal.md`. It asks for the type (component, variant, token or fix), the need, the markup, the projects that can use it, and the local version.
 - **Each project has the same DS block** in its `AGENTS.md` and `CLAUDE.md`. The block is in `docs/project-block.md`. When the block changes, tell the projects.
 - **`docs/connect-a-project.md` has the prompts for project sessions:** compatibility report, adoption, proposal and update. When a project session sends a compatibility report, write it into `docs/compat-analysis.md`, update `docs/BACKLOG.md`, and reply to the session. A report can also arrive as a GitHub issue with the title `[compat] <domain>`.

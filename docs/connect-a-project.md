@@ -9,6 +9,14 @@ This page gives the prompts that connect an agent session in a project to the go
 - **Agents from other providers** (Codex, Gemini…) cannot use `ListAgents` or `SendMessage`. They open a GitHub issue with `gh`.
 - **The record is in GitHub and git.** A message is a notification only. The DS session writes each result into the DS repo.
 
+## Known transition issues
+
+The DS is 0.x. These issues are known and accepted during the transition. Do not work around them in the project. Do not report them as new findings, but say if one blocks the project.
+
+- **Google Fonts:** `gov2.css` loads Inter and Fragment Mono from Google Fonts with `@import`. Each page that loads `gov2.css` makes this external request. The DS will fix this later.
+- **Link styles override project classes:** the base rule `[data-skin="gov2"] a` is stronger than a single utility class (for example a Tailwind class). So all links become blue and underlined, also on the dark header. Do not add `!important` in the project. The DS will lower the specificity of its base rules.
+- **No link roles yet:** the DS has one link style. `GUIDELINES.md` proposes the roles. Until the DS has the classes, report the places where roles look the same.
+
 ## Prompt 1: Compatibility report
 
 Use this prompt first, before a project adopts the DS. The agent reads only; it does not change files.
@@ -18,8 +26,9 @@ You work in <project repo>, the code for <domain>. The gov2 design system (DS) i
 ~/devbox/gov2/gov2ro-design-system. Write a compatibility report for the DS.
 Do not change files in this project or in the DS.
 
-1. In the DS, read CLAUDE.md, COMPONENTS.md, gov2.css and the section
-   "Compatibility analysis" in docs/BACKLOG.md.
+1. In the DS, read CLAUDE.md, COMPONENTS.md, GUIDELINES.md, gov2.css, the section
+   "Compatibility analysis" in docs/BACKLOG.md, and the section "Known transition issues"
+   in docs/connect-a-project.md.
 2. Find the live code for <domain>: the repo, the branch or worktree, and how it deploys.
    If there are several worktrees, say which one is live and how you know.
 3. Write the report with these sections:
@@ -50,8 +59,9 @@ Use this prompt after the DS session has the compatibility report.
 Adopt the gov2 design system (DS) in this project, at version <X.Y.Z>.
 The DS is at ~/devbox/gov2/gov2ro-design-system.
 
-1. In the DS, read docs/project-block.md, COMPONENTS.md, CHANGELOG.md, and the section
-   for this project in docs/compat-analysis.md.
+1. In the DS, read docs/project-block.md, COMPONENTS.md, GUIDELINES.md, CHANGELOG.md,
+   the section for this project in docs/compat-analysis.md, and the section
+   "Known transition issues" in docs/connect-a-project.md.
 2. Add the block from docs/project-block.md to AGENTS.md and CLAUDE.md in this project.
    Fill in the values. Keep the rest of the block as it is.
 3. Copy gov2.css from the DS tag v<X.Y.Z> into <path>:
@@ -59,9 +69,11 @@ The DS is at ~/devbox/gov2/gov2ro-design-system.
    Do not edit the copy.
 4. Use a DS component where one fits. Where the DS has no component, build a local version
    with the class prefix <prefix>- and open a ds-proposal issue, as the block says.
-5. Follow the process of this project for the backlog, the activity log and commits.
-6. Send a short summary to the DS session (ListAgents, then SendMessage): the version,
-   the issues that you opened, and the problems that you found.
+5. Make a screenshot of each main page. Check each page against the "Review checklist"
+   in GUIDELINES.md. Measure the contrast in the browser, not only in the tokens.
+6. Follow the process of this project for the backlog, the activity log and commits.
+7. Send a short summary to the DS session (ListAgents, then SendMessage): the version,
+   the issues that you opened, the checklist items that fail, and the problems that you found.
 ````
 
 ## Prompt 3: Propose a DS change
