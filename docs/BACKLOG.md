@@ -64,8 +64,10 @@ Items:
   - [ ] Ask the owner whether to file stiri proposals 2, 3, 4, 5, 7 and 11 as `ds-proposal` issues (breadcrumbs, pagination, table, summary list, skip link, highlight token).
 - [x] **org.gov2.ro** — repo `gov2-ro/institutii-publice` (the domain is `org.gov2.ro`, not `orgs`). Report received 2026-10-26 against 0.8.0 and recorded in `compat-analysis.md`.
   - Conflicts are now with `--g2-*` and the layers: all project CSS is unlayered, and a local `:focus-visible` replaces the DS focus. The project moves its CSS into `@layer app`.
-  - [ ] Decide whether the DS offers a shared compact density (body 15px, 32–36px controls), or projects keep it local under ADR 0004.
-  - [ ] Dark mode has one measured request (org) and one assumed (civtech).
+  - [-] Shared compact density. Not needed: the owner chose the DS sizes for org (2026-10-26).
+  - [ ] Owner decisions relayed 2026-10-26: DS fonts (waits for brief 03), DS sizes, local dark mode until issue #1, no tricolour text. The org adoption brief waits for a release.
+- [ ] Issue #1, dark colour scheme for the `--g2-color-*` tokens (org; civtech assumed). Needs owner approval in the issue, then an ADR and a brief.
+- [ ] Issue #2, tricolour title treatment (org, civtech). Conflicts with "tricolour is never text". Needs owner approval of one option in the issue.
 - [ ] Cross-project questions: Is the Google Fonts `@import` permitted in each project? Do the projects need dark mode?
 - [ ] Replace the Google Fonts `@import` with `@font-face` and font files in the DS. Accepted during the transition; fix before 1.0.0.
 

@@ -53,9 +53,21 @@ The session read the project only and changed no files. The report targets the 0
 |---|---|---|
 | Correct the backlog domain to `org.gov2.ro`; conflicts are now with `--g2-*` | S | Accepted |
 | Fonts without the Google Fonts `@import` | M | Accepted in ADR 0005; brief 03 is ready |
-| Compact density for data explorers (body 15px, 32–36px controls) | M | ADR 0004 supports local density customization. The migration document has a compact example. A shared variant needs owner approval |
-| Dark mode | L | Open; deferred by brief 04. org has one; civtech is assumed to have one |
+| Compact density for data explorers (body 15px, 32–36px controls) | M | Withdrawn: the owner chose the DS sizes for org |
+| Dark mode | L | Issue #1 (`ds-proposal`), opened 2026-10-26. Needs owner approval and an ADR |
+| Tricolour title treatment | M | Issue #2 (`ds-proposal`), opened 2026-10-26. Conflicts with "tricolour is never text" |
 | Patterns: choropleth and legend, multi-select filter, responsive filter bar, tree, breadcrumbs, tabs, data table, source badges, detail dialog | L | Contributed candidates for `patterns/`. Breadcrumbs and tables now have two projects (stiri, org) |
+
+### Owner decisions for org (2026-10-26)
+
+Relayed by the g2-org session after the report.
+
+- **Fonts:** DS fonts (Inter, Fragment Mono), with no local exception. org waits for a release with ADR 0005 (brief 03), so that the page makes no third-party request.
+- **Sizes:** the DS type scale and control sizes. No compact variant.
+- **Dark mode:** org keeps it with local `--g2-*` overrides in `@layer app`. The owner asks the DS for a shared dark scheme: issue #1.
+- **Tricolour title:** the local sweep on the title text goes. The owner asks the DS for a shared treatment: issue #2.
+- **Adoption brief:** `institutii-publice` `docs/briefs/ds-adoption.md` (tag v0.13.0). It waits for the owner's release announcement.
+- The DS GitHub remote has tags up to v0.6.0 only. Measured by the g2-org session.
 
 ### Notes for the DS
 
