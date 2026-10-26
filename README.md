@@ -12,7 +12,7 @@ optional Romanian tricolour mark (default: `.g2-ro-corner`).
 - [Modelul Unitar de Design al Republicii Moldova](https://mud.egov.md/)
 - [thedesignsystem.guide: Public Design Systems List](https://thedesignsystem.guide/public-design-systems-list)
 
-<!-- Style guide: https://gov2-ro.github.io/design-system/ -->
+<!-- Style guide: https://gov2-ro.github.io/gov2ro-design-system/ -->
 
 ---
 
@@ -20,11 +20,10 @@ optional Romanian tricolour mark (default: `.g2-ro-corner`).
 
 <!-- ```html
 <html lang="ro" data-skin="gov2">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/gov2-ro/design-system@1/gov2.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/gov2-ro/gov2ro-design-system@0.2.0/gov2.css">
 ``` -->
 
-`@1` follows the latest 1.x release (fixes, no breaking changes).
-Pin an exact version with `@1.0.0`.
+The design system is at 0.x: a proposal, not tested yet. A minor version can break, so pin an exact version.
 
 <!-- posturi.gov.ro: copy `gov2.css` into `webapp-php/static/skins/` and pick it in the style picker. -->
 
@@ -52,4 +51,4 @@ Pin an exact version with `@1.0.0`.
 1. Edit `gov2.css`, note the change in `CHANGELOG.md`.
 2. Tag: `git tag v1.0.1 && git push --tags`.
 <!-- 3. jsDelivr picks the tag up within minutes. Purge if needed:
-   https://purge.jsdelivr.net/gh/gov2-ro/design-system@1/gov2.css -->
+   https://purge.jsdelivr.net/gh/gov2-ro/gov2ro-design-system@0.2.0/gov2.css -->

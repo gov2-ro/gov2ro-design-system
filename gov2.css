@@ -1,4 +1,4 @@
-/* @skin gov2 — stilul comun pentru proiectele gov2.ro · v0.2 · 26.10.2026
+/* @skin gov2 — stilul comun pentru proiectele gov2.ro · v0.2.0 · 26.10.2026
 
    Shared skin for posturi.gov2.ro, civtech.gov2.ro, org.gov2.ro and siblings.
    Follows igov.ro's GOV.UK-derived theme (brand.css, 2026-10): Inter + Fragment Mono,
@@ -6,8 +6,8 @@
    green primary button, six-tone status palette. Optional Romanian tricolour band.
 
    posturi.gov.ro: copy to webapp-php/static/skins/gov2.css.
-   Repo: https://github.com/gov2-ro/design-system
-   CDN:  https://cdn.jsdelivr.net/gh/gov2-ro/design-system@1/gov2.css
+   Repo: https://github.com/gov2-ro/gov2ro-design-system
+   CDN:  https://cdn.jsdelivr.net/gh/gov2-ro/gov2ro-design-system@0.2.0/gov2.css
    Other projects: load this file, set <html data-skin="gov2">, use rgb(var(--c-ink)) etc.
    Colours are RGB channels. Opt-in classes are prefixed .g2-.
 */
