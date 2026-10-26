@@ -1,5 +1,16 @@
 # Activity
 
+## 2026-10-26 — Prompts for project sessions (0.4.0)
+
+**Done**
+- Wrote `docs/connect-a-project.md`: four prompts (compatibility report, adoption, proposal, update) and how sessions find the DS session.
+- The owner confirmed the repos: civtech.gov2.ro is `awesome-civetch`, orgs.gov2.ro is `institutii-publice`. ins.gov2.ro has worktrees; the owner starts a session there.
+
+**Decided**
+- **Each project session writes its own compatibility report.** The session in the project knows its live worktree and its build. The DS session writes the results into `docs/compat-analysis.md`. Cost of the alternative: the DS session reads each repo from outside and guesses which worktree is live.
+- **Reports go by `SendMessage`, or by a GitHub issue `[compat] <domain>` when there is no DS session.** Agents from other providers can use the issue. Cost of the alternative: a report is lost when no DS session runs.
+- **The prompts find the DS session with `ListAgents`, by the name prefix `gov2ro-design-system`.** The suffix changes for each session, so a fixed name does not work.
+
 ## 2026-10-26 — Component reference, proposal flow, project block (0.3.0)
 
 **Done**

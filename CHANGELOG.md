@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.0 — 2026-10-26 (proposal, untested)
+
+No change to the styles in `gov2.css`.
+
+- `docs/connect-a-project.md`: prompts for project sessions (compatibility report, adoption, proposal, update), and how sessions find the DS session.
+
 ## 0.3.0 — 2026-10-26 (proposal, untested)
 
 No change to the styles in `gov2.css`.

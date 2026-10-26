@@ -8,11 +8,12 @@ Statuses: `[ ]` open, `[~]` in progress, `[x]` done, `[-]` dropped.
 - [x] Write `COMPONENTS.md`: each `.g2-` class, its markup, when to use it, and its states. Agents cannot read the bundle in `docs/index.html`, so they need this reference.
 - [x] Write the DS block for the project repos: `docs/project-block.md`.
 - [~] Add the DS block to posturi.gov.ro. The block is in `AGENTS.md` and `CLAUDE.md` of posturi, but it is not committed there. The owner or the posturi agent commits it.
+- [x] Write the prompts for project sessions: `docs/connect-a-project.md`.
 - [ ] Decide if the shared agent rules move from `CLAUDE.md` to `AGENTS.md`, so that agents from other providers read them.
 
 ## Compatibility analysis of the live projects
 
-Analyse each project and list the bottlenecks for the DS. Write the result in `docs/compat-analysis.md`. For each project, find:
+Analyse each project and list the bottlenecks for the DS. A session in each project writes a report with prompt 1 of `docs/connect-a-project.md`. The DS session writes the result in `docs/compat-analysis.md`. For each project, find:
 - the stack: framework, CSS method (Tailwind, plain CSS, other), build;
 - the tokens and class names that exist, and conflicts with the `--c-*` tokens and the `.g2-` classes;
 - the fonts, the header, the footer and the skins or themes;
@@ -24,9 +25,9 @@ Items:
   - 46 problems: `.g2-` rules outside `[data-skin]`. posturi loads all skin files on each page, so an unscoped rule leaks into the other skins (`hartie`, `govuk`, `posturi`).
   - 23 problems: DS tokens that the posturi skin contract (39 tokens) does not know, for example `--c-primary`, `--c-brand` and `--c-ro-*`.
   - Possible DS change: scope the `.g2-` classes under `[data-skin="gov2"]`. Not decided. This is a breaking change.
-- [ ] **ins.gov2.ro** — repo not confirmed. Several repos mention the domain: `tempo-at`, `tempo-at-ui`, `tempo-at23`, `tempo-landing`. Find the live repo first.
-- [ ] **civtech.gov2.ro** — repo assumed: `awesome-civetch`. Confirm.
-- [ ] **orgs.gov2.ro** — repo assumed: `institutii-publice`, because it mentions `org.gov2.ro`. Confirm the repo and the domain (`orgs` or `org`).
+- [ ] **ins.gov2.ro** — repo not confirmed. Several repos mention the domain: `tempo-at`, `tempo-at-ui`, `tempo-at23`, `tempo-landing`, and the project has worktrees. The owner starts a session there with prompt 1 of `docs/connect-a-project.md`.
+- [ ] **civtech.gov2.ro** — repo `awesome-civetch` (confirmed by the owner).
+- [ ] **orgs.gov2.ro** — repo `institutii-publice` (confirmed by the owner).
 - [ ] Cross-project questions: Is the Google Fonts `@import` permitted in each project? Do the projects need dark mode?
 
 ## Checklist for 1.0.0

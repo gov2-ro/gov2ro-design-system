@@ -39,6 +39,7 @@ The file is for GitHub Pages, but Pages is not enabled now, and the repo is priv
 - **`COMPONENTS.md` is the specification** of each `.g2-` class and token group. Change it in the same commit as `gov2.css`.
 - **Proposals are GitHub issues** on `gov2-ro/gov2ro-design-system`, with the label `ds-proposal`. An agent in any project can open one with `gh`. The template is `.github/ISSUE_TEMPLATE/ds-proposal.md`. It asks for the type (component, variant, token or fix), the need, the markup, the projects that can use it, and the local version.
 - **Each project has the same DS block** in its `AGENTS.md` and `CLAUDE.md`. The block is in `docs/project-block.md`. When the block changes, tell the projects.
+- **`docs/connect-a-project.md` has the prompts for project sessions:** compatibility report, adoption, proposal and update. When a project session sends a compatibility report, write it into `docs/compat-analysis.md`, update `docs/BACKLOG.md`, and reply to the session. A report can also arrive as a GitHub issue with the title `[compat] <domain>`.
 - **Promote a local pattern to the DS** when a second project needs it, or when it is clearly generic. Until then, keep it in the project.
 - **One maintainer edits the DS.** Only the agent that works in this repo changes `gov2.css`, `CHANGELOG.md` and the docs. Agents in other repos open issues; they do not edit the DS.
 - **The maintainer releases small fixes without approval.** The owner approves each new component, variant or token, and each breaking change, in the issue.
