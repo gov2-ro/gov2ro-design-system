@@ -5,7 +5,16 @@ Follows igov.ro's GOV.UK-derived theme: Inter + Fragment Mono, square corners,
 underlined links, yellow focus, green primary button, six status tones,
 optional Romanian tricolour mark (default: `.g2-ro-corner`).
 
+## Inspiration
+
+- [design-system.service.gov.uk](https://design-system.service.gov.uk/)
+- [Government design systems](https://platformland.github.io/government-design-systems/)
+- [Modelul Unitar de Design al Republicii Moldova](https://mud.egov.md/)
+- [thedesignsystem.guide: Public Design Systems List](https://thedesignsystem.guide/public-design-systems-list)
+
 <!-- Style guide: https://gov2-ro.github.io/design-system/ -->
+
+---
 
 ## Use it
 
