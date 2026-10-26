@@ -1,4 +1,4 @@
-/* gov2 — stilul comun pentru proiectele gov2.ro · v0.11.0 · 26.10.2026
+/* gov2 — stilul comun pentru proiectele gov2.ro · v0.12.0 · 27.10.2026
 
    Shared stylesheet for gov2.ro projects.
    Inspired by igov.ro's GOV.UK-derived theme (brand.css, 2026-10): Inter + Fragment Mono,
@@ -10,6 +10,7 @@
    Layers: reset, gov2, utilities, app (public order). Inside gov2: tokens, base, components, states.
    A layer that an earlier stylesheet created keeps its position: declare the order first (see the migration document).
    Colours are RGB channels (--g2-color-*). Opt-in classes are prefixed .g2-.
+   Colour scheme: light by default. <html data-g2-scheme="dark"> or "auto" (follows prefers-color-scheme) opts in to the dark values (COMPONENTS.md).
    Fonts: this file makes no font request. --g2-font-sans and --g2-font-mono name Inter and Fragment Mono, with system fallbacks.
    Standard installation also copies fonts.css and fonts/, which supply the two families as local files (fonts/README.md).
    Migration from 0.6.0: docs/migration-from-0.6.0.md.
@@ -20,12 +21,15 @@
 /* ---- Tokens: published on :root ---- */
 @layer gov2.tokens {
 :root {
+  color-scheme: light; /* the active scheme; the dark blocks below set dark */
+
   /* Surfaces */
   --g2-color-page:                     255 255 255; /* #ffffff */
   --g2-color-surface:                  255 255 255; /* #ffffff */
   --g2-color-surface-sunken:           243 242 241; /* #f3f2f1  panels, footer, toolbars, notice bar, tags */
   --g2-color-line:                     177 180 182; /* #b1b4b6  rules, card borders */
   --g2-color-control-border:           11 12 12; /* #0b0c0c  form controls */
+  --g2-color-control-bg:               255 255 255; /* #ffffff  background of .g2-input, also while focused */
 
   /* Text */
   --g2-color-text:                     11 12 12; /* #0b0c0c  19:1 on white */
@@ -50,8 +54,10 @@
   --g2-color-action-hover:             0 90 48; /* #005a30 */
   --g2-color-action-shadow:            0 45 24; /* #002d18 */
   --g2-color-action-secondary-shadow:  146 145 145; /* #929191 */
+  --g2-color-action-secondary-hover:   219 218 217; /* #dbdad9  hover background of the secondary button */
   --g2-color-danger-solid:             212 53 28; /* #d4351c  errors, destructive button */
   --g2-color-danger-shadow:            85 21 11; /* #55150b */
+  --g2-color-on-solid:                 255 255 255; /* #ffffff  text on a saturated fill: action and danger buttons, notice title band */
 
   /* Focus: keyboard focus only */
   --g2-color-focus:                    255 221 0; /* #ffdd00 */
@@ -82,6 +88,7 @@
   --g2-color-ro-blue:                  0 43 127; /* #002b7f */
   --g2-color-ro-yellow:                252 209 22; /* #fcd116 */
   --g2-color-ro-red:                   206 17 38; /* #ce1126 */
+  --g2-color-ro-blue-ring:             58 90 160; /* #3a5aa0  ring of the blue dot in .g2-ro-dots, for the dark header */
 
   /* Chart ramp: blue series, greys for the rest, the dark colour marks the selection */
   --g2-color-chart-1:                  29 112 184; /* #1d70b8 */
@@ -118,6 +125,138 @@
   --g2-border-width-control:           2px;
   --g2-container-max:                  80rem; /* 1280px  maximum width of .g2-container, padding included */
   --g2-gutter:                         clamp(1rem, 3vw, 2rem); /* inline padding of .g2-container */
+}
+
+/* Dark scheme: opt-in, with one attribute on the root element. No attribute, or "light", keeps the values above.
+   The same values are written twice, because CSS cannot share a rule between a media query and a plain selector. A test compares them.
+   Tokens that keep their light value are not listed: the header group, focus, the tricolour and its ring. */
+:root[data-g2-scheme=dark] {
+  color-scheme: dark;
+
+  /* Surfaces */
+  --g2-color-page:                     11 12 12; /* #0b0c0c  near-black page; the header colour, so the brand band separates them */
+  --g2-color-surface:                  22 25 26; /* #16191a  raised surface: card, notice body */
+  --g2-color-surface-sunken:           32 36 38; /* #202426  panels, footer, toolbars, notice bar, chips, disabled field */
+  --g2-color-line:                     65 72 75; /* #41484b  rules, card borders */
+  --g2-color-control-border:           243 242 241; /* #f3f2f1  form controls */
+  --g2-color-control-bg:               11 12 12; /* #0b0c0c  field background */
+
+  /* Text */
+  --g2-color-text:                     243 242 241; /* #f3f2f1 */
+  --g2-color-text-muted:               177 180 182; /* #b1b4b6 */
+  --g2-color-text-faint:               142 151 155; /* #8e979b */
+
+  /* Links and selection */
+  --g2-color-link:                     134 185 255; /* #86b9ff */
+  --g2-color-link-visited:             169 138 240; /* #a98af0 */
+  --g2-color-selected-bg:              23 49 79; /* #17314f  selected rows */
+  --g2-color-on-link:                  11 12 12; /* #0b0c0c  text on a link-colour fill */
+
+  /* Brand */
+  --g2-color-brand:                    47 107 209; /* #2f6bd1  header band, footer rule, tile rules */
+
+  /* Actions: saturated fills carry dark text (on-solid) */
+  --g2-color-action:                   47 165 100; /* #2fa564 */
+  --g2-color-action-hover:             76 195 130; /* #4cc382  lighter on hover; dark text gains contrast */
+  --g2-color-action-shadow:            20 92 54; /* #145c36 */
+  --g2-color-action-secondary-shadow:  94 102 106; /* #5e666a */
+  --g2-color-action-secondary-hover:   48 54 58; /* #30363a */
+  --g2-color-danger-solid:             240 106 91; /* #f06a5b  errors, destructive button */
+  --g2-color-danger-shadow:            138 42 31; /* #8a2a1f */
+  --g2-color-on-solid:                 11 12 12; /* #0b0c0c  dark text on a saturated fill */
+
+  /* Status tones: bg / line / ink */
+  --g2-color-neutral-bg:               43 48 51; /* #2b3033 */
+  --g2-color-neutral-line:             141 151 156; /* #8d979c */
+  --g2-color-neutral-ink:              228 231 233; /* #e4e7e9 */
+  --g2-color-info-bg:                  21 48 76; /* #15304c */
+  --g2-color-info-line:                90 164 234; /* #5aa4ea */
+  --g2-color-info-ink:                 208 229 251; /* #d0e5fb */
+  --g2-color-progress-bg:              42 33 80; /* #2a2150 */
+  --g2-color-progress-line:            166 142 233; /* #a68ee9 */
+  --g2-color-progress-ink:             229 221 251; /* #e5ddfb */
+  --g2-color-warning-bg:               58 49 0; /* #3a3100 */
+  --g2-color-warning-line:             217 164 26; /* #d9a41a */
+  --g2-color-warning-ink:              255 233 140; /* #ffe98c */
+  --g2-color-success-bg:               15 58 37; /* #0f3a25 */
+  --g2-color-success-line:             47 165 100; /* #2fa564 */
+  --g2-color-success-ink:              200 237 216; /* #c8edd8 */
+  --g2-color-danger-bg:                74 27 21; /* #4a1b15 */
+  --g2-color-danger-line:              240 106 91; /* #f06a5b */
+  --g2-color-danger-ink:               255 217 211; /* #ffd9d3 */
+  --g2-color-success-solid:            47 165 100; /* #2fa564 */
+
+  /* Chart ramp: the same order of emphasis as the light scheme */
+  --g2-color-chart-1:                  79 148 216; /* #4f94d8 */
+  --g2-color-chart-2:                  156 195 246; /* #9cc3f6 */
+  --g2-color-chart-3:                  151 161 166; /* #97a1a6 */
+  --g2-color-chart-4:                  65 72 75; /* #41484b */
+  --g2-color-chart-selected:           243 242 241; /* #f3f2f1 */
+}
+@media (prefers-color-scheme: dark) {
+:root[data-g2-scheme=auto] {
+  color-scheme: dark;
+
+  /* Surfaces */
+  --g2-color-page:                     11 12 12; /* #0b0c0c  near-black page; the header colour, so the brand band separates them */
+  --g2-color-surface:                  22 25 26; /* #16191a  raised surface: card, notice body */
+  --g2-color-surface-sunken:           32 36 38; /* #202426  panels, footer, toolbars, notice bar, chips, disabled field */
+  --g2-color-line:                     65 72 75; /* #41484b  rules, card borders */
+  --g2-color-control-border:           243 242 241; /* #f3f2f1  form controls */
+  --g2-color-control-bg:               11 12 12; /* #0b0c0c  field background */
+
+  /* Text */
+  --g2-color-text:                     243 242 241; /* #f3f2f1 */
+  --g2-color-text-muted:               177 180 182; /* #b1b4b6 */
+  --g2-color-text-faint:               142 151 155; /* #8e979b */
+
+  /* Links and selection */
+  --g2-color-link:                     134 185 255; /* #86b9ff */
+  --g2-color-link-visited:             169 138 240; /* #a98af0 */
+  --g2-color-selected-bg:              23 49 79; /* #17314f  selected rows */
+  --g2-color-on-link:                  11 12 12; /* #0b0c0c  text on a link-colour fill */
+
+  /* Brand */
+  --g2-color-brand:                    47 107 209; /* #2f6bd1  header band, footer rule, tile rules */
+
+  /* Actions: saturated fills carry dark text (on-solid) */
+  --g2-color-action:                   47 165 100; /* #2fa564 */
+  --g2-color-action-hover:             76 195 130; /* #4cc382  lighter on hover; dark text gains contrast */
+  --g2-color-action-shadow:            20 92 54; /* #145c36 */
+  --g2-color-action-secondary-shadow:  94 102 106; /* #5e666a */
+  --g2-color-action-secondary-hover:   48 54 58; /* #30363a */
+  --g2-color-danger-solid:             240 106 91; /* #f06a5b  errors, destructive button */
+  --g2-color-danger-shadow:            138 42 31; /* #8a2a1f */
+  --g2-color-on-solid:                 11 12 12; /* #0b0c0c  dark text on a saturated fill */
+
+  /* Status tones: bg / line / ink */
+  --g2-color-neutral-bg:               43 48 51; /* #2b3033 */
+  --g2-color-neutral-line:             141 151 156; /* #8d979c */
+  --g2-color-neutral-ink:              228 231 233; /* #e4e7e9 */
+  --g2-color-info-bg:                  21 48 76; /* #15304c */
+  --g2-color-info-line:                90 164 234; /* #5aa4ea */
+  --g2-color-info-ink:                 208 229 251; /* #d0e5fb */
+  --g2-color-progress-bg:              42 33 80; /* #2a2150 */
+  --g2-color-progress-line:            166 142 233; /* #a68ee9 */
+  --g2-color-progress-ink:             229 221 251; /* #e5ddfb */
+  --g2-color-warning-bg:               58 49 0; /* #3a3100 */
+  --g2-color-warning-line:             217 164 26; /* #d9a41a */
+  --g2-color-warning-ink:              255 233 140; /* #ffe98c */
+  --g2-color-success-bg:               15 58 37; /* #0f3a25 */
+  --g2-color-success-line:             47 165 100; /* #2fa564 */
+  --g2-color-success-ink:              200 237 216; /* #c8edd8 */
+  --g2-color-danger-bg:                74 27 21; /* #4a1b15 */
+  --g2-color-danger-line:              240 106 91; /* #f06a5b */
+  --g2-color-danger-ink:               255 217 211; /* #ffd9d3 */
+  --g2-color-success-solid:            47 165 100; /* #2fa564 */
+
+  /* Chart ramp: the same order of emphasis as the light scheme */
+  --g2-color-chart-1:                  79 148 216; /* #4f94d8 */
+  --g2-color-chart-2:                  156 195 246; /* #9cc3f6 */
+  --g2-color-chart-3:                  151 161 166; /* #97a1a6 */
+  --g2-color-chart-4:                  65 72 75; /* #41484b */
+  --g2-color-chart-selected:           243 242 241; /* #f3f2f1 */
+}
 }
 }
 
@@ -174,7 +313,7 @@ a:where(:hover){text-decoration-thickness:3px}
 .g2-ro-corner{position:absolute;top:0;right:24px;width:54px;height:6px;background:linear-gradient(90deg,rgb(var(--g2-color-ro-blue)) 33.33%,rgb(var(--g2-color-ro-yellow)) 33.33% 66.66%,rgb(var(--g2-color-ro-red)) 66.66%)}
 .g2-ro-dots{display:inline-flex;gap:4px;margin-left:2px}
 .g2-ro-dots::before,.g2-ro-dots::after,.g2-ro-dots>i{content:"";display:block;width:7px;height:7px;border-radius:50%}
-.g2-ro-dots::before{background:rgb(var(--g2-color-ro-blue));box-shadow:0 0 0 1px #3a5aa0}
+.g2-ro-dots::before{background:rgb(var(--g2-color-ro-blue));box-shadow:0 0 0 1px rgb(var(--g2-color-ro-blue-ring))}
 .g2-ro-dots>i{background:rgb(var(--g2-color-ro-yellow))}
 .g2-ro-dots::after{background:rgb(var(--g2-color-ro-red))}
 /* Notice bar: above the header, dismissible (store the choice, e.g. localStorage). */
@@ -186,7 +325,7 @@ a:where(:hover){text-decoration-thickness:3px}
 .g2-wordmark em{font-style:normal;font-weight:500;color:rgb(var(--g2-color-on-header-muted))}
 .g2-logo{display:block;height:28px;width:auto}
 .g2-nav{display:flex;flex-wrap:wrap;column-gap:var(--g2-space-1)}
-.g2-nav a{box-sizing:border-box;display:inline-flex;align-items:center;min-height:44px;padding:var(--g2-space-2) var(--g2-space-3);color:#fff;text-decoration:none;font-weight:600;font-size:var(--g2-font-size-meta)}
+.g2-nav a{box-sizing:border-box;display:inline-flex;align-items:center;min-height:44px;padding:var(--g2-space-2) var(--g2-space-3);color:rgb(var(--g2-color-on-header));text-decoration:none;font-weight:600;font-size:var(--g2-font-size-meta)}
 .g2-nav a:hover{text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:6px}
 .g2-nav a[aria-current=page]{box-shadow:inset 0 -4px rgb(var(--g2-color-header-accent))}
 /* Forced colours remove box-shadow: mark the current page with a system colour instead. */
@@ -202,10 +341,10 @@ a:where(:hover){text-decoration-thickness:3px}
 .g2-dash.g2-red{background:rgb(var(--g2-color-ro-red))}
 
 /* ---- Buttons ---- */
-.g2-btn{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:8px 16px;border:var(--g2-border-width-control) solid transparent;border-radius:var(--g2-radius);background:rgb(var(--g2-color-action));color:#fff;font:600 var(--g2-font-size-body)/1.2 var(--g2-font-sans);box-shadow:0 2px rgb(var(--g2-color-action-shadow));cursor:pointer;text-decoration:none}
+.g2-btn{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:8px 16px;border:var(--g2-border-width-control) solid transparent;border-radius:var(--g2-radius);background:rgb(var(--g2-color-action));color:rgb(var(--g2-color-on-solid));font:600 var(--g2-font-size-body)/1.2 var(--g2-font-sans);box-shadow:0 2px rgb(var(--g2-color-action-shadow));cursor:pointer;text-decoration:none}
 .g2-btn:hover{background:rgb(var(--g2-color-action-hover))}
 .g2-btn.g2-secondary{background:rgb(var(--g2-color-surface-sunken));color:rgb(var(--g2-color-text));box-shadow:0 2px rgb(var(--g2-color-action-secondary-shadow))}
-.g2-btn.g2-secondary:where(:hover){background:#dbdad9}
+.g2-btn.g2-secondary:where(:hover){background:rgb(var(--g2-color-action-secondary-hover))}
 .g2-btn.g2-danger{background:rgb(var(--g2-color-danger-solid));box-shadow:0 2px rgb(var(--g2-color-danger-shadow))}
 
 /* ---- Tags: square, the text names the state ---- */
@@ -217,7 +356,7 @@ a:where(:hover){text-decoration-thickness:3px}
 .g2-tag[data-tone=danger]{background:rgb(var(--g2-color-danger-bg));color:rgb(var(--g2-color-danger-ink))}
 
 /* ---- Fields ---- */
-.g2-input{min-height:40px;padding:5px 8px;border:var(--g2-border-width-control) solid rgb(var(--g2-color-control-border));border-radius:var(--g2-radius);font:var(--g2-font-size-body) var(--g2-font-sans);background:#fff;color:rgb(var(--g2-color-text))}
+.g2-input{min-height:40px;padding:5px 8px;border:var(--g2-border-width-control) solid rgb(var(--g2-color-control-border));border-radius:var(--g2-radius);font:var(--g2-font-size-body) var(--g2-font-sans);background:rgb(var(--g2-color-control-bg));color:rgb(var(--g2-color-text))}
 /* Field: label, hint, error message and input stacked. The form sets the space between fields.
    The 12rem scroll margin keeps the label, hint and error in view when a recovery link (href="#id") jumps to the input. */
 .g2-field{display:grid;gap:var(--g2-space-1);justify-items:start;min-width:0;overflow-wrap:anywhere}
@@ -231,8 +370,8 @@ a:where(:hover){text-decoration-thickness:3px}
 /* ---- Panels ---- */
 .g2-inset{padding:12px 16px;border-left:5px solid rgb(var(--g2-color-line))}
 .g2-notice{border:5px solid rgb(var(--g2-color-info-line));border-radius:var(--g2-radius);background:rgb(var(--g2-color-info-line))}
-.g2-notice>*:first-child{margin:0;padding:2px 15px 7px;color:#fff;font-weight:700}
-.g2-notice>*:last-child{margin:0;padding:12px 15px 14px;background:#fff}
+.g2-notice>*:first-child{margin:0;padding:2px 15px 7px;color:rgb(var(--g2-color-on-solid));font-weight:700}
+.g2-notice>*:last-child{margin:0;padding:12px 15px 14px;background:rgb(var(--g2-color-surface))}
 .g2-tile{padding:20px;border:1px solid rgb(var(--g2-color-line));border-top:5px solid rgb(var(--g2-color-brand));border-radius:var(--g2-radius)}
 .g2-mono{font-family:var(--g2-font-mono);font-variant-numeric:tabular-nums}
 }
@@ -249,7 +388,7 @@ a:where(:hover){text-decoration-thickness:3px}
 @media(forced-colors:active){.g2-chip:where([aria-current]:not([aria-current=false],[aria-current=""]),[aria-pressed=true]){background:Highlight;color:HighlightText}
 .g2-chip:where([aria-current]:not([aria-current=false],[aria-current=""]),[aria-pressed=true]) .g2-chip-count{color:HighlightText}}
 :focus-visible{outline:3px solid transparent;background:rgb(var(--g2-color-focus));color:rgb(var(--g2-color-on-focus));box-shadow:0 -2px rgb(var(--g2-color-focus)),0 4px rgb(var(--g2-color-on-focus));text-decoration:none}
-:is(input,textarea,select):focus-visible{background:#fff;outline:3px solid rgb(var(--g2-color-focus));outline-offset:0;box-shadow:inset 0 0 0 2px rgb(var(--g2-color-text))}
+:is(input,textarea,select):focus-visible{background:rgb(var(--g2-color-control-bg));color:rgb(var(--g2-color-text));outline:3px solid rgb(var(--g2-color-focus));outline-offset:0;box-shadow:inset 0 0 0 2px rgb(var(--g2-color-text))}
 .g2-btn:focus-visible{background:rgb(var(--g2-color-focus));color:rgb(var(--g2-color-on-focus));box-shadow:0 2px rgb(var(--g2-color-text))}
 .g2-wordmark:focus-visible em{color:inherit}
 }

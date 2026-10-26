@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ro">
+<html lang="ro" data-g2-scheme="auto">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -59,43 +59,46 @@
 <a href="#culoare">02 · Culoare</a>
 </li>
 <li>
-<a href="#tipografie">03 · Tipografie</a>
+<a href="#scheme">03 · Schema de culori</a>
 </li>
 <li>
-<a href="#linkuri">04 · Linkuri</a>
+<a href="#tipografie">04 · Tipografie</a>
 </li>
 <li>
-<a href="#butoane">05 · Butoane</a>
+<a href="#linkuri">05 · Linkuri</a>
 </li>
 <li>
-<a href="#filtre">06 · Scurtături</a>
+<a href="#butoane">06 · Butoane</a>
 </li>
 <li>
-<a href="#stari">07 · Stări</a>
+<a href="#filtre">07 · Scurtături</a>
 </li>
 <li>
-<a href="#campuri">08 · Câmpuri</a>
+<a href="#stari">08 · Stări</a>
 </li>
 <li>
-<a href="#panouri">09 · Panouri</a>
+<a href="#campuri">09 · Câmpuri</a>
 </li>
 <li>
-<a href="#antet">10 · Antet și subsol</a>
+<a href="#panouri">10 · Panouri</a>
 </li>
 <li>
-<a href="#pagina">11 · Pagină și exemple</a>
+<a href="#antet">11 · Antet și subsol</a>
 </li>
 <li>
-<a href="#identitate">12 · Identitate</a>
+<a href="#pagina">12 · Pagină și exemple</a>
 </li>
 <li>
-<a href="#utilizare">13 · Utilizare</a>
+<a href="#identitate">13 · Identitate</a>
 </li>
 <li>
-<a href="#verificare">14 · Verificare</a>
+<a href="#utilizare">14 · Utilizare</a>
 </li>
 <li>
-<a href="#propuneri">15 · În lucru</a>
+<a href="#verificare">15 · Verificare</a>
+</li>
+<li>
+<a href="#propuneri">16 · În lucru</a>
 </li>
 </ol>
 <small>Exemple HTML reale.<br>Fără pas de generare.</small>
@@ -127,7 +130,7 @@
 <section class="guide-section" id="culoare" aria-labelledby="title-culoare">
 <span class="guide-number">02</span>
 <h2 id="title-culoare">Culoarea are un rol</h2>
-<p>Tokenii sunt canale RGB. Folosiți <code>rgb(var(--g2-color-text))</code> sau adăugați transparență cu <code>rgb(var(--g2-color-text) / .5)</code>.</p>
+<p>Tokenii sunt canale RGB. Folosiți <code>rgb(var(--g2-color-text))</code> sau adăugați transparență cu <code>rgb(var(--g2-color-text) / .5)</code>. Valorile hex de mai jos sunt ale schemei deschise; culorile afișate urmează schema activă.</p>
 <div class="guide-swatches">
 <div class="guide-swatch">
 <div class="guide-swatch-color" style="--guide-swatch:var(--g2-color-text)" aria-hidden="true">
@@ -252,10 +255,237 @@
 </tbody>
 </table>
 </div>
-<p class="guide-help">Valorile descriu perechile indicate. Măsurați și stările interactive; un token singur nu garantează contrastul.</p>
+<p class="guide-help">Valorile descriu perechile indicate, în schema deschisă. Schema întunecată are secțiunea ei, cu perechile ei măsurate. Măsurați și stările interactive; un token singur nu garantează contrastul.</p>
+</section>
+<section class="guide-section" id="scheme" aria-labelledby="title-scheme">
+<span class="guide-number">03</span>
+<h2 id="title-scheme">Schema întunecată, la cerere</h2>
+<p>Implicit, pagina are schema deschisă. Schema întunecată este opțională. O pagină o alege cu un atribut pe elementul <code>&lt;html&gt;</code>. Nucleul nu are comutator și nu are script.</p>
+<div class="guide-table-wrap">
+<table class="guide-table" id="scheme-attribute">
+<caption>Atributul <code>data-g2-scheme</code></caption>
+<thead>
+<tr>
+<th scope="col">Markup</th>
+<th scope="col">Rezultat</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>niciun atribut, sau <code>data-g2-scheme="light"</code></td><td>Schema deschisă</td></tr>
+<tr><td><code>data-g2-scheme="auto"</code></td><td>Urmează <code>prefers-color-scheme</code>: întunecată numai când cititorul o cere</td></tr>
+<tr><td><code>data-g2-scheme="dark"</code></td><td>Schema întunecată</td></tr>
+</tbody>
+</table>
+</div>
+<details class="guide-code">
+<summary>Markup HTML</summary>
+<pre>
+<code id="code-scheme">&lt;html lang=&quot;ro&quot; data-g2-scheme=&quot;auto&quot;&gt;</code>
+</pre>
+<button class="guide-copy" type="button" data-copy="code-scheme" hidden>Copiază codul</button>
+</details>
+<p>Orice altă valoare, sau lipsa atributului, dă schema deschisă. Un proiect care oferă cititorului o alegere setează atributul singur și păstrează alegerea. Ghidul acesta folosește <code>auto</code>: schimbați aspectul sistemului de operare, sau emulați <code>prefers-color-scheme</code> în instrumentele browserului, ca să vedeți tot ghidul în ambele scheme.</p>
+<div class="guide-scheme-pair">
+<figure>
+<figcaption>data-g2-scheme="light"</figcaption>
+<iframe class="guide-preview" id="preview-light" title="Previzualizare a componentelor, schema deschisă" srcdoc="&lt;!doctype html&gt;
+&lt;html lang=&quot;ro&quot; data-g2-scheme=&quot;light&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;title&gt;Previzualizare&lt;/title&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;../gov2.css&quot;&gt;
+&lt;style&gt;@layer app{.p{display:flex;flex-wrap:wrap;gap:8px;margin:0}.body{padding:var(--g2-space-4)}.body&gt;*{margin-block:0 var(--g2-space-4)}}&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;header class=&quot;g2-header&quot;&gt;&lt;span class=&quot;g2-ro-corner&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;&lt;div class=&quot;g2-header-in g2-container&quot;&gt;&lt;a class=&quot;g2-wordmark&quot; href=&quot;#&quot;&gt;proiect&lt;em&gt;.gov2.ro&lt;/em&gt;&lt;/a&gt;&lt;nav class=&quot;g2-nav&quot; aria-label=&quot;Exemplu&quot;&gt;&lt;a href=&quot;#&quot; aria-current=&quot;page&quot;&gt;Acasă&lt;/a&gt;&lt;a href=&quot;#&quot;&gt;Despre&lt;/a&gt;&lt;/nav&gt;&lt;/div&gt;&lt;/header&gt;
+&lt;div class=&quot;body g2-container&quot;&gt;
+&lt;h2 class=&quot;g2-heading-section&quot;&gt;Titlu de secțiune&lt;/h2&gt;
+&lt;p&gt;Text de corp, un &lt;a href=&quot;#&quot;&gt;link în text&lt;/a&gt; și un &lt;a class=&quot;g2-link-quiet&quot; href=&quot;#&quot;&gt;link discret&lt;/a&gt;. &lt;span class=&quot;g2-text-meta&quot;&gt;Metadate: 26.10.2026&lt;/span&gt;&lt;/p&gt;
+&lt;p class=&quot;p&quot;&gt;&lt;button class=&quot;g2-btn&quot; type=&quot;button&quot;&gt;Principal&lt;/button&gt;&lt;button class=&quot;g2-btn g2-secondary&quot; type=&quot;button&quot;&gt;Secundar&lt;/button&gt;&lt;button class=&quot;g2-btn g2-danger&quot; type=&quot;button&quot;&gt;Distructiv&lt;/button&gt;&lt;button class=&quot;g2-btn&quot; type=&quot;button&quot; disabled&gt;Indisponibil&lt;/button&gt;&lt;/p&gt;
+&lt;p class=&quot;p&quot;&gt;&lt;a class=&quot;g2-chip&quot; href=&quot;#&quot;&gt;Sănătate &lt;span class=&quot;g2-chip-count&quot;&gt;76&lt;/span&gt;&lt;/a&gt;&lt;a class=&quot;g2-chip&quot; href=&quot;#&quot; aria-current=&quot;true&quot;&gt;Selectat&lt;/a&gt;&lt;/p&gt;
+&lt;p class=&quot;p&quot;&gt;&lt;strong class=&quot;g2-tag&quot;&gt;Arhivat&lt;/strong&gt;&lt;strong class=&quot;g2-tag&quot; data-tone=&quot;info&quot;&gt;Nou&lt;/strong&gt;&lt;strong class=&quot;g2-tag&quot; data-tone=&quot;progress&quot;&gt;În lucru&lt;/strong&gt;&lt;strong class=&quot;g2-tag&quot; data-tone=&quot;warning&quot;&gt;Atenție&lt;/strong&gt;&lt;strong class=&quot;g2-tag&quot; data-tone=&quot;success&quot;&gt;Activ&lt;/strong&gt;&lt;strong class=&quot;g2-tag&quot; data-tone=&quot;danger&quot;&gt;Închis&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&quot;g2-field&quot;&gt;&lt;label class=&quot;g2-label&quot; for=&quot;a&quot;&gt;Instituția&lt;/label&gt;&lt;p class=&quot;g2-hint&quot; id=&quot;a-hint&quot;&gt;Numele complet.&lt;/p&gt;&lt;input class=&quot;g2-input&quot; id=&quot;a&quot; type=&quot;text&quot; aria-describedby=&quot;a-hint&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;g2-field g2-field-error&quot;&gt;&lt;label class=&quot;g2-label&quot; for=&quot;b&quot;&gt;Adresa de e-mail&lt;/label&gt;&lt;p class=&quot;g2-error-msg&quot; id=&quot;b-error&quot;&gt;Eroare: scrieți o adresă completă.&lt;/p&gt;&lt;input class=&quot;g2-input&quot; id=&quot;b&quot; type=&quot;email&quot; value=&quot;nume@&quot; aria-describedby=&quot;b-error&quot; aria-invalid=&quot;true&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;g2-field&quot;&gt;&lt;label class=&quot;g2-label&quot; for=&quot;c&quot;&gt;Cod înregistrare&lt;/label&gt;&lt;input class=&quot;g2-input&quot; id=&quot;c&quot; type=&quot;text&quot; value=&quot;DEMO-BC-0156&quot; disabled&gt;&lt;/div&gt;
+&lt;div class=&quot;g2-notice&quot; role=&quot;region&quot; aria-labelledby=&quot;n&quot;&gt;&lt;h3 id=&quot;n&quot;&gt;Important&lt;/h3&gt;&lt;div&gt;&lt;p&gt;Datele au fost actualizate acum trei zile.&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;g2-inset&quot;&gt;&lt;p&gt;Termenul se calculează în zile lucrătoare.&lt;/p&gt;&lt;/div&gt;
+&lt;div class=&quot;g2-tile&quot;&gt;&lt;h3 class=&quot;g2-mono&quot;&gt;1.204&lt;/h3&gt;&lt;p&gt;instituții în setul demonstrativ&lt;/p&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;footer class=&quot;g2-footer&quot;&gt;&lt;div class=&quot;g2-footer-in g2-container&quot;&gt;&lt;p&gt;&lt;strong&gt;proiect.gov2.ro&lt;/strong&gt;&lt;/p&gt;&lt;/div&gt;&lt;/footer&gt;
+&lt;/body&gt;
+&lt;/html&gt;"></iframe>
+</figure>
+<figure>
+<figcaption>data-g2-scheme="dark"</figcaption>
+<iframe class="guide-preview" id="preview-dark" title="Previzualizare a componentelor, schema întunecată" srcdoc="&lt;!doctype html&gt;
+&lt;html lang=&quot;ro&quot; data-g2-scheme=&quot;dark&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;title&gt;Previzualizare&lt;/title&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;../gov2.css&quot;&gt;
+&lt;style&gt;@layer app{.p{display:flex;flex-wrap:wrap;gap:8px;margin:0}.body{padding:var(--g2-space-4)}.body&gt;*{margin-block:0 var(--g2-space-4)}}&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;header class=&quot;g2-header&quot;&gt;&lt;span class=&quot;g2-ro-corner&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;&lt;div class=&quot;g2-header-in g2-container&quot;&gt;&lt;a class=&quot;g2-wordmark&quot; href=&quot;#&quot;&gt;proiect&lt;em&gt;.gov2.ro&lt;/em&gt;&lt;/a&gt;&lt;nav class=&quot;g2-nav&quot; aria-label=&quot;Exemplu&quot;&gt;&lt;a href=&quot;#&quot; aria-current=&quot;page&quot;&gt;Acasă&lt;/a&gt;&lt;a href=&quot;#&quot;&gt;Despre&lt;/a&gt;&lt;/nav&gt;&lt;/div&gt;&lt;/header&gt;
+&lt;div class=&quot;body g2-container&quot;&gt;
+&lt;h2 class=&quot;g2-heading-section&quot;&gt;Titlu de secțiune&lt;/h2&gt;
+&lt;p&gt;Text de corp, un &lt;a href=&quot;#&quot;&gt;link în text&lt;/a&gt; și un &lt;a class=&quot;g2-link-quiet&quot; href=&quot;#&quot;&gt;link discret&lt;/a&gt;. &lt;span class=&quot;g2-text-meta&quot;&gt;Metadate: 26.10.2026&lt;/span&gt;&lt;/p&gt;
+&lt;p class=&quot;p&quot;&gt;&lt;button class=&quot;g2-btn&quot; type=&quot;button&quot;&gt;Principal&lt;/button&gt;&lt;button class=&quot;g2-btn g2-secondary&quot; type=&quot;button&quot;&gt;Secundar&lt;/button&gt;&lt;button class=&quot;g2-btn g2-danger&quot; type=&quot;button&quot;&gt;Distructiv&lt;/button&gt;&lt;button class=&quot;g2-btn&quot; type=&quot;button&quot; disabled&gt;Indisponibil&lt;/button&gt;&lt;/p&gt;
+&lt;p class=&quot;p&quot;&gt;&lt;a class=&quot;g2-chip&quot; href=&quot;#&quot;&gt;Sănătate &lt;span class=&quot;g2-chip-count&quot;&gt;76&lt;/span&gt;&lt;/a&gt;&lt;a class=&quot;g2-chip&quot; href=&quot;#&quot; aria-current=&quot;true&quot;&gt;Selectat&lt;/a&gt;&lt;/p&gt;
+&lt;p class=&quot;p&quot;&gt;&lt;strong class=&quot;g2-tag&quot;&gt;Arhivat&lt;/strong&gt;&lt;strong class=&quot;g2-tag&quot; data-tone=&quot;info&quot;&gt;Nou&lt;/strong&gt;&lt;strong class=&quot;g2-tag&quot; data-tone=&quot;progress&quot;&gt;În lucru&lt;/strong&gt;&lt;strong class=&quot;g2-tag&quot; data-tone=&quot;warning&quot;&gt;Atenție&lt;/strong&gt;&lt;strong class=&quot;g2-tag&quot; data-tone=&quot;success&quot;&gt;Activ&lt;/strong&gt;&lt;strong class=&quot;g2-tag&quot; data-tone=&quot;danger&quot;&gt;Închis&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&quot;g2-field&quot;&gt;&lt;label class=&quot;g2-label&quot; for=&quot;a&quot;&gt;Instituția&lt;/label&gt;&lt;p class=&quot;g2-hint&quot; id=&quot;a-hint&quot;&gt;Numele complet.&lt;/p&gt;&lt;input class=&quot;g2-input&quot; id=&quot;a&quot; type=&quot;text&quot; aria-describedby=&quot;a-hint&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;g2-field g2-field-error&quot;&gt;&lt;label class=&quot;g2-label&quot; for=&quot;b&quot;&gt;Adresa de e-mail&lt;/label&gt;&lt;p class=&quot;g2-error-msg&quot; id=&quot;b-error&quot;&gt;Eroare: scrieți o adresă completă.&lt;/p&gt;&lt;input class=&quot;g2-input&quot; id=&quot;b&quot; type=&quot;email&quot; value=&quot;nume@&quot; aria-describedby=&quot;b-error&quot; aria-invalid=&quot;true&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;g2-field&quot;&gt;&lt;label class=&quot;g2-label&quot; for=&quot;c&quot;&gt;Cod înregistrare&lt;/label&gt;&lt;input class=&quot;g2-input&quot; id=&quot;c&quot; type=&quot;text&quot; value=&quot;DEMO-BC-0156&quot; disabled&gt;&lt;/div&gt;
+&lt;div class=&quot;g2-notice&quot; role=&quot;region&quot; aria-labelledby=&quot;n&quot;&gt;&lt;h3 id=&quot;n&quot;&gt;Important&lt;/h3&gt;&lt;div&gt;&lt;p&gt;Datele au fost actualizate acum trei zile.&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;g2-inset&quot;&gt;&lt;p&gt;Termenul se calculează în zile lucrătoare.&lt;/p&gt;&lt;/div&gt;
+&lt;div class=&quot;g2-tile&quot;&gt;&lt;h3 class=&quot;g2-mono&quot;&gt;1.204&lt;/h3&gt;&lt;p&gt;instituții în setul demonstrativ&lt;/p&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;footer class=&quot;g2-footer&quot;&gt;&lt;div class=&quot;g2-footer-in g2-container&quot;&gt;&lt;p&gt;&lt;strong&gt;proiect.gov2.ro&lt;/strong&gt;&lt;/p&gt;&lt;/div&gt;&lt;/footer&gt;
+&lt;/body&gt;
+&lt;/html&gt;"></iframe>
+</figure>
+</div>
+<p class="guide-help">Cele două previzualizări încarcă același <code>gov2.css</code>, cu același markup. Doar atributul diferă. Ele nu încarcă <code>fonts.css</code>: culorile nu depind de font.</p>
+<h3>Ce se schimbă</h3>
+<ul>
+<li>Valorile întunecate sunt în <code>gov2.css</code>, în stratul <code>gov2.tokens</code>, după cele deschise. Componentele nu au reguli pe scheme: ele citesc aceiași tokeni. Un proiect nu își scrie valori întunecate proprii pentru <code>--g2-color-*</code>.</li>
+<li><code>color-scheme</code> urmează schema activă. Un <code>&lt;select&gt;</code>, un <code>&lt;textarea&gt;</code>, un câmp de dată și bara de derulare ale browserului se desenează în schema activă.</li>
+<li>Pe o suprafață plină (butoanele principal și distructiv, banda titlului unui panou de notificare), schema întunecată folosește o culoare deschisă și text închis. Culoarea textului este <code>--g2-color-on-solid</code>.</li>
+<li>Antetul rămâne închis în ambele scheme. Pagina întunecată are culoarea antetului, deci banda de brand le separă.</li>
+<li>Focusul rămâne galben, cu text închis. Un câmp în focus are conturul galben și un inel de culoarea textului.</li>
+<li>Tonurile de stare păstrează sensul: fundal închis, text deschis și o linie deschisă, cu aceleași șase nume.</li>
+<li>Un link vizitat rămâne deosebit de un link nevizitat prin nuanță (mov, nu albastru), în ambele scheme.</li>
+</ul>
+<div class="guide-table-wrap">
+<table class="guide-table" id="scheme-new-tokens">
+<caption>Patru tokeni noi, cu valoarea deschisă a literalului pe care îl înlocuiesc</caption>
+<thead>
+<tr>
+<th scope="col">Token</th>
+<th scope="col">Valoare deschisă</th>
+<th scope="col">Rol</th>
+</tr>
+</thead>
+<tbody>
+<tr data-token="--g2-color-on-solid"><td><code>--g2-color-on-solid</code></td><td>#ffffff</td><td>Text pe o suprafață plină: butoanele principal și distructiv, banda titlului unui panou de notificare</td></tr>
+<tr data-token="--g2-color-action-secondary-hover"><td><code>--g2-color-action-secondary-hover</code></td><td>#dbdad9</td><td>Fundalul butonului secundar la hover</td></tr>
+<tr data-token="--g2-color-control-bg"><td><code>--g2-color-control-bg</code></td><td>#ffffff</td><td>Fundalul unui câmp, și când are focus</td></tr>
+<tr data-token="--g2-color-ro-blue-ring"><td><code>--g2-color-ro-blue-ring</code></td><td>#3a5aa0</td><td>Inelul punctului albastru din <code>.g2-ro-dots</code></td></tr>
+</tbody>
+</table>
+</div>
+<h3>Contrastul în schema întunecată</h3>
+<p>Fiecare valoare este calculată din tokenii din <code>gov2.css</code>. Un test recalculează tabelele de mai jos.</p>
+<div class="guide-table-wrap">
+<table class="guide-table" id="scheme-text-pairs">
+<caption>Perechi de text și fundal (cel puțin 4,5:1)</caption>
+<thead>
+<tr>
+<th scope="col">Pereche</th>
+<th scope="col">Contrast</th>
+<th scope="col">Utilizare</th>
+</tr>
+</thead>
+<tbody>
+<tr data-fg="--g2-color-text" data-bg="--g2-color-page" data-min="4.5"><td><code>text</code> / <code>page</code></td><td>17,52:1</td><td>Text obișnuit</td></tr>
+<tr data-fg="--g2-color-text" data-bg="--g2-color-surface" data-min="4.5"><td><code>text</code> / <code>surface</code></td><td>15,81:1</td><td>Text în panou de notificare și în zonele de exemplu</td></tr>
+<tr data-fg="--g2-color-text" data-bg="--g2-color-surface-sunken" data-min="4.5"><td><code>text</code> / <code>surface-sunken</code></td><td>14,00:1</td><td>Text în subsol, în chip și în bara de anunț</td></tr>
+<tr data-fg="--g2-color-text-muted" data-bg="--g2-color-page" data-min="4.5"><td><code>text-muted</code> / <code>page</code></td><td>9,40:1</td><td>Metadate, indicii</td></tr>
+<tr data-fg="--g2-color-text-muted" data-bg="--g2-color-surface-sunken" data-min="4.5"><td><code>text-muted</code> / <code>surface-sunken</code></td><td>7,51:1</td><td>Metadate pe suprafața secundară</td></tr>
+<tr data-fg="--g2-color-text-faint" data-bg="--g2-color-page" data-min="4.5"><td><code>text-faint</code> / <code>page</code></td><td>6,58:1</td><td>Text discret, numai pe pagină</td></tr>
+<tr data-fg="--g2-color-link" data-bg="--g2-color-page" data-min="4.5"><td><code>link</code> / <code>page</code></td><td>9,70:1</td><td>Linkuri în text</td></tr>
+<tr data-fg="--g2-color-link" data-bg="--g2-color-surface-sunken" data-min="4.5"><td><code>link</code> / <code>surface-sunken</code></td><td>7,75:1</td><td>Linkuri pe suprafața secundară</td></tr>
+<tr data-fg="--g2-color-link" data-bg="--g2-color-selected-bg" data-min="4.5"><td><code>link</code> / <code>selected-bg</code></td><td>6,54:1</td><td>Linkuri într-un rând selectat</td></tr>
+<tr data-fg="--g2-color-link-visited" data-bg="--g2-color-page" data-min="4.5"><td><code>link-visited</code> / <code>page</code></td><td>7,07:1</td><td>Linkuri vizitate</td></tr>
+<tr data-fg="--g2-color-link-visited" data-bg="--g2-color-selected-bg" data-min="4.5"><td><code>link-visited</code> / <code>selected-bg</code></td><td>4,77:1</td><td>Linkuri vizitate într-un rând selectat</td></tr>
+<tr data-fg="--g2-color-on-solid" data-bg="--g2-color-action" data-min="4.5"><td><code>on-solid</code> / <code>action</code></td><td>6,24:1</td><td>Butonul principal</td></tr>
+<tr data-fg="--g2-color-on-solid" data-bg="--g2-color-action-hover" data-min="4.5"><td><code>on-solid</code> / <code>action-hover</code></td><td>8,80:1</td><td>Butonul principal la hover</td></tr>
+<tr data-fg="--g2-color-on-solid" data-bg="--g2-color-danger-solid" data-min="4.5"><td><code>on-solid</code> / <code>danger-solid</code></td><td>6,45:1</td><td>Butonul distructiv</td></tr>
+<tr data-fg="--g2-color-on-solid" data-bg="--g2-color-info-line" data-min="4.5"><td><code>on-solid</code> / <code>info-line</code></td><td>7,40:1</td><td>Titlul panoului de notificare</td></tr>
+<tr data-fg="--g2-color-danger-solid" data-bg="--g2-color-page" data-min="4.5"><td><code>danger-solid</code> / <code>page</code></td><td>6,45:1</td><td>Textul unei erori</td></tr>
+<tr data-fg="--g2-color-danger-solid" data-bg="--g2-color-surface" data-min="4.5"><td><code>danger-solid</code> / <code>surface</code></td><td>5,82:1</td><td>Textul unei erori într-un panou</td></tr>
+<tr data-fg="--g2-color-text" data-bg="--g2-color-action-secondary-hover" data-min="4.5"><td><code>text</code> / <code>action-secondary-hover</code></td><td>10,96:1</td><td>Butonul secundar la hover</td></tr>
+<tr data-fg="--g2-color-text" data-bg="--g2-color-neutral-bg" data-min="4.5"><td><code>text</code> / <code>neutral-bg</code></td><td>11,94:1</td><td>Chip la hover</td></tr>
+<tr data-fg="--g2-color-on-link" data-bg="--g2-color-link" data-min="4.5"><td><code>on-link</code> / <code>link</code></td><td>9,70:1</td><td>Text pe un fundal în culoarea linkului</td></tr>
+</tbody>
+</table>
+</div>
+<div class="guide-table-wrap">
+<table class="guide-table" id="scheme-graphic-pairs">
+<caption>Borduri și informație grafică (cel puțin 3:1)</caption>
+<thead>
+<tr>
+<th scope="col">Pereche</th>
+<th scope="col">Contrast</th>
+<th scope="col">Utilizare</th>
+</tr>
+</thead>
+<tbody>
+<tr data-fg="--g2-color-control-border" data-bg="--g2-color-page" data-min="3"><td><code>control-border</code> / <code>page</code></td><td>17,52:1</td><td>Bordura unui câmp, pe pagină</td></tr>
+<tr data-fg="--g2-color-control-border" data-bg="--g2-color-surface" data-min="3"><td><code>control-border</code> / <code>surface</code></td><td>15,81:1</td><td>Bordura unui câmp, într-un panou</td></tr>
+<tr data-fg="--g2-color-text" data-bg="--g2-color-surface-sunken" data-min="3"><td><code>text</code> / <code>surface-sunken</code></td><td>14,00:1</td><td>Bordura chip-ului selectat, pe chip</td></tr>
+<tr data-fg="--g2-color-danger-solid" data-bg="--g2-color-page" data-min="3"><td><code>danger-solid</code> / <code>page</code></td><td>6,45:1</td><td>Bara și bordura unui câmp cu eroare</td></tr>
+<tr data-fg="--g2-color-focus" data-bg="--g2-color-page" data-min="3"><td><code>focus</code> / <code>page</code></td><td>14,55:1</td><td>Indicatorul de focus</td></tr>
+<tr data-fg="--g2-color-brand" data-bg="--g2-color-page" data-min="3"><td><code>brand</code> / <code>page</code></td><td>3,87:1</td><td>Banda de brand, pe pagină</td></tr>
+<tr data-fg="--g2-color-action" data-bg="--g2-color-page" data-min="3"><td><code>action</code> / <code>page</code></td><td>6,24:1</td><td>Butonul principal, pe pagină</td></tr>
+<tr data-fg="--g2-color-neutral-line" data-bg="--g2-color-page" data-min="3"><td><code>neutral-line</code> / <code>page</code></td><td>6,57:1</td><td>Linia tonului neutru</td></tr>
+</tbody>
+</table>
+</div>
+<div class="guide-table-wrap">
+<table class="guide-table" id="scheme-tones">
+<caption>Tonuri de stare</caption>
+<thead>
+<tr>
+<th scope="col">Ton</th>
+<th scope="col">Text pe fundal (cel puțin 4,5:1)</th>
+<th scope="col">Linie pe pagină (cel puțin 3:1)</th>
+</tr>
+</thead>
+<tbody>
+<tr data-tone="neutral"><td><code>neutral</code></td><td>10,75:1</td><td>6,57:1</td></tr>
+<tr data-tone="info"><td><code>info</code></td><td>10,44:1</td><td>7,40:1</td></tr>
+<tr data-tone="progress"><td><code>progress</code></td><td>11,22:1</td><td>7,15:1</td></tr>
+<tr data-tone="warning"><td><code>warning</code></td><td>10,68:1</td><td>8,65:1</td></tr>
+<tr data-tone="success"><td><code>success</code></td><td>10,02:1</td><td>6,24:1</td></tr>
+<tr data-tone="danger"><td><code>danger</code></td><td>11,05:1</td><td>6,45:1</td></tr>
+</tbody>
+</table>
+</div>
+<h3>Tricolorul pe pagina întunecată</h3>
+<p>Culorile tricolorului sunt culori naționale și nu se schimbă în nicio schemă. Ele nu poartă text. Tabelul arată cât se văd pe pagina întunecată, care are culoarea antetului.</p>
+<div class="guide-table-wrap">
+<table class="guide-table" id="scheme-tricolour">
+<caption>Tricolorul față de pagina întunecată</caption>
+<thead>
+<tr>
+<th scope="col">Pereche</th>
+<th scope="col">Pe pagina întunecată</th>
+<th scope="col">Pe pagina deschisă (alb)</th>
+<th scope="col">Efect</th>
+</tr>
+</thead>
+<tbody>
+<tr data-fg="--g2-color-ro-blue" data-bg="--g2-color-page"><td><code>ro-blue</code> / <code>page</code></td><td>1,54:1</td><td>12,71:1</td><td>Albastrul abia se vede</td></tr>
+<tr data-fg="--g2-color-ro-yellow" data-bg="--g2-color-page"><td><code>ro-yellow</code> / <code>page</code></td><td>13,31:1</td><td>1,47:1</td><td>Galbenul se vede bine</td></tr>
+<tr data-fg="--g2-color-ro-red" data-bg="--g2-color-page"><td><code>ro-red</code> / <code>page</code></td><td>3,48:1</td><td>5,63:1</td><td>Roșul se vede</td></tr>
+<tr data-fg="--g2-color-ro-blue-ring" data-bg="--g2-color-header-bg"><td><code>ro-blue-ring</code> / <code>header-bg</code></td><td>2,94:1</td><td>2,94:1</td><td>Inelul face punctul albastru vizibil pe antet</td></tr>
+</tbody>
+</table>
+</div>
+<p class="guide-help">Marca în colț și punctele stau în antet, care este închis în ambele scheme: ele arată la fel. Banda <code>.g2-ro-bar</code> și liniuța <code>.g2-dash</code> stau pe pagină: pe pagina întunecată, partea albastră se vede puțin. Inelul punctului albastru (<code>--g2-color-ro-blue-ring</code>) nu se schimbă.</p>
+<div class="guide-callout">
+<p>
+<strong>Pași pentru un proiect</strong>
+</p>
+<p>1. Adăugați <code>data-g2-scheme="auto"</code> pe <code>&lt;html&gt;</code>. 2. Nu scrieți valori întunecate proprii pentru tokenii <code>--g2-color-*</code>. 3. Verificați culorile locale ale proiectului pe pagina întunecată: o culoare scrisă pentru o pagină deschisă rămâne deschisă. 4. Verificați focusul, hover, selecția, eroarea și starea dezactivată în ambele scheme.</p>
+<p>Un proiect cu culori locale pentru o pagină deschisă rămâne deschis până când alege <code>auto</code> sau <code>dark</code>.</p>
+</div>
 </section>
 <section class="guide-section" id="tipografie" aria-labelledby="title-tipografie">
-<span class="guide-number">03</span>
+<span class="guide-number">04</span>
 <h2 id="title-tipografie">Text clar, cifre ușor de comparat</h2>
 <p>Inter este familia sans-serif; Fragment Mono este folosită pentru coduri și cifre aliniate. <code>gov2.css</code> numește familiile, cu fonturile sistemului ca rezervă, și nu face nicio cerere pentru fonturi. Fișierul <code>fonts.css</code>, cu folderul <code>fonts/</code>, le livrează local. Este pasul standard de instalare, iar acest ghid îl încarcă. Dimensiunile sunt în <code>rem</code>, deci urmează mărimea textului aleasă de cititor. Valorile în px sunt cele de la o rădăcină de 16px. Corpul de text are 1,0625rem (17px) și înălțime de rând 1,55.</p>
 <div class="guide-demo">
@@ -321,7 +551,7 @@
 <p class="guide-help">Cele șase roluri sunt puncte de plecare. Ajustați-le când conținutul sau sarcina o cere, apoi verificați lizibilitatea. Dimensiunile titlurilor acestui ghid țin de documentație.</p>
 </section>
 <section class="guide-section" id="linkuri" aria-labelledby="title-linkuri">
-<span class="guide-number">04</span>
+<span class="guide-number">05</span>
 <h2 id="title-linkuri">Linkuri și roluri</h2>
 <p>Un link navighează. Un buton execută o acțiune. Un link important poate primi aspect de buton, păstrând comportamentul de link.</p>
 <div class="guide-demo">
@@ -356,7 +586,7 @@
 <p class="guide-help">Folosiți Tab pentru focus și indicatorul mouse-ului pentru hover. Linkurile din text și titluri au o culoare pentru istoricul vizitelor.</p>
 </section>
 <section class="guide-section" id="butoane" aria-labelledby="title-butoane">
-<span class="guide-number">05</span>
+<span class="guide-number">06</span>
 <h2 id="title-butoane">Acțiuni cu o prioritate clară</h2>
 <p>O acțiune principală evidențiată ajută de obicei orientarea. Sarcinile independente pot justifica mai multe acțiuni importante.</p>
 <div class="guide-demo">
@@ -383,7 +613,7 @@
 <p class="guide-help">Varianta distructivă nu are încă un hover distinct. Starea de focus poate fi verificată și când mouse-ul rămâne deasupra.</p>
 </section>
 <section class="guide-section" id="filtre" aria-labelledby="title-filtre">
-<span class="guide-number">06</span>
+<span class="guide-number">07</span>
 <h2 id="title-filtre">Scurtături și selecție</h2>
 <p>Un chip poate fi link de navigare sau buton de comutare. O etichetă de stare nu presupune o acțiune.</p>
 <div class="guide-demo">
@@ -419,7 +649,7 @@
 <p class="guide-help">Selecția are o bordură închisă. Valorile <code>aria-current="false"</code>, <code>aria-current=""</code> și <code>aria-pressed="false"</code> nu selectează chip-ul.</p>
 </section>
 <section class="guide-section" id="stari" aria-labelledby="title-stari">
-<span class="guide-number">07</span>
+<span class="guide-number">08</span>
 <h2 id="title-stari">Starea se citește în text</h2>
 <p>Cele șase tonuri sprijină un mesaj explicit. Textul explică starea și când culoarea nu poate fi percepută.</p>
 <div class="guide-demo">
@@ -447,7 +677,7 @@
 <p class="guide-help">Aceleași șase nume apar în markup (<code>data-tone</code>) și în tokeni (<code>--g2-color-warning-bg</code>): <code>neutral / info / progress / warning / success / danger</code>. Absența atributului înseamnă <code>neutral</code>. Valorile vechi <code>warn</code>, <code>ok</code> și <code>bad</code> nu mai sunt recunoscute.</p>
 </section>
 <section class="guide-section" id="campuri" aria-labelledby="title-campuri">
-<span class="guide-number">08</span>
+<span class="guide-number">09</span>
 <h2 id="title-campuri">Câmpuri și recuperarea după erori</h2>
 <p>Asociați programatic eticheta, indiciul și mesajul de eroare. Explicați cum se poate corecta problema.</p>
 <div class="guide-demo">
@@ -536,7 +766,7 @@
 <p class="guide-help">Textarea, select, checkbox și radio nu fac parte din această etapă: nu au încă un contract vizual în DS. Controalele native rămân native.</p>
 </section>
 <section class="guide-section" id="panouri" aria-labelledby="title-panouri">
-<span class="guide-number">09</span>
+<span class="guide-number">10</span>
 <h2 id="title-panouri">Note, mesaje și cifre cu sursă</h2>
 <div class="guide-demo">
 <div class="g2-inset">
@@ -590,7 +820,7 @@
 <p>Într-un produs civic, puneți sursa și data verificării lângă cifră. Explicați limitele datelor fără a sugera concluzii pe care sursa nu le susține.</p>
 </section>
 <section class="guide-section" id="antet" aria-labelledby="title-antet">
-<span class="guide-number">10</span>
+<span class="guide-number">11</span>
 <h2 id="title-antet">Antet, anunț și subsol</h2>
 <p>Antetul are o bandă închisă și o regulă albastră. Numele rămâne text, inclusiv când adăugați un logo decorativ.</p>
 <div class="guide-demo">
@@ -675,7 +905,7 @@
 <p class="guide-help"><code>.g2-footer</code> este suprafața; <code>.g2-footer-in</code> aranjează conținutul. Grupurile se rup pe rânduri când nu mai încap. Niciun grup de linkuri nu este obligatoriu.</p>
 </section>
 <section class="guide-section" id="pagina" aria-labelledby="title-pagina">
-<span class="guide-number">11</span>
+<span class="guide-number">12</span>
 <h2 id="title-pagina">Container, spațiere și pagini de exemplu</h2>
 <p><code>.g2-container</code> ocupă toată lățimea disponibilă, până la <code>--g2-container-max</code> (80rem, 1280px la o rădăcină de 16px), cu margini laterale automate și o margine interioară <code>--g2-gutter</code> între 1rem și 2rem. Containerul întreg, cu marginea interioară, încape într-o fereastră de 320px.</p>
 <div class="guide-demo">
@@ -744,7 +974,7 @@
 </ul>
 </section>
 <section class="guide-section" id="identitate" aria-labelledby="title-identitate">
-<span class="guide-number">12</span>
+<span class="guide-number">13</span>
 <h2 id="title-identitate">Identitate opțională</h2>
 <p>Tricolorul și logoul sunt opționale. Mărcile sunt decorative: nu explică o stare și nu înlocuiesc numele proiectului.</p>
 <div class="guide-demo">
@@ -822,7 +1052,7 @@
 <p class="guide-help">Simbolul geometric este doar demonstrativ. Un SVG cu <code>currentColor</code> preia culoarea textului; <code>.g2-logo</code> îl afișează la 28px înălțime.</p>
 </section>
 <section class="guide-section" id="utilizare" aria-labelledby="title-utilizare">
-<span class="guide-number">13</span>
+<span class="guide-number">14</span>
 <h2 id="title-utilizare">Folosiți fișierul distribuit</h2>
 <p>Copiați din același tag exact <code>gov2.css</code>, <code>fonts.css</code> și folderul <code>fonts/</code>, și păstrați-le nemodificate. Puneți compoziția și variațiile locale într-un fișier al proiectului.</p>
 <div class="guide-install">
@@ -902,7 +1132,7 @@ git -C &quot;$DS&quot; archive &quot;$TAG&quot; gov2.css fonts.css fonts | tar -
 <p class="guide-help">Variațiile locale pot adapta spațiul, densitatea și amplasarea. Verificați contrastul, focusul și hover împreună cu focus după modificare: o regulă de proiect poate suprascrie culorile de focus.</p>
 </section>
 <section class="guide-section" id="verificare" aria-labelledby="title-verificare">
-<span class="guide-number">14</span>
+<span class="guide-number">15</span>
 <h2 id="title-verificare">Verificați comportamentul, nu doar aspectul</h2>
 <ol class="guide-checklist">
 <li>Parcurgeți pagina cu Tab și Shift+Tab. Focusul trebuie să rămână vizibil, inclusiv pe nume și în navigare.</li>
@@ -915,11 +1145,11 @@ git -C &quot;$DS&quot; archive &quot;$TAG&quot; gov2.css fonts.css fonts | tar -
 <p class="guide-help">Testele automate nu înlocuiesc cititorul de ecran sau verificarea manuală a istoricului linkurilor. <a href="testing.md">Procedura și limitele verificării</a> sunt documentate separat.</p>
 </section>
 <section class="guide-section" id="propuneri" aria-labelledby="title-propuneri">
-<span class="guide-number">15</span>
+<span class="guide-number">16</span>
 <h2 id="title-propuneri">În lucru, separat de componentele disponibile</h2>
 <div class="guide-proposals">
 <h3>Propuneri, nu API disponibil</h3>
-<p>Textarea, select, checkbox și radio cu contract vizual, tabele, paginare, breadcrumbs, taburi, grafice, filtre complexe, butoane cu icoană și modul întunecat.</p>
+<p>Textarea, select, checkbox și radio cu contract vizual, tabele, paginare, breadcrumbs, taburi, grafice, filtre complexe, butoane cu icoană și o rampă secvențială pentru hărți.</p>
 <p>Prima etapă aprobată este implementată: containerul, spațierea, scara tipografică, compoziția antetului și subsolului și câmpurile complete. Ea este verificată pe <a href="examples/directory.html">o pagină de rezultate</a> și <a href="examples/form.html">una de formular/detaliu</a>. Fiecare nevoie nouă se înregistrează în <code>BACKLOG.md</code> înainte să devină componentă.</p>
 </div>
 <p>Biblioteca de <a href="../patterns/README.md">patterns</a> este definită, dar încă goală. Un tipar poate porni într-un proiect și deveni comun când nevoia se repetă.</p>

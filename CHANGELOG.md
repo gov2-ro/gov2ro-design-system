@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.12.0 — 2026-10-27 (proposal, untested)
+
+Brief 05 (opt-in dark colour scheme). ADR 0009 records the decision. Nothing here is a breaking change: no token or class is renamed or removed, and a page without the new attribute computes the same styles as in 0.11.0.
+`docs/migration-from-0.6.0.md` has a section, *Changes after 0.11.0: the dark scheme*, for projects that update.
+
+**Added**
+- The attribute `data-g2-scheme` on the root element: `light`, `dark` or `auto`. No attribute means light. `auto` follows `prefers-color-scheme`. The core has no toggle and no script.
+- Dark values for 46 colour tokens, in the `gov2.tokens` layer after the light values: for `:root[data-g2-scheme=dark]`, and for `:root[data-g2-scheme=auto]` inside `@media (prefers-color-scheme: dark)` (the same values, written twice, and a test compares them).
+  The header group, the focus pair, the three tricolour colours and the new ring keep their light value. The dark page has the colour of the header; the brand band separates them.
+- Four tokens, with the light value of the literal that each replaces: `--g2-color-on-solid` (`#ffffff`), `--g2-color-action-secondary-hover` (`#dbdad9`), `--g2-color-control-bg` (`#ffffff`) and `--g2-color-ro-blue-ring` (`#3a5aa0`).
+- `color-scheme`: `light` on `:root`, `dark` in the dark blocks. Native controls and scrollbars follow the active scheme.
+- The live guide: section *Schema întunecată, la cerere* (03) with the attribute, side-by-side previews of the same components in both schemes, and tables of the measured contrast, computed from the tokens. The guide sets `data-g2-scheme="auto"`.
+- `tests/scheme.test.mjs` (dark values, acceptance 1 to 11 of brief 05), `tests/baseline/gov2-0.11.0.css` (the release that the test compares with), and `?scheme=` on `tests/contract.html`.
+
+**Changed**
+- No component rule has a colour literal. The literals `#fff`, `#dbdad9` and `#3a5aa0` became the four tokens above; `.g2-nav a` reads `--g2-color-on-header`; the notice body reads `--g2-color-surface`.
+- The focus rule of `input`, `textarea` and `select` also sets the text colour (`--g2-color-text`). In the light scheme the computed value is the same as before; in the dark scheme the text stays readable on the field background.
+- `COMPONENTS.md`, `GUIDELINES.md`, `README.md` and `docs/project-block.md` describe the scheme. The *Not in the DS yet* list no longer names the dark mode; it names the sequential colour ramp for maps.
+- The header comment of `gov2.css` names the attribute. The version line is unchanged.
+- `tests/helpers.mjs` has `tokenBlocks`, `setScheme` and `contrastReport` (moved from `tests/foundation.test.mjs`). The token tests read the light block, and the layer test expects the dark blocks in `gov2.tokens`.
+
 ## 0.11.0 — 2026-10-26 (proposal, untested)
 
 **Breaking**

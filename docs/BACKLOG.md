@@ -27,6 +27,10 @@ See `decisions/0001-shared-system-boundary.md` and `briefs/README.md` for the se
 - [x] Implement brief 03: local fonts and reproducible file delivery (`## Unreleased` in `CHANGELOG.md`). `fonts.css` and `fonts/` (Inter variable and Fragment Mono 400, latin and latin-ext, 172,660 bytes), the Google Fonts `@import` removed, the exact-tag install procedure in `README.md`, and `tests/fonts.test.mjs` (23 checks). All 7 acceptance criteria have executable assertions (130 browser checks pass in Chrome 155). The owner directed that local fonts are the standard installation step; only quick one-off projects skip them.
 - [x] Review brief 03 (Opus): accepted the variable Inter files (declared range 100–900, the real axis of the file), the Fontsource 5.2.8 source, no layer in `fonts.css` and the install procedure. Released as 0.10.0.
 - [ ] Tell the projects that `docs/project-block.md` changed again (install `gov2.css`, `fonts.css` and `fonts/` from one tag) and that the Google Fonts import is gone (Breaking). org and stiri wait for this release. Publishing is separate.
+- [x] Implement brief 05: the opt-in dark scheme (`## Unreleased` in `CHANGELOG.md`). `data-g2-scheme` (`light`, `dark`, `auto`), 46 dark colour tokens in `gov2.tokens`, four new tokens (`--g2-color-on-solid`, `--g2-color-action-secondary-hover`, `--g2-color-control-bg`, `--g2-color-ro-blue-ring`), no colour literal in any component rule, `tests/scheme.test.mjs` and a guide section. All 12 acceptance checks have executable assertions except the manual ones in `testing.md`. Opus reviews it, then bumps the version and tags.
+- [x] Review brief 05 (Opus): accepted the dark values (page darkest, raised surfaces lighter), the text colour in the field focus rule, `data-g2-scheme="auto"` on the guide, previews without `fonts.css` and the vendored 0.11.0 baseline. Released as 0.12.0.
+- [ ] Tell the projects that `docs/project-block.md` changed again (one line on `data-g2-scheme`). org replaces its local dark overrides with `data-g2-scheme="auto"` when the release reaches it. Publishing is separate.
+- [ ] Manual dark-scheme checks not done for brief 05: Safari, Firefox, a real phone with the system dark mode, native controls of a real project, real forced colours on Windows, the paint before the stylesheet loads. See `testing.md`, *Dark colour scheme*.
 - [ ] Manual font checks not done for brief 03: Safari and Firefox rendering of the variable Inter file, a machine without Inter, a real host below a subpath with its real Content-Security-Policy header. See `testing.md`, *Fonts*.
 - [x] Implement brief 04: the selected page-foundation slice (container, spacing, type roles, header/nav/footer composition, fields, two example pages; `## Unreleased` in `CHANGELOG.md`). All 12 acceptance checks have executable assertions (106 browser checks pass in Chrome 155); native zoom, screen readers and other engines are recorded as manual in `testing.md`. Opus reviews it, then bumps the version and tags.
 - [x] Review brief 04 (Opus): accepted the 44px navigation targets, `overflow-wrap` on headings and fields, the 12rem scroll margin, the forced-colours rules and the disabled field look. Released as 0.9.0.
@@ -69,9 +73,9 @@ Items:
   - Conflicts are now with `--g2-*` and the layers: all project CSS is unlayered, and a local `:focus-visible` replaces the DS focus. The project moves its CSS into `@layer app`.
   - [-] Shared compact density. Not needed: the owner chose the DS sizes for org (2026-10-26).
   - [ ] Owner decisions relayed 2026-10-26: DS fonts (brief 03 is implemented; org waits for the release), DS sizes, local dark mode until issue #1, no tricolour text. The org adoption brief waits for a release.
-- [ ] Issue #1, dark colour scheme for the `--g2-color-*` tokens (org; civtech assumed). Needs owner approval in the issue, then an ADR and a brief.
+- [x] Issue #1, dark colour scheme for the `--g2-color-*` tokens (org; civtech assumed). Approved by the owner (ADR 0009), implemented in brief 05 (`## Unreleased`). org adopts it with `data-g2-scheme="auto"` after the release.
 - [ ] Issue #2, tricolour title treatment (org, civtech). Conflicts with "tricolour is never text". Needs owner approval of one option in the issue.
-- [ ] Cross-project questions: Do the projects need dark mode? (The Google Fonts question is closed: brief 03 removes the import and the DS ships local fonts.)
+- [x] Cross-project questions: Do the projects need dark mode? Yes: org has one, civtech is assumed to have one. The DS ships it (brief 05). (The Google Fonts question is closed: brief 03 removes the import and the DS ships local fonts.)
 - [x] Replace the Google Fonts `@import` with `@font-face` and font files in the DS (Unreleased, brief 03).
 
 ## Hierarchy and link roles
@@ -117,7 +121,9 @@ Found while writing `COMPONENTS.md`. Each gap is also listed in `COMPONENTS.md` 
 - [ ] A core skip link. The example pages have a local one (`ex-skip`).
 - [ ] Icon buttons, complex filters and charts (deferred by ADR 0007).
 - [ ] A hover state for `.g2-btn.g2-danger`.
-- [ ] Dark mode.
+- [x] Dark mode: opt-in with `data-g2-scheme` (Unreleased, brief 05).
+- [ ] A sequential colour ramp for maps, with dark values (org has its own; a separate proposal, ADR 0009).
+- [ ] The tricolour blue (`#002b7f`) is 1.54:1 against the dark page, so the blue third of `.g2-ro-bar` and `.g2-dash` is hard to see on a dark page. Not changed (ADR 0009). A change needs a separate decision.
 - [ ] Tables, pagination, breadcrumbs, tabs and summary lists. The directory example shows five results with no pagination and a single detail page. Breadcrumbs and tables now have two projects (stiri, org); see `compat-analysis.md`. Each one needs owner approval.
 
 Follow-ups from brief 04 (measured or decided in `ACTIVITY.md`):
@@ -134,7 +140,7 @@ Defects found during brief 01. They existed in 0.7.0. The migration did not chan
 
 - [ ] A disabled `.g2-btn` still changes its background on hover (measured: primary `#00703c` to `#005a30`, secondary `#f3f2f1` to `#dbdad9`, at 50% opacity). Guard the hover rules with `:not(:disabled)`.
 - [ ] The general `:focus-visible` rule gives any focused element the yellow background. Measured: `<main tabindex="-1">` after a skip-link activation turns fully yellow. Whole-site activation makes this more likely. Decide how to limit it (for example, exclude `[tabindex="-1"]`).
-- [ ] Some components use colour literals where a token role exists: `#fff` (button text, navigation links, notice text, input background), `#dbdad9` (secondary hover), `#3a5aa0` (tricolour dot ring). A project that overrides `--g2-color-on-header` does not change the navigation link colour.
+- [x] Some components used colour literals where a token role exists: `#fff`, `#dbdad9` and `#3a5aa0`. They are tokens now (`--g2-color-on-solid`, `--g2-color-action-secondary-hover`, `--g2-color-control-bg`, `--g2-color-ro-blue-ring`) and `.g2-nav a` reads `--g2-color-on-header` (Unreleased, brief 05). A static test fails on a colour literal in any component rule.
 - [x] The class `.g2-btn.g2-warning` is red (destructive), but the status `warning` is yellow. The owner approved a new name: `.g2-btn.g2-danger`, with no alias (issue #9, 0.11.0).
 
 ## Delivery

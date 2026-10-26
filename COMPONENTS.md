@@ -11,6 +11,7 @@ A project that uses 0.6.0 or 0.7.0 reads `docs/migration-from-0.6.0.md`.
 - Loading the file applies the base styles to the whole page and publishes the tokens on `:root`.
 - The `.g2-` classes are opt-in. A component appears only where the markup has its class.
 - `gov2.css` declares four layers, in this order: `reset`, `gov2`, `utilities`, `app`. See *Layers and project CSS*.
+- The page is light by default. `data-g2-scheme` on `<html>` opts in to the dark scheme. See *Colour scheme*.
 - `gov2.css` makes no font request. Standard installation also copies `fonts.css` and the `fonts/` folder from the same tag, and links `fonts.css` next to `gov2.css`. See *Fonts*.
 - `.g2-container` sets the page width and the side padding. See *Container*. Spacing and type roles have tokens and classes: see *Spacing* and *Type roles*.
 
@@ -27,7 +28,7 @@ Inside `gov2`, the sublayers are `tokens`, `base`, `components` and `states`.
 | Layer | Contents |
 |---|---|
 | `reset` | A reset from the project or from a vendor. Put it here. |
-| `gov2.tokens` | The custom properties on `:root`. |
+| `gov2.tokens` | The custom properties on `:root`: the light values first, then the dark values. See *Colour scheme*. |
 | `gov2.base` | `body`, links and the reduced-motion rule. |
 | `gov2.components` | Every `.g2-` class default, including its hover treatment. |
 | `gov2.states` | Keyboard focus, the selected chip, the disabled button and the field error. They win over the component defaults. |
@@ -46,24 +47,60 @@ Inside `gov2`, the sublayers are `tokens`, `base`, `components` and `states`.
 
 ## Tokens
 
-Colour tokens are RGB channels. Use them as `rgb(var(--g2-color-text))` or `rgb(var(--g2-color-text) / .5)`. The values are in `gov2.css`.
+Colour tokens are RGB channels. Use them as `rgb(var(--g2-color-text))` or `rgb(var(--g2-color-text) / .5)`. The values are in `gov2.css`, in a light and a dark set. See *Colour scheme*.
 Length and font tokens are plain values, not RGB channels. Override a token in your own `app` layer. Check contrast and focus after each change.
 
 | Group | Tokens | Use |
 |---|---|---|
-| Surfaces | `--g2-color-page`, `--g2-color-surface`, `--g2-color-surface-sunken`, `--g2-color-line`, `--g2-color-control-border` | Backgrounds and rules. `--g2-color-page` is the page background and `--g2-color-surface` is a raised surface such as a card. `--g2-color-surface-sunken` is for panels, footer, toolbars, the notice bar and tags. `--g2-color-control-border` is the border of form controls. |
+| Surfaces | `--g2-color-page`, `--g2-color-surface`, `--g2-color-surface-sunken`, `--g2-color-line`, `--g2-color-control-border`, `--g2-color-control-bg` | Backgrounds and rules. `--g2-color-page` is the page background and `--g2-color-surface` is a raised surface such as a card. `--g2-color-surface-sunken` is for panels, footer, toolbars, the notice bar and tags. `--g2-color-control-border` is the border of form controls. `--g2-color-control-bg` is the background of `.g2-input`, also while the field has focus. |
 | Text | `--g2-color-text`, `--g2-color-text-muted`, `--g2-color-text-faint` | `--g2-color-text-faint` for text on the page background only (about 4.57:1); it fails ordinary-text contrast on `--g2-color-surface-sunken`. |
 | Links and selection | `--g2-color-link`, `--g2-color-link-visited`, `--g2-color-selected-bg`, `--g2-color-on-link` | `--g2-color-selected-bg` for selected rows. `--g2-color-on-link` is the text colour on a fill of the link colour. No component reads it. |
 | Brand and header | `--g2-color-brand`, `--g2-color-header-bg`, `--g2-color-on-header`, `--g2-color-on-header-muted`, `--g2-color-header-accent` | Header, header band, footer rule, tile rule, and other dark surfaces. `--g2-color-header-accent` marks the current navigation item. |
-| Actions | `--g2-color-action`, `--g2-color-action-hover`, `--g2-color-action-shadow`, `--g2-color-action-secondary-shadow`, `--g2-color-danger-solid`, `--g2-color-danger-shadow` | Buttons. `--g2-color-danger-solid` is also the colour of error text and the error bar. |
+| Actions | `--g2-color-action`, `--g2-color-action-hover`, `--g2-color-action-shadow`, `--g2-color-action-secondary-shadow`, `--g2-color-action-secondary-hover`, `--g2-color-danger-solid`, `--g2-color-danger-shadow`, `--g2-color-on-solid` | Buttons. `--g2-color-action-secondary-hover` is the hover background of the secondary button. `--g2-color-danger-solid` is also the colour of error text and the error bar. `--g2-color-on-solid` is the text colour on a saturated fill: the primary and danger buttons and the title band of a notice. |
 | Focus | `--g2-color-focus`, `--g2-color-on-focus` | Focus state only. |
 | Status | `--g2-color-success-solid` and the 18 tone tokens in the table under *Tags* | Tags and status panels. `--g2-color-success-solid` is a solid success fill; no component reads it. |
-| Tricolour | `--g2-color-ro-blue`, `--g2-color-ro-yellow`, `--g2-color-ro-red` | Decorative marks only. Never use them for text. |
+| Tricolour | `--g2-color-ro-blue`, `--g2-color-ro-yellow`, `--g2-color-ro-red`, `--g2-color-ro-blue-ring` | Decorative marks only. Never use them for text. `--g2-color-ro-blue-ring` is the ring around the blue dot of `.g2-ro-dots`. |
 | Charts | `--g2-color-chart-1`, `--g2-color-chart-2`, `--g2-color-chart-3`, `--g2-color-chart-4`, `--g2-color-chart-selected` | Blue series, then greys. `--g2-color-chart-selected` marks the selection. |
 | Type | `--g2-font-sans`, `--g2-font-mono` | Text family. Family for codes and aligned numbers. Each names Inter or Fragment Mono first, then system fonts. See *Fonts*. |
 | Type scale | `--g2-font-size-heading-page`, `--g2-font-size-heading-section`, `--g2-font-size-heading-item`, `--g2-font-size-body`, `--g2-font-size-meta`, `--g2-font-size-label`, `--g2-line-height-heading`, `--g2-line-height-body` | Font sizes in rem and two line heights. See *Type roles*. |
 | Spacing | `--g2-space-1`, `--g2-space-2`, `--g2-space-3`, `--g2-space-4`, `--g2-space-5`, `--g2-space-6`, `--g2-space-7` | Seven steps in rem, from .25rem to 3rem. See *Spacing*. |
 | Metrics | `--g2-radius` (0), `--g2-border-width-control` (2px), `--g2-container-max` (80rem), `--g2-gutter` (`clamp(1rem, 3vw, 2rem)`) | `--g2-radius` is read by buttons, chips, fields, tags, tiles and notices. `--g2-border-width-control` is the border width of buttons, chips and fields. `--g2-container-max` and `--g2-gutter` are read by `.g2-container`. |
+
+## Colour scheme
+
+The default is the light scheme. A page opts in to the dark scheme with one attribute on the root element.
+
+| Markup | Result |
+|---|---|
+| no attribute, or `data-g2-scheme="light"` | The light scheme. The page looks as in 0.11.0. |
+| `data-g2-scheme="auto"` | Follows `prefers-color-scheme`. The scheme is dark only when the reader asks for it. |
+| `data-g2-scheme="dark"` | The dark scheme. |
+
+```html
+<html lang="ro" data-g2-scheme="auto">
+```
+
+- Any other value gives the light scheme.
+- The dark values are in `gov2.css`, in the `gov2.tokens` layer, after the light values. The component rules do not change for a scheme: they read the tokens. A project does not write dark values for the colour tokens.
+- The dark values are written twice: for `:root[data-g2-scheme=dark]`, and for `:root[data-g2-scheme=auto]` inside `@media (prefers-color-scheme: dark)`. CSS cannot share one rule between these two. A test checks that the two blocks are equal.
+- `color-scheme` is `light` on `:root` and `dark` in the dark blocks. A native `select`, `textarea` or date field, and the scrollbars, follow it. They have no DS class: `color-scheme` is the only dark styling that they get.
+- The core has no toggle and no script. A project that lets the reader choose sets the attribute itself and stores the choice.
+- These colour tokens keep their light value in both schemes: the header group (`--g2-color-header-bg`, `--g2-color-on-header`, `--g2-color-on-header-muted`, `--g2-color-header-accent`), the focus pair, the three tricolour colours and `--g2-color-ro-blue-ring`.
+  The header is dark in both schemes. The dark page has the colour of the header, so the brand band separates them.
+- A saturated fill carries light colour and dark text in the dark scheme. `--g2-color-on-solid` is `#ffffff` in the light scheme and `#0b0c0c` in the dark scheme. It colours the text of the primary and danger buttons and of the notice title band.
+- Keyboard focus is the same in both schemes: a yellow fill with dark text. A focused field has a yellow outline and an inset ring in `--g2-color-text`, on `--g2-color-control-bg`.
+- The tricolour is not changed for the dark scheme. The blue (`#002b7f`) has 1.54:1 against the dark page and the dark header. The corner mark and the dots stay in the header, so they look the same in both schemes.
+  `.g2-ro-bar` and `.g2-dash` sit on the page: their blue third is hard to see on the dark page. A change needs a separate decision.
+- The status tones keep their meaning: a dark background, a light ink and a light line, with the same six names. A visited link has another hue (violet) than a link (blue) in both schemes.
+- The chart tokens keep their order of emphasis. There is no sequential ramp for maps.
+- The live guide shows the measured contrast of every pair. A test recomputes each value from the tokens.
+
+For a project:
+
+1. Set `data-g2-scheme="auto"` on `<html>`. Without the attribute, the project stays light after an update.
+2. Do not write dark values for the colour tokens. Use the tokens in your own rules.
+3. Check the colours of the project on the dark page. A colour literal that was written for a light page stays light.
+4. Check focus, hover plus focus, selection, disabled and error states in both schemes.
 
 ## Fonts
 
@@ -213,7 +250,7 @@ A black bar with an 8px brand band below it.
 - `.g2-wordmark`: the project name, white, 19px bold. Put the domain part in `<em>` to show it muted. On keyboard focus, both parts use ink on yellow.
 - `.g2-logo`: an SVG from `logo/`, 28px high. It is decorative: use `alt=""`.
 - `.g2-nav`: a flex row that wraps, with a 4px gap (`--g2-space-1`) between links.
-- `.g2-nav a`: white, semibold, `--g2-font-size-meta`, at least 44px high, with `--g2-space-2` padding above and below and `--g2-space-3` at the sides. A long label wraps and is not clipped.
+- `.g2-nav a`: `--g2-color-on-header` (white), semibold, `--g2-font-size-meta`, at least 44px high, with `--g2-space-2` padding above and below and `--g2-space-3` at the sides. A long label wraps and is not clipped.
   Set `aria-current="page"` on the current link: it gets a blue bar below.
   A navigation link with keyboard focus shows the standard focus bars (yellow above, ink below) instead of that blue bar, and it is not underlined while hovered.
   With forced colours, the current link uses the system selection colours (`Highlight`, `HighlightText`), because forced colours remove the bar.
@@ -284,7 +321,7 @@ A short 48×4px tricolour mark above a section title.
 | `.g2-btn.g2-secondary` | Other actions. Grey. |
 | `.g2-btn.g2-danger` | A destructive action. Red. Before 0.11.0 the class was `.g2-warning`. |
 
-- The button is at least 44px high and has a 2px shadow below it. Buttons, chips and inputs set `box-sizing:border-box` without requiring a project reset.
+- The button is at least 44px high and has a 2px shadow below it. The text colour is `--g2-color-on-solid`. The secondary button reads `--g2-color-action-secondary-hover` on hover. Buttons, chips and inputs set `box-sizing:border-box` without requiring a project reset.
 - On keyboard focus, the button is yellow with ink text, including when hovered. The focus rule is in `gov2.states`; hover is in `gov2.components`.
 - `:disabled` shows the button at 50% opacity and the `not-allowed` cursor. On a link, `:disabled` does not apply.
 - A project class next to the component class, for example `class="g2-btn btn-compact"`, can change the size. Put its rule in the `app` layer.
@@ -327,7 +364,7 @@ The destructive button `.g2-btn.g2-danger` uses the same name as the `danger` st
 | `.g2-field` | Stacks the parts of one field: label, hint, error message and control. The gap is `--g2-space-1`. A direct `.g2-input` fills the width of the field. A word that is wider than the field breaks (`overflow-wrap: anywhere`), so that a long address or code does not overflow a narrow screen. The field sets no outer margin: the form sets the space between fields with the spacing tokens. |
 | `.g2-label` | The field label. Block, `--g2-font-size-label`, semibold. Use `<label for="…">`. |
 | `.g2-hint` | Help before the control: format, example, why the field is locked. Muted, `--g2-font-size-meta`. Connect it with `aria-describedby`. |
-| `.g2-input` | The text control: at least 40px high, 2px border (`--g2-color-control-border`), text at `--g2-font-size-body`. The focus style is in `gov2.states`. |
+| `.g2-input` | The text control: at least 40px high, 2px border (`--g2-color-control-border`), background `--g2-color-control-bg`, text at `--g2-font-size-body`. The focus style is in `gov2.states`. |
 | `.g2-field-error` | Wraps a field that has an error. It adds a red bar on the left and makes the input border red. The input keeps the red border on hover and on focus. |
 | `.g2-error-msg` | The error text, red and bold. Start it with "Eroare:", so that the colour does not carry the meaning. |
 
@@ -367,7 +404,7 @@ A page must not move focus away from its heading on load. Move focus to the summ
 </div>
 ```
 
-A boxed message with a blue title band. The panel must have exactly two children: the first child is the title, the last child is the body.
+A boxed message with a blue title band. The panel must have exactly two children: the first child is the title, the last child is the body. The title text reads `--g2-color-on-solid`. The body background is `--g2-color-surface`.
 
 ### Tile
 
@@ -395,4 +432,4 @@ These parts are missing. Build a local version with the project prefix, and open
 - A skip link. The example pages have a local one.
 - Icon buttons, complex filters and charts.
 - A hover state for `.g2-btn.g2-danger`.
-- Dark mode.
+- A sequential colour ramp for maps, in either scheme.

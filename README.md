@@ -64,6 +64,8 @@ To update, run the same command with a newer tag, then read `CHANGELOG.md` back 
 - No public CDN or hosted guide is configured. Do not link to one.
 
 Loading the stylesheet applies the base styles to the whole page. No activation attribute or wrapper is needed.
+The page is light by default. To opt in to the dark scheme, set `data-g2-scheme="auto"` (follows the reader's setting) or `data-g2-scheme="dark"` on `<html>`.
+A page without the attribute, or with `data-g2-scheme="light"`, looks as before. See `COMPONENTS.md`, *Colour scheme*.
 The tokens (`--g2-*`) are on `:root`. The components are opt-in through their `.g2-*` classes.
 The stylesheet declares the layers `reset, gov2, utilities, app`. Put your reset in `reset` and your own CSS in `app`.
 

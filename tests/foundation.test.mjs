@@ -3,7 +3,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { mkdir } from 'node:fs/promises';
-import { useBrowser, browser, base, read, css, reference, example, artifacts, withPage, withSite, fixture, standaloneSite, styles, contrast, keyboardFocus } from './helpers.mjs';
+import { useBrowser, browser, base, read, css, reference, example, artifacts, withPage, withSite, fixture, standaloneSite, styles, contrast, keyboardFocus, contrastReport, tokenBlocks } from './helpers.mjs';
 
 useBrowser();
 
@@ -11,7 +11,7 @@ const pages = [{ name: 'directory', path: '/docs/examples/directory.html' }, { n
 const widths = [320, 390, 768, 1280];
 const newClasses = ['g2-container', 'g2-heading-page', 'g2-heading-section', 'g2-heading-item', 'g2-text-meta', 'g2-field', 'g2-label', 'g2-hint', 'g2-footer-in'];
 const noComments = text => text.replace(/\/\*[\s\S]*?\*\//g, '');
-const tokenValues = Object.fromEntries([...css.matchAll(/^\s*(--[\w-]+):\s*([^;]+);/gm)].map(m => [m[1], m[2].trim()]));
+const tokenValues = tokenBlocks().light; // the light values; the dark values are in tests/scheme.test.mjs
 const classesOf = html => new Set([...html.matchAll(/\sclass="([^"]*)"/g)].flatMap(m => m[1].split(/\s+/)).filter(Boolean));
 
 // Opens a page with external requests blocked, and records each blocked URL.
@@ -63,44 +63,6 @@ async function tabSequence(page) {
   }
   return { expected, actual, states };
 }
-
-// Text contrast on the rendered surfaces: every visible text node, and the border of every enabled field.
-const contrastReport = page => page.evaluate(() => {
-  const parse = value => (value.match(/[\d.]+/g) || []).map(Number);
-  const over = (top, bottom) => { const a = top[3] ?? 1; return [0, 1, 2].map(i => top[i] * a + bottom[i] * (1 - a)); };
-  const surface = element => {
-    const stack = [];
-    for (let e = element; e; e = e.parentElement) {
-      const c = parse(getComputedStyle(e).backgroundColor);
-      if ((c[3] ?? 1) > 0) { stack.push(c); if ((c[3] ?? 1) >= 1) break; }
-    }
-    return stack.reverse().reduce((result, c) => over(c, result), [255, 255, 255]);
-  };
-  const luminance = ([r, g, b]) => [r, g, b].map(v => { v /= 255; return v <= .04045 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4; }).reduce((sum, v, i) => sum + v * [.2126, .7152, .0722][i], 0);
-  const ratio = (a, b) => { const [low, high] = [luminance(a), luminance(b)].sort((x, y) => x - y); return (high + .05) / (low + .05); };
-  const problems = [];
-  let text = 0, boundaries = 0;
-  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
-  for (let node; (node = walker.nextNode());) {
-    if (!node.textContent.trim()) continue;
-    const element = node.parentElement;
-    if (element.closest(':disabled') || !element.getClientRects().length || getComputedStyle(element).visibility === 'hidden') continue;
-    const style = getComputedStyle(element), background = surface(element), color = over(parse(style.color), background);
-    const large = parseFloat(style.fontSize) >= 24 || (parseFloat(style.fontSize) >= 18.66 && Number(style.fontWeight) >= 700);
-    const found = ratio(color, background);
-    text++;
-    if (found < (large ? 3 : 4.5)) problems.push(`text "${node.textContent.trim().slice(0, 30)}" ${found.toFixed(2)}:1`);
-  }
-  for (const input of document.querySelectorAll('input:not(:disabled)')) {
-    const style = getComputedStyle(input), background = surface(input.parentElement);
-    boundaries++;
-    const border = ratio(over(parse(style.borderTopColor), background), background);
-    if (border < 3) problems.push(`#${input.id} border ${border.toFixed(2)}:1`);
-    const value = ratio(over(parse(style.color), surface(input)), surface(input));
-    if (value < 4.5) problems.push(`#${input.id} value ${value.toFixed(2)}:1`);
-  }
-  return { text, boundaries, problems };
-});
 
 // ---- Static checks: names, values, documentation and the example files ----
 test('foundation: tokens have the decided names and values', () => {

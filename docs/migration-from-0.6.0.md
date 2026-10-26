@@ -62,7 +62,7 @@ The tests compare each value in these tables with `gov2.css`, so the tables cann
 Colour tokens stay bare RGB channels: `rgb(var(--g2-color-text))`, or `rgb(var(--g2-color-text) / .5)`.
 
 The DS had 62 tokens. Version 0.8.0 has 57. Five tokens are removed, each with a reason in the table.
-Tokens added after 0.8.0 have no 0.6.0 name, so they have no row. See *Changes after 0.8.0*.
+Tokens added after 0.8.0 have no 0.6.0 name, so they have no row. See *Changes after 0.8.0* and *Changes after 0.11.0: the dark scheme*.
 
 #### Surfaces
 
@@ -484,6 +484,18 @@ There is no alias: a button with the old class shows as the green primary button
 1. Replace `g2-warning` with `g2-danger` in the class attribute of each destructive button.
 2. Check that no project rule selects `.g2-warning`.
 
+## Changes after 0.11.0: the dark scheme
+
+This change is **not breaking**. A page without the new attribute looks exactly as in 0.11.0 (a test compares every computed style). No token or class is renamed.
+
+- New attribute on `<html>`: `data-g2-scheme` with the values `light`, `dark` and `auto`. No attribute means light. `auto` follows `prefers-color-scheme`. Any other value means light.
+- New tokens, with no old name: `--g2-color-on-solid`, `--g2-color-action-secondary-hover`, `--g2-color-control-bg` and `--g2-color-ro-blue-ring`. Each has the light value of the colour literal that it replaces (`#ffffff`, `#dbdad9`, `#ffffff`, `#3a5aa0`).
+- `gov2.css` now sets `color-scheme: light` on `:root`. In the dark scheme it sets `color-scheme: dark`, so native controls and scrollbars follow the scheme.
+- The dark values are in the `gov2.tokens` layer. A project that has its own dark values for `--g2-color-*` in `app` can remove them and set `data-g2-scheme="auto"`.
+- A project that sets `color: #fff` or a similar literal for its own components keeps that literal in the dark scheme. Check these colours on a dark page before you opt in.
+
+To opt in: set `data-g2-scheme="auto"` on `<html>`, then check focus, hover plus focus, selection, disabled and error states in both schemes. `COMPONENTS.md`, *Colour scheme*, has the rules.
+
 ## Checklist
 
 1. `grep -rn 'data-skin' <project>` finds nothing outside archived files.
@@ -493,3 +505,4 @@ There is no alias: a button with the old class shows as the green primary button
 5. The layer order is declared before every other stylesheet that creates layers.
 6. Tab through each page. Check focus, hover plus focus, selected chips, disabled buttons and field errors.
 7. A version after 0.9.1: `fonts.css` and `fonts/` are installed and linked, or you decided to skip them. The page makes no Google Fonts request.
+8. A version after 0.11.0, only if the project opts in to the dark scheme: `data-g2-scheme` is on `<html>`, the project has no dark values of its own for `--g2-color-*`, and its local colours are checked on a dark page.

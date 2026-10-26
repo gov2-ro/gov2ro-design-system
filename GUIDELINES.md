@@ -89,6 +89,11 @@ Text and background form a pair. A text token is not safe on every surface.
 For example, `--g2-color-text-faint` measures about 4.57:1 on white and 4.08:1 on `--g2-color-surface-sunken`.
 Use `--g2-color-text-muted` for ordinary metadata on the sunken surface.
 
+A page can offer a dark scheme with `data-g2-scheme` on `<html>` (`COMPONENTS.md`, *Colour scheme*). Light stays the default.
+Then every colour comes from a token: a colour literal that was written for a light page stays light on a dark page.
+Judge a dark page by its measured pairs, not by its look. A saturated fill, such as the primary button, carries dark text in the dark scheme (`--g2-color-on-solid`).
+The tricolour does not change with the scheme. Its blue is hard to see on a dark page, so do not use it where the reader must see it.
+
 ## Accessibility
 
 Target WCAG 2.2 AA. Validate applicable criteria, not only a screenshot or a list of token values.
@@ -99,6 +104,7 @@ Target WCAG 2.2 AA. Validate applicable criteria, not only a screenshot or a lis
 - Keyboard focus must remain visible, including when hover and focus occur together. A project rule can replace the gov2 focus colours: see `docs/migration-from-0.6.0.md`.
 - Aim for 44×44px targets for important controls when practical. WCAG 2.2 AA has a 24×24px minimum with exceptions.
 - Check reflow, text enlargement and forced colours on representative pages.
+- When the page offers the dark scheme, repeat the contrast, focus and state checks in both schemes.
 
 See the [WCAG 2.2 standard](https://www.w3.org/TR/WCAG22/) for definitions and exceptions.
 

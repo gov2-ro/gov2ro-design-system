@@ -12,6 +12,9 @@
     if (reset === 'unlayered') document.write('<style>' + resetRules + '</style>');
     // ?fonts=1 adds the optional fonts.css. Without it, the fixture is core-only and makes no font request.
     if (new URLSearchParams(location.search).has('fonts')) document.write('<link rel="stylesheet" href="../fonts.css">');
+    // ?scheme=dark|auto|light sets the colour scheme attribute, as a project does. Without it, the page has no attribute (the light scheme).
+    const scheme = new URLSearchParams(location.search).get('scheme');
+    if (scheme) document.documentElement.setAttribute('data-g2-scheme', scheme);
   </script>
   <link rel="stylesheet" href="../gov2.css">
 </head>
@@ -53,6 +56,19 @@
         <input class="g2-input" id="field-disabled" type="text" value="DEMO-BC-0127" aria-describedby="field-disabled-hint" disabled>
       </div>
     </div>
+    <div class="g2-ro-bar" id="ro-bar" aria-hidden="true"></div>
+    <div class="g2-header" id="marks">
+      <span class="g2-ro-corner" id="ro-corner" aria-hidden="true"></span>
+      <div class="g2-header-in">
+        <span class="g2-wordmark" id="marks-wordmark">Mărci <span class="g2-ro-dots" id="ro-dots" aria-hidden="true"><i></i></span></span>
+        <a class="g2-link-inverse" id="inverse" href="#content">Link pe fundal închis</a>
+      </div>
+    </div>
+    <p><span class="g2-dash" id="dash" aria-hidden="true"></span> <span class="g2-dash g2-red" id="dash-red" aria-hidden="true"></span></p>
+    <div class="g2-notice-bar" id="notice-bar" role="region" aria-label="Anunț"><p>Proiect independent. Datele sunt demonstrative.</p><button type="button" aria-label="Închide anunțul">×</button></div>
+    <div class="g2-inset" id="inset"><p>Termenul se calculează în zile lucrătoare.</p></div>
+    <div class="g2-notice" id="notice" role="region" aria-labelledby="notice-title"><h2 id="notice-title">Important</h2><div><p>Datele au fost actualizate acum trei zile.</p><a id="notice-link" href="#content">Verifică sursa</a></div></div>
+    <div class="g2-tile" id="tile"><h3 class="g2-mono">1.204</h3><p>instituții în setul demonstrativ</p></div>
   </main>
   <footer class="g2-footer" id="footer">
     <div class="g2-footer-in g2-container" id="footer-in">

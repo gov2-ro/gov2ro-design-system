@@ -1,5 +1,102 @@
 # Activity
 
+## 2026-10-27 — Opt-in dark colour scheme (brief 05, 0.12.0)
+
+**Done**
+- `gov2.css` (version header unchanged, 0.11.0): the attribute `data-g2-scheme` (`light`, `dark`, `auto`; none means light). 46 dark colour tokens in `gov2.tokens`, after the light block, written twice (`:root[data-g2-scheme=dark]`, and `:root[data-g2-scheme=auto]` inside `@media (prefers-color-scheme: dark)`) with a trailing hex comment each.
+  `color-scheme: light` on `:root`, `color-scheme: dark` in both dark blocks. Four tokens, each with the light value of the literal it replaces: `--g2-color-on-solid` (`#ffffff`), `--g2-color-action-secondary-hover` (`#dbdad9`), `--g2-color-control-bg` (`#ffffff`), `--g2-color-ro-blue-ring` (`#3a5aa0`).
+  `.g2-nav a` reads `--g2-color-on-header`; `.g2-notice>*:last-child` reads `--g2-color-surface`. No component rule has a colour literal now (a static test fails on one; the detector finds the eight literals of 0.11.0).
+  One rule added beyond the brief's list: the focus rule of `input`, `textarea` and `select` also sets `color: rgb(var(--g2-color-text))` (see Hard).
+- Header tokens, focus pair, the three tricolour colours and the new ring keep their light value in the dark scheme (10 of 56 colour tokens). The dark page is the header colour (`#0b0c0c`); the brand band separates them.
+- Documents: `COMPONENTS.md` (new section *Colour scheme*, four token rows, the dark mode removed from *Not in the DS yet*), `GUIDELINES.md`, `README.md`, `docs/project-block.md` (one line), `docs/migration-from-0.6.0.md` (*Changes after 0.11.0: the dark scheme*, checklist item 8), `CHANGELOG.md` (`## Unreleased`: Added and Changed, no Breaking), `docs/testing.md`, `docs/BACKLOG.md`.
+- Guide: `data-g2-scheme="auto"` on `<html>`; new section 03 *Schema întunecată, la cerere* (sections 03 to 15 are 04 to 16 now) with the attribute table, two `srcdoc` previews of the same components (light and dark, real `gov2.css`, no `fonts.css`), a table of the four new tokens, and four contrast tables computed from the tokens (a test recomputes every cell). `docs/guide.css`: three layout rules for the previews. `docs/guide.js` and `docs/examples/*.html` are unchanged.
+- Tests: `tests/scheme.test.mjs` (52 checks), `tests/baseline/gov2-0.11.0.css` (byte copy of `git show v0.11.0:gov2.css`, SHA-256 `a20b4417…b2c5`), `?scheme=` and eight added elements in `tests/contract.html` (ro-bar, ro-corner, ro-dots, inverse link, dashes, notice bar, inset, notice, tile), `tokenBlocks`, `setScheme` and `contrastReport` in `tests/helpers.mjs` (`contrastReport` moved from `foundation.test.mjs`). `guide.test.mjs`: the token tests read the light block, the four tokens join `foundationTokens`, the layer test expects the two dark blocks, the guide has two attributes (`lang`, `data-g2-scheme`) and 16 sections.
+
+**Hard**
+- Chrome 156.0.8078.48 (the installed Chrome updated since the 155.0.8059.85 of earlier entries). `PLAYWRIGHT_CHANNEL=chrome npm test`. Before: 130 passed, 0 failed, 115.4 s (rerun at the start). After: 130 existing + 52 new = 182 passed, 0 failed, 0 skipped, 0 TODO, 209.8 s (`guide` 60, `foundation` 47, `fonts` 23, `scheme` 52; `scheme` alone 91.8 s). The archive SHA-256 is unchanged (`3cdbe56f…1952`). Command: `GUIDE_ARTIFACT_DIR=<dir> PLAYWRIGHT_CHANNEL=chrome npm test`.
+- Acceptance 1, measured: the 0.11.0 stylesheet and the new one give the same fingerprint (every longhand computed property of every element, except `color-scheme` and custom properties) for no attribute and for `light`, at rest on the fixture (98 elements), both example pages and the guide, and in rest, hover, keyboard focus and focus plus hover for 25 fixture controls and one control per distinct class and state on the other pages. A control check shows that the fingerprint changes for more than 30 elements in the dark scheme.
+  Mutation checks in a scratch copy, one change each: `#fff` back in `.g2-btn` (fails the literal check and the token-rule check); one dark value changed in the auto block only (fails the equality check); `text-faint` set to its light value (fails the ADR 0009 pairs); `--g2-color-control-bg` changed to `#fafafa` (fails acceptance 1 on the fixture); the text colour removed from the focused-field rule (fails the dark state check); `color-scheme: light` in the auto block (fails the matrix and the equality check).
+- `color-scheme` on native controls, measured by computed style (light → dark): `select`, `textarea` and date field background `rgb(255, 255, 255)` → `rgb(59, 59, 59)`, text `rgb(0, 0, 0)` → `rgb(255, 255, 255)`; system colours `Canvas` `rgb(255, 255, 255)` → `rgb(18, 18, 18)`, `Field` → `rgb(59, 59, 59)`, `ButtonFace` `rgb(239, 239, 239)` → `rgb(107, 107, 107)`. No attribute computes the same as `light`.
+  Scrollbars, measured from pixels in a second Chrome that keeps classic scrollbars (Playwright hides them in headless mode; the first attempt read 0 px of gutter): light track `rgb(250, 250, 250)` and thumb `rgb(193, 193, 193)`; dark track `rgb(44, 44, 44)` and thumb `rgb(107, 107, 107)`. No attribute draws the light scrollbar.
+- The focus rule of fields: the general `:focus-visible` rule sets the text colour to `--g2-color-on-focus` (`#0b0c0c`), and `.g2-input` colours sit in a lower layer, so a focused field had dark text on the field background. That is right on white. With `--g2-color-control-bg` dark, the same text would be `#0b0c0c` on `#0b0c0c`. The field rule now sets `color: rgb(var(--g2-color-text))`: the same computed value in the light scheme (`rgb(11, 12, 12)`, checked by acceptance 1), light text in the dark scheme. Mutation check: without it, the dark state check fails.
+- Dark text pairs as rendered: fixture 52 text nodes, lowest 6.24:1 (the primary button); guide with every code block open 894 nodes, lowest 5.82:1 (error text on the raised surface); directory 127 nodes, lowest 6.24:1; form 64 nodes, lowest 6.24:1. Light, for comparison: lowest 4.86:1 (the destructive button). The two dark previews in the guide pass too. Field borders 17.52:1 on the page and 15.81:1 on the raised surface.
+- Tricolour on the dark page (unchanged values): blue `#002b7f` 1.54:1, yellow `#fcd116` 13.31:1, red `#ce1126` 3.48:1; on white: 12.71:1, 1.47:1, 5.63:1. The header is dark in both schemes, so the corner mark and the dots look the same in both: the blue third is 1.54:1 there already, and the ring (`#3a5aa0`, 2.94:1 on the header) keeps the blue dot visible. Marks that sit on the page (`.g2-ro-bar`, `.g2-dash`) lose their blue third on the dark page. Seen in the screenshots: the blue segment of the bar is a faint dark band; the yellow and red segments are clear.
+- Forced colours (acceptance 8): every non-colour property of every fixture element and of ten controls in four states is equal in the two schemes, and the behaviours hold in both (current link and selected chip differ from the others, the disabled field differs, the error bar stays 5px, the box shadow is removed, the focus outline is solid). Colour-valued computed properties are not equal: Chrome keeps the author colour of `html` and `body` text and some `Highlight` blends in the computed style (for example `rgba(5, 0, 73, 0.8)` against `rgba(55, 0, 110, 0.8)` on the current link), so a first version of the check that compared every property failed on 85 of 98 elements. The painted palette is the same in both: `Canvas` `rgb(255, 255, 255)` and `CanvasText` `rgb(0, 0, 0)` in both schemes (measured with a probe element). In a screenshot, the current link and the selected chip show a purple box with a white inner box; this is identical to 0.11.0 in the light scheme (acceptance 1) and was not investigated.
+- Wrong turns, all in my own checks: the detector expectation (eight literals, not seven; `box-shadow` reports its hex); the fingerprint first included custom properties (the four new tokens differ by design); the representative controls included an off-screen skip link and the copy buttons inside closed `<details>`; `cssRules` on a style rule is an empty list, not `undefined`; `document.styleSheets` of the preview includes an inline `<style>` with no `href`; the light focus indicator is the dark bar below the control (yellow on white is 1.35:1), so the focus check takes the strongest of the yellow and the shadow colours (in the dark scheme the yellow itself must reach 3:1: 14.55:1).
+  After the guide change the full suite failed four checks: the fonts check (each font file once: each preview iframe requested the four files again, so the previews no longer link `fonts.css`), two section counts (15 to 16), and the reference check (`--g2-color-*` in `COMPONENTS.md` reads as a token name).
+- First draft of the dark link pair had a luminance ratio of 1.17:1 between link and visited link (light: 1.40:1). I changed link `#7cb4ff` to `#86b9ff` and visited `#b394f2` to `#a98af0`: CIE76 ΔE 33.9 (light 19.8), luminance ratio 1.37:1.
+- Not done: Safari and Firefox, a phone with the system dark mode, native controls of a real project, real Windows forced colours, the paint before the stylesheet loads. `docs/testing.md` lists them.
+
+**Dark values** (proposed by me; light → dark; ratios measured from the token values in each scheme)
+
+| Token | Light | Dark | Measured (light → dark) |
+|---|---|---|---|
+| `page` | `#ffffff` | `#0b0c0c` | text on it 19.59 → 17.52 |
+| `surface` | `#ffffff` | `#16191a` | text on it 19.59 → 15.81 |
+| `surface-sunken` | `#f3f2f1` | `#202426` | text on it 17.52 → 14.00; muted text on it 6.33 → 7.51 |
+| `line` | `#b1b4b6` | `#41484b` | against page 2.08 → 2.10 |
+| `control-border` | `#0b0c0c` | `#f3f2f1` | on page 19.59 → 17.52; on surface 19.59 → 15.81 |
+| `control-bg` | `#ffffff` | `#0b0c0c` | text on it 19.59 → 17.52 |
+| `text` | `#0b0c0c` | `#f3f2f1` | on page 19.59 → 17.52; on sunken 17.52 → 14.00; on selected 14.82 → 11.82 |
+| `text-muted` | `#505a5f` | `#b1b4b6` | on page 7.07 → 9.40; on sunken 6.33 → 7.51 |
+| `text-faint` | `#6f777b` | `#8e979b` | on page 4.56 → 6.58; on sunken 4.08 → 5.25 |
+| `link` | `#1d4fbf` | `#86b9ff` | on page 7.18 → 9.70; on sunken 6.43 → 7.75; on selected 5.44 → 6.54 |
+| `link-visited` | `#4c2c92` | `#a98af0` | on page 10.08 → 7.07; on sunken 9.02 → 5.65; on selected 7.63 → 4.77 |
+| `selected-bg` | `#d2e2f1` | `#17314f` | text on it 14.82 → 11.82 |
+| `on-link` | `#ffffff` | `#0b0c0c` | on link fill 7.18 → 9.70 |
+| `brand` | `#0b3d91` | `#2f6bd1` | against page 10.04 → 3.87; against sunken 8.98 → 3.09 |
+| `action` | `#00703c` | `#2fa564` | on-solid text 6.21 → 6.24; against page 6.21 → 6.24 |
+| `action-hover` | `#005a30` | `#4cc382` | on-solid text 8.38 → 8.80 |
+| `action-shadow` | `#002d18` | `#145c36` | edge vs fill 2.44 → 2.56 |
+| `action-secondary-shadow` | `#929191` | `#5e666a` | edge vs page 3.14 → 3.34 |
+| `action-secondary-hover` | `#dbdad9` | `#30363a` | text on it 14.03 → 10.96; vs rest 1.25 → 1.28 |
+| `danger-solid` | `#d4351c` | `#f06a5b` | on-solid text 4.86 → 6.45; text/bar on page 4.86 → 6.45 |
+| `danger-shadow` | `#55150b` | `#8a2a1f` | edge vs fill 2.89 → 2.84 |
+| `on-solid` | `#ffffff` | `#0b0c0c` | on info-line band 5.17 → 7.40 |
+| `neutral-bg` | `#e5e6e7` | `#2b3033` | ink on it 8.57 → 10.75 |
+| `neutral-line` | `#505a5f` | `#8d979c` | on page 7.07 → 6.57 |
+| `neutral-ink` | `#383f43` | `#e4e7e9` | on bg 8.57 → 10.75 |
+| `info-bg` | `#d2e2f1` | `#15304c` | ink on it 10.66 → 10.44 |
+| `info-line` | `#1d70b8` | `#5aa4ea` | on page 5.17 → 7.40 |
+| `info-ink` | `#0c2d4a` | `#d0e5fb` | on bg 10.66 → 10.44 |
+| `progress-bg` | `#dbd5e9` | `#2a2150` | ink on it 8.67 → 11.22 |
+| `progress-line` | `#4c2c92` | `#a68ee9` | on page 10.08 → 7.15 |
+| `progress-ink` | `#3d2375` | `#e5ddfb` | on bg 8.67 → 11.22 |
+| `warning-bg` | `#fff7bf` | `#3a3100` | ink on it 7.77 → 10.68 |
+| `warning-line` | `#b58800` | `#d9a41a` | on page 3.24 → 8.65 |
+| `warning-ink` | `#594d00` | `#ffe98c` | on bg 7.77 → 10.68 |
+| `success-bg` | `#cce2d8` | `#0f3a25` | ink on it 6.16 → 10.02 |
+| `success-line` | `#00703c` | `#2fa564` | on page 6.21 → 6.24 |
+| `success-ink` | `#005a30` | `#c8edd8` | on bg 6.16 → 10.02 |
+| `danger-bg` | `#f4cdc6` | `#4a1b15` | ink on it 12.53 → 11.05 |
+| `danger-line` | `#d4351c` | `#f06a5b` | on page 4.86 → 6.45 |
+| `danger-ink` | `#2a0b06` | `#ffd9d3` | on bg 12.53 → 11.05 |
+| `success-solid` | `#00703c` | `#2fa564` | vs page 6.21 → 6.24 |
+| `chart-1` | `#1d70b8` | `#4f94d8` | vs page 5.17 → 6.12 |
+| `chart-2` | `#0b3d91` | `#9cc3f6` | vs page 10.04 → 10.77 |
+| `chart-3` | `#505a5f` | `#97a1a6` | vs page 7.07 → 7.43 |
+| `chart-4` | `#b1b4b6` | `#41484b` | vs page 2.08 → 2.10 |
+| `chart-selected` | `#0b0c0c` | `#f3f2f1` | vs page 19.59 → 17.52 |
+
+**Decided**
+- Maintainer review (Opus): reran the suite, 182 passed and 0 failed; looked at the dark form page at 1280px. Accepted all dark values. In the dark scheme the `surface-sunken` role is a raised, lighter surface; the token name describes the light-scheme role and stays, because renaming it would break projects for a word. Accepted the field focus text colour: the light value is unchanged, and without it a focused field would show dark text on a dark field. Kept the blue third of `.g2-ro-bar` and `.g2-dash` faint on a dark page (ADR 0009 keeps national colours); a dark-page variant needs an owner decision. Added a dark-scheme line to `CLAUDE.md` and `AGENTS.md`.
+- The dark page is the header colour, `#0b0c0c` (GOV.UK black), not a new neutral. Cost of the alternative (a page lighter than the header, for a tonal edge): one more neutral to explain, and a tonal edge that would be about 1.1:1, too weak to carry the separation alone. The 8px brand band (`#2f6bd1`, 3.87:1 against both) separates header and page. The surface (`#16191a`) and the sunken surface (`#202426`) are lighter than the page, so the sunken tokens in the dark scheme are raised, not recessed; the token names keep their role (panels, footer, chips, disabled field).
+- Saturated fills are light with dark text in the dark scheme (`--g2-color-on-solid` `#0b0c0c`): primary `#2fa564` 6.24:1, danger `#f06a5b` 6.45:1, notice band `#5aa4ea` 7.40:1. Cost of keeping white text on the light-scheme fills: the light-scheme green (`#00703c`) is 3.16:1 against the dark page, and the light-scheme red (`#d4351c`), which is also the error text, is 4.03:1, which fails 4.5:1 as text. This is why the brief has the `on-solid` token.
+- The enabled field border is the text colour (`#f3f2f1`) and the disabled border is `--g2-color-text-muted`, as in the light scheme (ink and muted ink), so enabled and disabled fields stay apart by border, background and text colour (all three differ, tested). Field background is the page colour, so a field on a raised surface reads as a well.
+- `--g2-color-success-solid` equals `--g2-color-action` and `--g2-color-success-line`; `--g2-color-danger-line` equals `--g2-color-danger-solid`, as in the light scheme.
+- Chart ramp in the dark scheme keeps the contrast order of the light ramp (against the page): selected 17.52, chart-2 10.77, chart-3 7.43, chart-1 6.12, chart-4 2.10 (light: 19.59, 10.04, 7.07, 5.17, 2.08). The lowest series stays a quiet grey, as before.
+- The dark values are written twice because CSS cannot share one rule between a media query and a plain selector. Cost of the alternatives: `light-dark()` takes colours, not RGB channels; a custom-property toggle would change the channel format that every consumer reads. A test compares the two blocks.
+- The guide sets `data-g2-scheme="auto"`, so the whole guide follows the system setting, and shows both schemes side by side in two `srcdoc` previews. Cost: the only script-free way to show a dark and a light page next to each other is a separate document with its own root element, so the sample markup exists twice (a test checks that the two copies are equal except the attribute). The example pages stay without an attribute (brief 05: no change to their default); the tests render them in both schemes.
+- The baseline for acceptance 1 is a committed copy of the 0.11.0 stylesheet, not a `git show` at test time: a clone without tags still runs the check. Cost: a 19.7 KB file in `tests/` that the next release must replace.
+- Fixture elements were added at the end of `<main>` so that the existing tab-order and geometry checks do not change.
+
+**Questions for the maintainer**
+1. Accept the dark values and the surface order (page, raised surface, sunken surface, getting lighter)?
+2. Accept the added `color` in the focus rule of fields (needed in the dark scheme; the light computed value is equal)?
+3. Accept `data-g2-scheme="auto"` on the guide, and the preview iframes without `fonts.css`?
+4. `CLAUDE.md` and `AGENTS.md` carry the project block: add the line from `docs/project-block.md`? I did not edit them.
+5. The blue third of `.g2-ro-bar` and `.g2-dash` is nearly invisible on the dark page (1.54:1). Keep it, or open a decision for a dark-page variant?
+
 ## 2026-10-26 — Destructive button renamed (0.11.0)
 
 **Done**

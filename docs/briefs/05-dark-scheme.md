@@ -1,6 +1,6 @@
 # Brief 05: Opt-in dark colour scheme
 
-Status: Ready for implementation after brief 03 lands. ADR 0009 records the decision. Issue #1.
+Status: Implemented in 0.12.0. ADR 0009 records the decision. Issue #1.
 Brief 03 also edits `gov2.css` and the suite. Start this brief from the commit that releases brief 03.
 
 ## Problem and outcome

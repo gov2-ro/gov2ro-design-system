@@ -18,9 +18,10 @@ Open `http://127.0.0.1:4173/docs/`.
 If Chrome is already installed, use `PLAYWRIGHT_CHANNEL=chrome npm test` instead of downloading Chromium.
 Generate review screenshots with `GUIDE_ARTIFACT_DIR=/tmp/gov2-guide PLAYWRIGHT_CHANNEL=chrome npm test`.
 The tests start their own server on a free local port and close it when finished.
-`npm test` runs every `tests/*.test.mjs` file: `guide.test.mjs` (guide, contract, layers, migration), `foundation.test.mjs` (page foundations and the example pages) and `fonts.test.mjs` (local fonts and file delivery).
-`tests/helpers.mjs` holds the shared set-up: server, browser, page openers and the contrast and focus helpers. `tests/woff2.mjs` reads the `cmap`, `fvar` and `name` tables of a WOFF2 file with Node's built-in Brotli. Neither is a test file.
+`npm test` runs every `tests/*.test.mjs` file: `guide.test.mjs` (guide, contract, layers, migration), `foundation.test.mjs` (page foundations and the example pages), `fonts.test.mjs` (local fonts and file delivery) and `scheme.test.mjs` (the dark colour scheme).
+`tests/helpers.mjs` holds the shared set-up: server, browser, page openers, the contrast and focus helpers, `tokenBlocks` (the light and the dark token values read from `gov2.css`), `setScheme` and `contrastReport`. `tests/woff2.mjs` reads the `cmap`, `fvar` and `name` tables of a WOFF2 file with Node's built-in Brotli. Neither is a test file.
 With `GUIDE_ARTIFACT_DIR` set, the example-page reflow checks also save full-page screenshots at 1280, 390 and 320px (`example-directory-1280.png`, and so on).
+The scheme checks also save the guide and both example pages in the light and the dark scheme at 1280 and 320px, in chunks of 3000px (`scheme-guide-dark-320-01.png`, and so on). Each chunk is checked against its expected size: a single full-page capture of a very tall page can repeat content.
 
 ## Automated coverage
 
@@ -83,7 +84,34 @@ Browser checks (`tests/contract.html`, the example pages and the guide):
   The check serves only the three documented paths, so a file outside them cannot hide a missing dependency.
 - Documentation: the changelog lists the removed import under **Breaking** with the fix, and no current document calls the fonts optional or says that the stylesheet imports them.
 
+### Dark colour scheme (`tests/scheme.test.mjs`)
+
+`tests/baseline/gov2-0.11.0.css` is a byte copy of `git show v0.11.0:gov2.css`, the last release before the scheme. A test checks its SHA-256. When a later release changes the colours, replace the file with that release and update the hash.
+
+Static checks read `gov2.css`, the guide and the reference: the four new tokens and their light values; no colour literal outside the token layer (a detector, tested against the eight literals of 0.11.0); the dark block and the auto block are equal and set only colour tokens that exist;
+the tokens that keep their light value are the documented ones (the header group, focus, the tricolour and its ring); each colour token has its hex value in a trailing comment that matches its channels; every text pair of ADR 0009 meets 4.5:1, every border and graphic pair meets 3:1,
+each status tone meets its pairs, the visited link is as far from the link as in the light scheme, the chart ramp keeps its order of emphasis; the guide tables equal the contrast that the tokens give; the reference, the guide, the other documents and the changelog name the attribute and the tokens.
+
+Browser checks (acceptance 1 to 11 of brief 05):
+
+- **Acceptance 1.** The fixture, both example pages and the guide are loaded with the 0.11.0 stylesheet and with the current one, without an attribute and with `light`. A fingerprint of every longhand computed property of every element (except `color-scheme` and custom properties) must be equal at rest.
+  The same holds for hover, keyboard focus and focus plus hover of every fixture control (25), and of one control for each distinct class and state on the other pages. A second check proves that the fingerprint tells the dark scheme from the light scheme.
+- **Acceptance 2 and 3.** Eleven combinations of the emulated `prefers-color-scheme` and the attribute (none, `light`, `auto`, `dark`, an unknown value, a capitalised value, an empty value) must give the light or the dark token values and the matching `color-scheme`. The native `select`, `textarea`, date field and the system colours `Canvas`, `Field` and `ButtonFace` follow the scheme.
+  The scrollbar is measured from pixels in a second browser that keeps classic scrollbars (Playwright hides them in headless Chrome by default).
+- **Acceptance 4 to 7.** Text contrast on the rendered surfaces in the dark scheme (fixture, guide with every code block open, both example pages, and the two guide previews); the borders of fields, the selected chip, the error bar and the keyboard focus indicator against their surfaces; each status tone as rendered; and hover, focus, hover plus focus, disabled, selected and error states, in both schemes.
+- **Acceptance 8.** With forced-colour emulation, every element and the control states compute the same in the light and in the dark scheme.
+- **Acceptance 9.** Every `var(--g2-…)` of `gov2.css`, `guide.css` and `examples.css` has a value in the light, dark and auto schemes.
+- **Acceptance 11.** The guide and both example pages have no horizontal overflow in either scheme at 1280 and 320px.
+
 ## Manual checks
+
+### Dark colour scheme
+
+- Look at the dark scheme in Safari and Firefox, and on a real phone with the system dark mode. The suite runs only in Chrome.
+- Check the native `select`, `textarea`, checkbox, radio and date controls of a real project in the dark scheme. The DS has no class for them; they follow `color-scheme` only.
+- Check a project's own colours (literals written for a light page) on a dark page before the project opts in.
+- Review forced colours on a real Windows system in both schemes. The suite uses Chrome's emulation.
+- Check how the browser paints the page before the stylesheet loads, for a reader with the dark system setting and `data-g2-scheme="auto"`. This is not measured.
 
 ### Fonts
 
@@ -126,6 +154,13 @@ Do not infer success from `getComputedStyle()` alone. Hover is independently tes
 The automated suite does not establish full WCAG conformance. Record actual coverage and remaining gaps in `ACTIVITY.md`.
 
 ## Last recorded run
+
+2026-10-27 (brief 05), Chrome 156.0.8078.48 (installed Chrome):
+182 passed, 0 failed, 0 skipped, 0 TODO, 209.8 seconds (`guide.test.mjs` 60 checks, `foundation.test.mjs` 47, `fonts.test.mjs` 23, `scheme.test.mjs` 52; `scheme.test.mjs` alone 91.8 seconds).
+Command: `GUIDE_ARTIFACT_DIR=<dir> PLAYWRIGHT_CHANNEL=chrome npm test`. The archive checksum is unchanged (`3cdbe56f…1952`). Before the change the suite had 130 checks (115.4 seconds, rerun at the start).
+Measured in this run: dark text pairs on the rendered surfaces (lowest 6.24:1 in the fixture and both example pages, 5.82:1 in the guide with every code block open); native `select`, `textarea` and date field, `Canvas` and the scrollbar follow `color-scheme`; the tricolour on the dark page (blue 1.54:1, yellow 13.31:1, red 3.48:1).
+Reviewed by eye: the guide and both example pages in both schemes at 1280 and 320px (screenshots saved in chunks of 3000px; the guide at 320px has 12 chunks, of which the first, the second and the one with the colour section were looked at).
+Not performed: every item under *Dark colour scheme* in the manual checks, and a second browser engine.
 
 2026-10-26 (brief 03), Chrome 155.0.8059.85 (installed Chrome):
 130 passed, 0 failed, 0 skipped, 0 TODO, 117.5 seconds (`guide.test.mjs` 60 checks, `foundation.test.mjs` 47, `fonts.test.mjs` 23; 24.6 seconds alone).

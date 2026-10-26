@@ -9,6 +9,19 @@ export let browser, server, base;
 export const root = new URL('../', import.meta.url);
 export const read = path => readFile(new URL(path, root), 'utf8');
 export const css = await read('gov2.css');
+// The custom properties of gov2.css by scheme. The light values are the first :root block; the dark values are written twice
+// (:root[data-g2-scheme=dark], and :root[data-g2-scheme=auto] inside a prefers-color-scheme media query). Each entry maps a token to its channels.
+export function tokenBlocks(source = css) {
+  const block = selector => {
+    const found = source.match(new RegExp(`(?:^|\\n)${selector}\\s*\\{([^}]*)\\}`));
+    if (!found) throw new Error(`gov2.css has no ${selector} block`);
+    return found[1];
+  };
+  const parse = text => Object.fromEntries([...text.matchAll(/^\s*(--[\w-]+):\s*([^;]+);/gm)].map(m => [m[1], m[2].trim()]));
+  const scheme = text => text.match(/^\s*color-scheme:\s*(\w+);/m)?.[1];
+  const light = block(':root'), dark = block(':root\\[data-g2-scheme=dark\\]'), auto = block(':root\\[data-g2-scheme=auto\\]');
+  return { light: parse(light), dark: parse(dark), auto: parse(auto), schemes: { light: scheme(light), dark: scheme(dark), auto: scheme(auto) }, texts: { light, dark, auto } };
+}
 export const migration = await read('docs/migration-from-0.6.0.md');
 export const reference = await read('COMPONENTS.md');
 export const artifacts = process.env.GUIDE_ARTIFACT_DIR;
@@ -100,3 +113,46 @@ export async function keyboardFocus(page, selector) {
   await page.locator(selector).focus();
   assert.equal(await page.locator(selector).evaluate(el => el.matches(':focus-visible')), true);
 }
+// Sets the colour scheme the way a project does: the attribute on the root element (null removes it).
+export const setScheme = (page, value) => page.evaluate(v => (v === null ? document.documentElement.removeAttribute('data-g2-scheme') : document.documentElement.setAttribute('data-g2-scheme', v)), value);
+// Text contrast on the rendered surfaces: every visible text node, and the border and value of every enabled field.
+// `lowest` is the smallest ratio found, with its text. The surface under a text node is the stack of translucent and opaque backgrounds above it.
+export const contrastReport = page => page.evaluate(() => {
+  const parse = value => (value.match(/[\d.]+/g) || []).map(Number);
+  const over = (top, bottom) => { const a = top[3] ?? 1; return [0, 1, 2].map(i => top[i] * a + bottom[i] * (1 - a)); };
+  // With no opaque background in the chain, the canvas shows: white in the light scheme, rgb(18, 18, 18) in the dark scheme.
+  const canvas = getComputedStyle(document.documentElement).colorScheme === 'dark' ? [18, 18, 18] : [255, 255, 255];
+  const surface = element => {
+    const stack = [];
+    for (let e = element; e; e = e.parentElement) {
+      const c = parse(getComputedStyle(e).backgroundColor);
+      if ((c[3] ?? 1) > 0) { stack.push(c); if ((c[3] ?? 1) >= 1) break; }
+    }
+    return stack.reverse().reduce((result, c) => over(c, result), canvas);
+  };
+  const luminance = ([r, g, b]) => [r, g, b].map(v => { v /= 255; return v <= .04045 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4; }).reduce((sum, v, i) => sum + v * [.2126, .7152, .0722][i], 0);
+  const ratio = (a, b) => { const [low, high] = [luminance(a), luminance(b)].sort((x, y) => x - y); return (high + .05) / (low + .05); };
+  const problems = [];
+  let text = 0, boundaries = 0, lowest = { ratio: Infinity, text: '' };
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+  for (let node; (node = walker.nextNode());) {
+    if (!node.textContent.trim()) continue;
+    const element = node.parentElement;
+    if (element.closest(':disabled') || !element.getClientRects().length || getComputedStyle(element).visibility === 'hidden') continue;
+    const style = getComputedStyle(element), background = surface(element), color = over(parse(style.color), background);
+    const large = parseFloat(style.fontSize) >= 24 || (parseFloat(style.fontSize) >= 18.66 && Number(style.fontWeight) >= 700);
+    const found = ratio(color, background);
+    text++;
+    if (found < lowest.ratio) lowest = { ratio: found, text: node.textContent.trim().slice(0, 30) };
+    if (found < (large ? 3 : 4.5)) problems.push(`text "${node.textContent.trim().slice(0, 30)}" ${found.toFixed(2)}:1`);
+  }
+  for (const input of document.querySelectorAll('input:not(:disabled)')) {
+    const style = getComputedStyle(input), background = surface(input.parentElement);
+    boundaries++;
+    const border = ratio(over(parse(style.borderTopColor), background), background);
+    if (border < 3) problems.push(`#${input.id} border ${border.toFixed(2)}:1`);
+    const value = ratio(over(parse(style.color), surface(input)), surface(input));
+    if (value < 4.5) problems.push(`#${input.id} value ${value.toFixed(2)}:1`);
+  }
+  return { text, boundaries, problems, lowest };
+});

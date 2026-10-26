@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdir } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { useBrowser, base, read, css, migration, reference, artifacts, withPage, fixture, example, withSite,
-  standaloneSite, layeredSite, styles, assertFocusReadable, contrast, keyboardFocus } from './helpers.mjs';
+  standaloneSite, layeredSite, styles, assertFocusReadable, contrast, keyboardFocus, tokenBlocks } from './helpers.mjs';
 
 useBrowser();
 
@@ -18,7 +18,7 @@ test('archive is linked and labels the preserved guide as historical', () => wit
   const hash = createHash('sha256').update(await snapshot.body()).digest('hex');
   assert.equal(hash, '3cdbe56f9a4bec755eb6b03e7c44344b38d5e0009a48dc2e89b3116607451952');
   await page.getByRole('link', { name: 'Înapoi la ghidul viu' }).click();
-  assert.equal(await page.locator('main section').count(), 15);
+  assert.equal(await page.locator('main section').count(), 16);
 }));
 
 test('archived original still renders its bundled reference content', () => withPage(async page => {
@@ -65,7 +65,7 @@ test('no duplicate IDs, broken fragment links, missing local links or missing la
 }));
 
 test('guide reads without JavaScript and code remains available in native details', () => withPage(async page => {
-  assert.equal(await page.locator('main section').count(), 15);
+  assert.equal(await page.locator('main section').count(), 16);
   const details = page.locator('details').first();
   await details.locator('summary').click();
   assert.ok(await details.locator('pre').isVisible());
@@ -231,13 +231,14 @@ test('reduced motion disables a project transition on a component', () => withPa
 }, { path: '/tests/contract.html', reducedMotion: 'reduce' }));
 
 // ---- Brief 01: the shared CSS contract (activation, names, layers, customization, migration) ----
-const tokenDefinitions = source => Object.fromEntries([...source.matchAll(/^\s*(--[\w-]+):\s*([^;]+);/gm)].map(m => [m[1], m[2].trim()]));
-const tokens = tokenDefinitions(css);
+// The light values are the public token list. The dark values (brief 05) redefine a subset of the same names: tests/scheme.test.mjs checks them.
+const tokens = tokenBlocks().light;
 const classes = [...new Set(css.match(/\.g2-[\w-]+/g))];
 const statuses = ['neutral', 'info', 'progress', 'warning', 'success', 'danger'];
-// Tokens added after 0.8.0 (brief 04): the type scale, the spacing scale and the gutter.
+// Tokens added after 0.8.0: the type scale, the spacing scale and the gutter (brief 04), and four colour tokens for the dark scheme (brief 05).
 const foundationTokens = ['--g2-font-size-heading-page', '--g2-font-size-heading-section', '--g2-font-size-heading-item', '--g2-font-size-body', '--g2-font-size-meta', '--g2-font-size-label',
-  '--g2-line-height-heading', '--g2-line-height-body', '--g2-gutter', '--g2-space-1', '--g2-space-2', '--g2-space-3', '--g2-space-4', '--g2-space-5', '--g2-space-6', '--g2-space-7'];
+  '--g2-line-height-heading', '--g2-line-height-body', '--g2-gutter', '--g2-space-1', '--g2-space-2', '--g2-space-3', '--g2-space-4', '--g2-space-5', '--g2-space-6', '--g2-space-7',
+  '--g2-color-on-solid', '--g2-color-action-secondary-hover', '--g2-color-control-bg', '--g2-color-ro-blue-ring'];
 // Files that describe the current API. History (changelog, activity, ADRs, briefs, migration) may name old identifiers.
 const currentFiles = ['gov2.css', 'COMPONENTS.md', 'GUIDELINES.md', 'README.md', 'AGENTS.md', 'CLAUDE.md', 'patterns/README.md', 'docs/index.html', 'docs/guide.css', 'docs/guide.js',
   'docs/archive/index.html', 'docs/project-block.md', 'docs/connect-a-project.md', 'docs/testing.md', 'tests/contract.html',
@@ -246,9 +247,11 @@ const currentFiles = ['gov2.css', 'COMPONENTS.md', 'GUIDELINES.md', 'README.md',
 test('contract: stylesheet has no activation gate, consumer reference or un-namespaced token, and every var() resolves', () => {
   assert.doesNotMatch(css, /data-skin/);
   assert.doesNotMatch(css, /posturi|check-skins|skin contract|skin file/i);
-  const names = [...css.matchAll(/(--[\w-]+)\s*:/g)].map(m => m[1]);
-  assert.equal(names.length, Object.keys(tokens).length, 'a custom property is declared more than once or outside :root');
-  for (const name of names) assert.match(name, /^--g2-/, `${name} is not namespaced`);
+  const names = [...tokenBlocks().texts.light.matchAll(/(--[\w-]+)\s*:/g)].map(m => m[1]);
+  assert.equal(names.length, Object.keys(tokens).length, 'a custom property is declared more than once in the light block');
+  assert.equal([...css.matchAll(/(--[\w-]+)\s*:/g)].length, names.length + 2 * Object.keys(tokenBlocks().dark).length, 'a custom property is declared outside the light block and the two dark blocks');
+  for (const name of [...css.matchAll(/(--[\w-]+)\s*:/g)].map(m => m[1])) assert.match(name, /^--g2-/, `${name} is not namespaced`);
+  for (const name of Object.keys(tokenBlocks().dark)) assert.ok(tokens[name], `the dark block sets ${name}, which the light block does not define`);
   for (const use of css.matchAll(/var\((--[\w-]+)/g)) assert.ok(tokens[use[1]], `${use[1]} is not defined`);
 });
 
@@ -361,9 +364,11 @@ test('contract: a minimal page gets the whole-site defaults from the stylesheet 
   assert.equal((await styles(page, 'button.g2-btn')).height, 44);
 }));
 
+// The live guide opts in to the colour scheme with data-g2-scheme="auto" (brief 05). That is the only attribute besides lang; it is not an activation attribute.
 for (const path of ['/tests/contract.html', '/docs/', '/docs/archive/']) {
   test(`contract: ${path} sets no activation attribute and still gets the defaults`, () => withPage(async page => {
-    assert.deepEqual(await page.evaluate(() => document.documentElement.getAttributeNames()), ['lang']);
+    assert.deepEqual(await page.evaluate(() => document.documentElement.getAttributeNames()), path === '/docs/' ? ['lang', 'data-g2-scheme'] : ['lang']);
+    if (path === '/docs/') assert.equal(await page.evaluate(() => document.documentElement.dataset.g2Scheme), 'auto');
     const state = await page.evaluate(() => ({ text: getComputedStyle(document.documentElement).getPropertyValue('--g2-color-text').trim(), font: getComputedStyle(document.body).fontFamily }));
     assert.equal(state.text, '11 12 12');
     assert.match(state.font, /^Inter,/);
@@ -382,7 +387,8 @@ test('contract: gov2.css declares the public layer order first and keeps every r
   assert.deepEqual(sheet.statements, [['reset', 'gov2', 'utilities', 'app'], ['gov2.tokens', 'gov2.base', 'gov2.components', 'gov2.states']]);
   assert.deepEqual(Object.keys(sheet.blocks), ['gov2.tokens', 'gov2.base', 'gov2.components', 'gov2.states']);
   assert.deepEqual(sheet.kinds.filter(kind => !['CSSLayerStatementRule', 'CSSLayerBlockRule', 'CSSImportRule'].includes(kind)), [], 'a rule sits outside every layer');
-  assert.deepEqual(sheet.blocks['gov2.tokens'], [':root']);
+  // The tokens layer holds the light block, the dark block and the dark block for prefers-color-scheme (the media rule shows its condition).
+  assert.deepEqual(sheet.blocks['gov2.tokens'], [':root', ':root[data-g2-scheme="dark"]', '(prefers-color-scheme: dark)']);
   const components = sheet.blocks['gov2.components'].join('\n'), states = sheet.blocks['gov2.states'].join('\n');
   assert.doesNotMatch(components, /focus-visible|:disabled|aria-pressed|field-error \.g2-input/);
   for (const state of [':focus-visible', ':disabled', 'aria-pressed', '.g2-field-error .g2-input']) assert.ok(states.includes(state), `${state} belongs in gov2.states`);

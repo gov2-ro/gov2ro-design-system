@@ -1,7 +1,7 @@
 # Gov2 audit follow-up
 
 Date: 2026-10-26
-Status: D1–D6 accepted. Briefs 02, 01, 04 and 03 are implemented; brief 05 is in progress. Briefs 06 and 07 follow it in order.
+Status: D1–D6 accepted. Briefs 02, 01, 04, 03 and 05 are implemented. Brief 06 is next, then 07.
 
 The owner wants quick corrections now and implementation briefs for another model.
 Take the decisions in order. Record each answer here and in the affected brief before starting dependent work.
@@ -54,13 +54,13 @@ Brief 04 is implemented in 0.9.0. Brief 03 is ready.
 2. `02-live-guide-and-checks.md` — **Implemented:** executable documentation and regression checks then migrated to the 0.8.0 API by brief 01.
 3. `03-fonts-and-delivery.md` — **Implemented (0.10.0):** local fonts as the default installation (ADR 0005 and its amendment), and reproducible installation.
 4. `04-page-foundations.md` — **Implemented (0.9.0):** the accepted foundation and two representative pages.
-5. `05-dark-scheme.md` — **In progress:** opt-in dark values for the colour tokens (ADR 0009, issue #1).
+5. `05-dark-scheme.md` — **Implemented (0.12.0):** opt-in dark values for the colour tokens (ADR 0009, issue #1).
 6. `06-tricolour-title-sweep.md` — **Ready after 05:** `.g2-ro-sweep`, with two deliberate WCAG deviations (ADR 0010, issue #2).
 7. `07-navigation-and-data-components.md` — **Ready after 06:** breadcrumbs, pagination, table, summary list, skip link and highlight (issues #3–#8, approved 2026-10-27).
 
 The owner requested package 02 first. Its guide, fixtures and test runner now exist.
 Package 01 migrated those files and turned the two TODOs into real assertions. Do not create a second fixture framework.
-Briefs 03 (0.10.0) and the button rename (0.11.0) have landed. Brief 05 is in progress. Then implement 05, 06 and 07, in that order. Each one edits `gov2.css` and the suite, so they run one after another.
+Briefs 03 (0.10.0) and the button rename (0.11.0) have landed. Brief 05 landed in 0.12.0. Then implement 06 and 07, in that order. Each one edits `gov2.css` and the suite, so they run one after another.
 The prior bundle is preserved under `docs/archive/` for historical reference. Keep its snapshot unchanged during migrations.
 
 Each package ends with an implementation report: changes, commands, measured results, remaining assumptions and migration notes.
