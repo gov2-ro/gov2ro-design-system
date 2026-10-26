@@ -20,7 +20,7 @@ optional Romanian tricolour mark (default: `.g2-ro-corner`).
 
 <!-- ```html
 <html lang="ro" data-skin="gov2">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/gov2-ro/gov2ro-design-system@0.2.0/gov2.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/gov2-ro/gov2ro-design-system@0.3.0/gov2.css">
 ``` -->
 
 The design system is at 0.x: a proposal, not tested yet. A minor version can break, so pin an exact version.
@@ -51,4 +51,4 @@ The design system is at 0.x: a proposal, not tested yet. A minor version can bre
 1. Edit `gov2.css`, note the change in `CHANGELOG.md`.
 2. Tag: `git tag v1.0.1 && git push --tags`.
 <!-- 3. jsDelivr picks the tag up within minutes. Purge if needed:
-   https://purge.jsdelivr.net/gh/gov2-ro/gov2ro-design-system@0.2.0/gov2.css -->
+   https://purge.jsdelivr.net/gh/gov2-ro/gov2ro-design-system@0.3.0/gov2.css -->

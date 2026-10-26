@@ -1,5 +1,24 @@
 # Activity
 
+## 2026-10-26 — Component reference, proposal flow, project block (0.3.0)
+
+**Done**
+- Wrote `COMPONENTS.md`: the specification of each `.g2-` class and token group, with markup, use and states.
+- Created the label `ds-proposal` on GitHub, and the issue template `.github/ISSUE_TEMPLATE/ds-proposal.md`.
+- Wrote the DS block for the projects in `docs/project-block.md`. Added a posturi version of the block to `AGENTS.md` and `CLAUDE.md` in posturi.gov.ro. It is not committed there.
+- Added the compatibility analysis of the live projects to `docs/BACKLOG.md`.
+- Corrected `CLAUDE.md`: GitHub Pages is not enabled, and the repo is private. The earlier text said that Pages serves `docs/`.
+
+**Hard**
+- posturi has a skin contract. Measured: `check-skins.php` reports 69 problems for `gov2.css`, 46 unscoped `.g2-` rules and 23 unknown tokens. posturi loads all skin files on each page, so the unscoped rules leak into the other skins. This is the first compatibility bottleneck.
+- The mapping from domains to repos is partly assumed. Only `posturi.gov.ro` is certain.
+
+**Decided**
+- **`COMPONENTS.md` is the specification, and `docs/index.html` is the showcase.** Agents cannot read the 480 KB bundle. Cost of the alternative: agents read `gov2.css` and guess the markup.
+- **The issue template asks for the local version.** A project does not wait for the DS. It builds a local version and links the issue. Cost of the alternative: the project work stops until the DS releases.
+- **The posturi block is not committed in posturi.** Another agent can work in that repo, and posturi has its own process. Cost of the alternative: a commit in a repo that this session does not maintain.
+- **Version 0.3.0:** `COMPONENTS.md` and the proposal flow are deliverables, so the minor version goes up. `gov2.css` itself did not change.
+
 ## 2026-10-26 — Agent guidance and DS governance
 
 **Done**

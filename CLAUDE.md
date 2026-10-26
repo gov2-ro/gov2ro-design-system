@@ -18,7 +18,7 @@ The DS follows the GOV.UK-derived theme of igov.ro: Inter + Fragment Mono, squar
 
 ## Style guide (`docs/index.html`)
 
-GitHub Pages serves this file. A tool generated it as a self-contained bundle (`__bundler/manifest` and `template` script blocks, with lines of several hundred KB). The bundle does not load `../gov2.css`, so a stylesheet change does not show in the guide. Do not edit the layout or styles by hand. A plain text replacement (for example a URL) is safe, because the template has no integrity hash. The guide text is in Romanian.
+The file is for GitHub Pages, but Pages is not enabled now, and the repo is private. A tool generated it as a self-contained bundle (`__bundler/manifest` and `template` script blocks, with lines of several hundred KB). The bundle does not load `../gov2.css`, so a stylesheet change does not show in the guide. Do not edit the layout or styles by hand. A plain text replacement (for example a URL) is safe, because the template has no integrity hash. The guide text is in Romanian.
 
 ## Logos
 
@@ -36,7 +36,9 @@ GitHub Pages serves this file. A tool generated it as a self-contained bundle (`
 
 ## How the DS changes
 
-- **Proposals are GitHub issues** on `gov2-ro/gov2ro-design-system`, with the label `ds-proposal`. An agent in any project can open one with `gh`. The issue gives the need, a screenshot, the markup, the projects that can use it, and the type: component, variant, token or fix.
+- **`COMPONENTS.md` is the specification** of each `.g2-` class and token group. Change it in the same commit as `gov2.css`.
+- **Proposals are GitHub issues** on `gov2-ro/gov2ro-design-system`, with the label `ds-proposal`. An agent in any project can open one with `gh`. The template is `.github/ISSUE_TEMPLATE/ds-proposal.md`. It asks for the type (component, variant, token or fix), the need, the markup, the projects that can use it, and the local version.
+- **Each project has the same DS block** in its `AGENTS.md` and `CLAUDE.md`. The block is in `docs/project-block.md`. When the block changes, tell the projects.
 - **Promote a local pattern to the DS** when a second project needs it, or when it is clearly generic. Until then, keep it in the project.
 - **One maintainer edits the DS.** Only the agent that works in this repo changes `gov2.css`, `CHANGELOG.md` and the docs. Agents in other repos open issues; they do not edit the DS.
 - **The maintainer releases small fixes without approval.** The owner approves each new component, variant or token, and each breaking change, in the issue.
@@ -85,8 +87,6 @@ Two files carry the project memory between sessions. Create each file with the f
 - Record wrong turns. Say what you measured and what you assumed. Keep the measured numbers: they are the baseline for regressions.
 
 Record a design rule that the projects depend on as an ADR in `docs/decisions/NNNN-title.md`.
-
-Note: GitHub Pages serves `docs/`, so these files are public.
 
 ## Opus designs, Sonnet builds
 

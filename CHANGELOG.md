@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.0 — 2026-10-26 (proposal, untested)
+
+No change to the styles in `gov2.css`.
+
+- `COMPONENTS.md`: the reference for each `.g2-` class and token group, with markup.
+- Proposals: GitHub issues with the label `ds-proposal`, and an issue template.
+- `docs/project-block.md`: the DS rules block for `AGENTS.md` and `CLAUDE.md` in each project.
+
 ## 0.2.0 — 2026-10-26 (proposal, untested)
 
 First tagged version, aligned with igov.ro (brand.css, GOV.UK theme of 2026-10).
