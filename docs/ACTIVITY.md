@@ -5,6 +5,8 @@
 **Done**
 - Wrote `docs/connect-a-project.md`: four prompts (compatibility report, adoption, proposal, update) and how sessions find the DS session.
 - The owner confirmed the repos: civtech.gov2.ro is `awesome-civetch`, orgs.gov2.ro is `institutii-publice`. ins.gov2.ro has worktrees; the owner starts a session there.
+- Published on the owner's request: pushed `main` and the tags `v0.2.0`, `v0.3.0` and `v0.4.0` to GitHub.
+- Open in posturi.gov.ro, not committed: the DS block in `AGENTS.md` and `CLAUDE.md`, and the 0.3.0 copy of `gov2.css`.
 
 **Decided**
 - **Each project session writes its own compatibility report.** The session in the project knows its live worktree and its build. The DS session writes the results into `docs/compat-analysis.md`. Cost of the alternative: the DS session reads each repo from outside and guesses which worktree is live.
