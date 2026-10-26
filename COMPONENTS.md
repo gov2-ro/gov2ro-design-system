@@ -275,14 +275,14 @@ A short 48×4px tricolour mark above a section title.
 ```html
 <button class="g2-btn" type="submit">Caută</button>
 <a class="g2-btn g2-secondary" href="/export">Exportă CSV</a>
-<button class="g2-btn g2-warning" type="button">Șterge contul</button>
+<button class="g2-btn g2-danger" type="button">Șterge contul</button>
 ```
 
 | Class | Use |
 |---|---|
 | `.g2-btn` | The primary action. Use one for each page or form. Green. |
 | `.g2-btn.g2-secondary` | Other actions. Grey. |
-| `.g2-btn.g2-warning` | A destructive action. Red. |
+| `.g2-btn.g2-danger` | A destructive action. Red. Before 0.11.0 the class was `.g2-warning`. |
 
 - The button is at least 44px high and has a 2px shadow below it. Buttons, chips and inputs set `box-sizing:border-box` without requiring a project reset.
 - On keyboard focus, the button is yellow with ink text, including when hovered. The focus rule is in `gov2.states`; hover is in `gov2.components`.
@@ -309,7 +309,7 @@ The attribute value and the token names use the same six status names. A tag wit
 | `success` | `--g2-color-success-bg`, `--g2-color-success-line`, `--g2-color-success-ink` | Done, valid, active. |
 | `danger` | `--g2-color-danger-bg`, `--g2-color-danger-line`, `--g2-color-danger-ink` | Error, closed, rejected. |
 
-The class `.g2-btn.g2-warning` is not a status. It is the red destructive button and uses `--g2-color-danger-solid`.
+The destructive button `.g2-btn.g2-danger` uses the same name as the `danger` status and reads `--g2-color-danger-solid`.
 
 ## Fields
 
@@ -394,5 +394,5 @@ These parts are missing. Build a local version with the project prefix, and open
 - A core error summary. The example form has a local composition.
 - A skip link. The example pages have a local one.
 - Icon buttons, complex filters and charts.
-- A hover state for `.g2-btn.g2-warning`.
+- A hover state for `.g2-btn.g2-danger`.
 - Dark mode.

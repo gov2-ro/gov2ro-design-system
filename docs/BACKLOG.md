@@ -116,7 +116,7 @@ Found while writing `COMPONENTS.md`. Each gap is also listed in `COMPONENTS.md` 
 - [ ] A core error summary. The form example has a local composition (`ex-summary`); promote it when a second project needs it.
 - [ ] A core skip link. The example pages have a local one (`ex-skip`).
 - [ ] Icon buttons, complex filters and charts (deferred by ADR 0007).
-- [ ] A hover state for `.g2-btn.g2-warning`.
+- [ ] A hover state for `.g2-btn.g2-danger`.
 - [ ] Dark mode.
 - [ ] Tables, pagination, breadcrumbs, tabs and summary lists. The directory example shows five results with no pagination and a single detail page. Breadcrumbs and tables now have two projects (stiri, org); see `compat-analysis.md`. Each one needs owner approval.
 
@@ -135,7 +135,7 @@ Defects found during brief 01. They existed in 0.7.0. The migration did not chan
 - [ ] A disabled `.g2-btn` still changes its background on hover (measured: primary `#00703c` to `#005a30`, secondary `#f3f2f1` to `#dbdad9`, at 50% opacity). Guard the hover rules with `:not(:disabled)`.
 - [ ] The general `:focus-visible` rule gives any focused element the yellow background. Measured: `<main tabindex="-1">` after a skip-link activation turns fully yellow. Whole-site activation makes this more likely. Decide how to limit it (for example, exclude `[tabindex="-1"]`).
 - [ ] Some components use colour literals where a token role exists: `#fff` (button text, navigation links, notice text, input background), `#dbdad9` (secondary hover), `#3a5aa0` (tricolour dot ring). A project that overrides `--g2-color-on-header` does not change the navigation link colour.
-- [ ] The class `.g2-btn.g2-warning` is red (destructive), but the status `warning` is yellow. Decide whether the class gets a new name. ADR 0003 keeps the class names, so this needs a decision.
+- [x] The class `.g2-btn.g2-warning` is red (destructive), but the status `warning` is yellow. The owner approved a new name: `.g2-btn.g2-danger`, with no alias (issue #9, 0.11.0).
 
 ## Delivery
 

@@ -183,8 +183,8 @@ Tokens added after 0.8.0 have no 0.6.0 name, so they have no row. See *Changes a
 
 ## Classes, attributes and selectors
 
-No `.g2-*` class is renamed or removed.
-The class `.g2-btn.g2-warning` keeps its meaning: a red, destructive button. It does not use the `warning` status colours.
+From 0.6.0 to 0.10.0, no `.g2-*` class is renamed or removed.
+In 0.11.0, `.g2-btn.g2-warning` becomes `.g2-btn.g2-danger` (see *Changes after 0.10.0*).
 
 | 0.6.0 | Now |
 |---|---|
@@ -474,6 +474,15 @@ If a project links both its own `@font-face` rules and `fonts.css` for the same 
 2. The font requests go only to the files in your `fonts/` folder and return 200. A page without Romanian letters needs the two *latin* files. A page with ă, ș or ț also needs the Inter *latin-ext* file.
 3. In the browser developer tools, check the rendered font of a heading and of Romanian text such as "Ăă Ââ Îî Șș Țț". It is Inter, and a web font.
 4. Block the font requests and reload. The text stays readable, with the system fonts, and nothing overflows horizontally.
+
+## Changes after 0.10.0: the destructive button
+
+`.g2-btn.g2-warning` is renamed `.g2-btn.g2-danger` (issue #9). The button is still red and destructive.
+The new name matches the `danger` status and `--g2-color-danger-solid`. `warning` is the yellow status.
+There is no alias: a button with the old class shows as the green primary button.
+
+1. Replace `g2-warning` with `g2-danger` in the class attribute of each destructive button.
+2. Check that no project rule selects `.g2-warning`.
 
 ## Checklist
 

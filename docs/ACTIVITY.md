@@ -1,5 +1,18 @@
 # Activity
 
+## 2026-10-26 — Destructive button renamed (0.11.0)
+
+**Done**
+- Renamed `.g2-btn.g2-warning` to `.g2-btn.g2-danger` in `gov2.css`, `COMPONENTS.md`, the guide, the raw fixture and the migration document. Opened issue #9 to record the owner's approval.
+- Opened issues #3–#8 for the stiri proposals (breadcrumbs, pagination, table, summary list, skip link, highlight token).
+
+**Hard**
+- The colour values and states did not change. Chrome 155.0.8059.85: 130 passed, 0 failed in 118.2 s. The existing state checks on the fixture's `#danger` button cover the renamed class.
+
+**Decided**
+- `danger`, not `destructive`: one word, one meaning across the status tokens, `data-tone` and the button. Cost of the alternative: a second term for the same red role.
+- Released alone, before brief 05, so that the breaking change does not hide inside the dark scheme release.
+
 ## 2026-10-26 — Local fonts and file delivery (brief 03, 0.10.0)
 
 **Done**

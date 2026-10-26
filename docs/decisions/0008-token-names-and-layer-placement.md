@@ -48,7 +48,7 @@ These follow from the general rule that focus wins over component defaults.
 
 ## Known limits, deferred
 
-- `.g2-btn.g2-warning` is the red destructive button, while `warning` is now the yellow status name. ADR 0003 keeps class names. A rename needs an owner decision.
+- `.g2-btn.g2-warning` is the red destructive button, while `warning` is now the yellow status name. ADR 0003 keeps class names. A rename needs an owner decision. Resolved: the owner approved `.g2-btn.g2-danger` (issue #9, 0.11.0).
 - A disabled button still changes background on hover.
 - The general `:focus-visible` rule fills a focused skip-link target, such as `<main tabindex="-1">`, with yellow.
 - Some component colours are literals (`#fff`, `#dbdad9`, `#3a5aa0`) rather than tokens.

@@ -1,4 +1,4 @@
-/* gov2 — stilul comun pentru proiectele gov2.ro · v0.10.0 · 26.10.2026
+/* gov2 — stilul comun pentru proiectele gov2.ro · v0.11.0 · 26.10.2026
 
    Shared stylesheet for gov2.ro projects.
    Inspired by igov.ro's GOV.UK-derived theme (brand.css, 2026-10): Inter + Fragment Mono,
@@ -206,7 +206,7 @@ a:where(:hover){text-decoration-thickness:3px}
 .g2-btn:hover{background:rgb(var(--g2-color-action-hover))}
 .g2-btn.g2-secondary{background:rgb(var(--g2-color-surface-sunken));color:rgb(var(--g2-color-text));box-shadow:0 2px rgb(var(--g2-color-action-secondary-shadow))}
 .g2-btn.g2-secondary:where(:hover){background:#dbdad9}
-.g2-btn.g2-warning{background:rgb(var(--g2-color-danger-solid));box-shadow:0 2px rgb(var(--g2-color-danger-shadow))}
+.g2-btn.g2-danger{background:rgb(var(--g2-color-danger-solid));box-shadow:0 2px rgb(var(--g2-color-danger-shadow))}
 
 /* ---- Tags: square, the text names the state ---- */
 .g2-tag{display:inline-block;padding:2px 8px;border-radius:var(--g2-radius);font:600 var(--g2-font-size-label)/1.35 var(--g2-font-sans);background:rgb(var(--g2-color-neutral-bg));color:rgb(var(--g2-color-neutral-ink))}

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.11.0 — 2026-10-26 (proposal, untested)
+
+**Breaking**
+- `.g2-btn.g2-warning` is renamed `.g2-btn.g2-danger` (issue #9, approved by the owner). The button is still red and destructive. The new name matches the `danger` status; `warning` is the yellow status. No alias: a button with the old class shows as the green primary button. Replace the class; see *Changes after 0.10.0* in the migration document.
+
 ## 0.10.0 — 2026-10-26 (proposal, untested)
 
 Brief 03 (fonts and file delivery). ADR 0005 and its amendment record the decision. ADRs 0009 and 0010 and briefs 05 and 06 (dark scheme, title sweep) are also in this release, as decisions only. `docs/migration-from-0.6.0.md` has a section, *Changes after 0.9.1: fonts*, for projects that update.
