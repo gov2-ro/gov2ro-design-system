@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.10.0 — 2026-10-26 (proposal, untested)
+
+Brief 03 (fonts and file delivery). ADR 0005 and its amendment record the decision. ADRs 0009 and 0010 and briefs 05 and 06 (dark scheme, title sweep) are also in this release, as decisions only. `docs/migration-from-0.6.0.md` has a section, *Changes after 0.9.1: fonts*, for projects that update.
+
+**Breaking**
+- **Google Fonts import removed.** `gov2.css` no longer imports Inter and Fragment Mono from Google Fonts. It makes no font request at all. A project that relied on the import now gets its installed fonts or the system fonts from `--g2-font-sans` and `--g2-font-mono`, and its text can change width.
+  The fix is one line: copy `fonts.css` and the `fonts/` folder from the same tag as `gov2.css`, and link `fonts.css` next to `gov2.css`. This is now part of the standard installation. A project that serves Inter and Fragment Mono itself, and a quick one-off project that accepts system fonts, can skip it.
+  The tokens `--g2-font-sans` and `--g2-font-mono` and their fallback stacks are unchanged.
+
+**Added**
+- `fonts.css`: four `@font-face` rules (Inter latin and latin-ext, Fragment Mono latin and latin-ext) with `font-display: swap`, a `unicode-range` for each subset and URLs relative to the file (`fonts/…`). It has no layer, no token and no type rule.
+- `fonts/`: the four WOFF2 files (172,660 bytes), the two OFL licence notices and `fonts/README.md` with the source, version, licence, size and SHA-256 of every file. Inter is one variable file for each subset (weights 100 to 900); Fragment Mono is the weight 400.
+  The files are copied unchanged from `@fontsource-variable/inter` 5.2.8 and `@fontsource/fragment-mono` 5.2.8.
+- The README procedure *Install from an exact tag*: copy `gov2.css`, `fonts.css` and `fonts/` from a tag with `git archive`. `COMPONENTS.md` has a *Fonts* section.
+- `tests/fonts.test.mjs` and `tests/woff2.mjs`: browser checks and file checks for core-only and standard mode (network requests, Romanian coverage read from the font files, fallback, subpaths, Content-Security-Policy, the install procedure).
+- `tests/contract.html?fonts=1` adds `fonts.css` to the raw fixture. Without the parameter, the fixture is core-only.
+
+**Changed**
+- The live guide and the two example pages link `fonts.css`. The guide describes the installation, the Content-Security-Policy and the exceptions, and shows Romanian samples in both families.
+- `docs/project-block.md` tells projects to install `gov2.css`, `fonts.css` and `fonts/` together from one tag.
+- The check *fonts blocked* in `tests/foundation.test.mjs` blocks the local font files of the example pages, and asserts that the page makes no external request.
+- `scripts/serve.mjs` serves `.woff2` as `font/woff2` and `.txt` as `text/plain`.
+- The header comment of `gov2.css` describes the font delivery.
+- `docs/connect-a-project.md`, `CLAUDE.md` and `AGENTS.md` describe the local fonts.
+
 ## 0.9.1 — 2026-10-26 (proposal, untested)
 
 **Fixed**

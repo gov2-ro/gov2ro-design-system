@@ -18,9 +18,31 @@ optional Romanian tricolour mark (default: `.g2-ro-corner`).
 
 ## Use it
 
-The current API is 0.x. Pin an exact tag when you copy the stylesheet into a project.
-Copy the file without editing it. Put project styles in a separate file.
+The current API is 0.x. Pin an exact tag when you copy the files into a project.
+Copy the files without editing them. Put project styles in a separate file.
 Consumers adapt to the DS; the DS does not implement consumer skin compatibility.
+Only the latest DS is maintained. A project keeps its copy until the project chooses to update.
+
+### Install from an exact tag
+
+The standard installation copies three paths from one tag: `gov2.css`, `fonts.css` and the `fonts/` folder.
+`fonts/` holds the local Inter and Fragment Mono files, their licence notices and their provenance (`fonts/README.md`).
+Copy the whole folder, so that the notices stay with the files.
+
+First update your clone of this repository: `git -C "$DS" fetch --tags`. Then run:
+
+<!-- install -->
+```sh
+# DS is a clone of this repository. TAG is the exact tag to install, for example v0.9.1.
+DS=~/devbox/gov2/gov2ro-design-system
+TAG=vX.Y.Z
+mkdir -p assets/gov2
+git -C "$DS" archive "$TAG" gov2.css fonts.css fonts | tar -x -C assets/gov2
+```
+
+The command writes `assets/gov2/gov2.css`, `assets/gov2/fonts.css` and `assets/gov2/fonts/`. Choose your own asset path.
+`fonts.css` finds its files with relative URLs, so it works from the site root and from a subpath, if `fonts/` stays next to it.
+To update, run the same command with a newer tag, then read `CHANGELOG.md` back to your old version. Look for **Breaking**.
 
 ```html
 <!doctype html>
@@ -28,16 +50,22 @@ Consumers adapt to the DS; the DS does not implement consumer skin compatibility
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="/assets/gov2.css">
+  <link rel="stylesheet" href="/assets/gov2/gov2.css">
+  <link rel="stylesheet" href="/assets/gov2/fonts.css">
 </head>
 <body>…</body>
 </html>
 ```
 
+- The order of the two `<link>` elements does not matter. `fonts.css` only declares `@font-face` rules, with `font-display: swap`.
+- A page that links `fonts.css` needs `style-src 'self'` and `font-src 'self'` in its Content-Security-Policy, if it serves the files itself.
+- `gov2.css` alone makes no font request and works offline. Without `fonts.css`, the page falls back to the system fonts in `--g2-font-sans` and `--g2-font-mono`.
+  Skip `fonts.css` only for a quick one-off project that accepts system fonts, or when the project already serves Inter and Fragment Mono itself.
+- No public CDN or hosted guide is configured. Do not link to one.
+
 Loading the stylesheet applies the base styles to the whole page. No activation attribute or wrapper is needed.
 The tokens (`--g2-*`) are on `:root`. The components are opt-in through their `.g2-*` classes.
 The stylesheet declares the layers `reset, gov2, utilities, app`. Put your reset in `reset` and your own CSS in `app`.
-The current CSS also loads Google Fonts. No public CDN or hosted guide is configured.
 
 Read [COMPONENTS.md](COMPONENTS.md) for the API and [GUIDELINES.md](GUIDELINES.md) for design defaults and accessibility.
 A project that uses 0.6.0 or 0.7.0 reads [the migration guide](docs/migration-from-0.6.0.md): old and new names, loading examples and the layer limits.
@@ -79,6 +107,7 @@ See [testing instructions](docs/testing.md) for coverage, screenshots and manual
 ## Contents
 
 - `gov2.css` — layers, tokens (`--g2-*`, colours as RGB channels) and opt-in `.g2-*` classes
+- `fonts.css` and `fonts/` — the local Inter and Fragment Mono files and their `@font-face` rules, with licences, sources, sizes and checksums in `fonts/README.md`
 - `docs/index.html` — the editable live guide; it loads `gov2.css` directly
 - `docs/guide.css` and `docs/guide.js` — documentation layout and optional helpers
 - `docs/testing.md` — repeatable browser checks and manual verification procedures

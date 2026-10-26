@@ -6,6 +6,7 @@
   <meta name="description" content="Ghidul viu gov2: componente reale, markup, recomandări și verificări pentru proiecte civice.">
   <title>gov2 — ghidul sistemului de design</title>
   <link rel="stylesheet" href="../gov2.css">
+  <link rel="stylesheet" href="../fonts.css">
   <link rel="stylesheet" href="guide.css">
   <script src="guide.js" defer>
 </script>
@@ -256,7 +257,7 @@
 <section class="guide-section" id="tipografie" aria-labelledby="title-tipografie">
 <span class="guide-number">03</span>
 <h2 id="title-tipografie">Text clar, cifre ușor de comparat</h2>
-<p>Inter este familia sans-serif; Fragment Mono este folosită pentru coduri și cifre aliniate. Dimensiunile sunt în <code>rem</code>, deci urmează mărimea textului aleasă de cititor. Valorile în px sunt cele de la o rădăcină de 16px. Corpul de text are 1,0625rem (17px) și înălțime de rând 1,55.</p>
+<p>Inter este familia sans-serif; Fragment Mono este folosită pentru coduri și cifre aliniate. <code>gov2.css</code> numește familiile, cu fonturile sistemului ca rezervă, și nu face nicio cerere pentru fonturi. Fișierul <code>fonts.css</code>, cu folderul <code>fonts/</code>, le livrează local. Este pasul standard de instalare, iar acest ghid îl încarcă. Dimensiunile sunt în <code>rem</code>, deci urmează mărimea textului aleasă de cititor. Valorile în px sunt cele de la o rădăcină de 16px. Corpul de text are 1,0625rem (17px) și înălțime de rând 1,55.</p>
 <div class="guide-demo">
 <p class="guide-demo-label">Cele șase roluri, ca puncte de plecare</p>
 <h3 class="g2-heading-page">Titlu de pagină</h3>
@@ -306,6 +307,8 @@
 <p class="guide-demo-label">Text din stylesheet</p>
 <p class="guide-type-body">Școli, spitale și instituții din țară. Urmărim sursele și explicăm ce știm, ce lipsește și când am verificat.</p>
 <p class="g2-mono">1.284.551 lei · 26.10.2026 · REF-7Q2K</p>
+<p class="guide-type-body" id="ro-sample-sans">Litere românești: Ăă Ââ Îî Șș Țț</p>
+<p class="g2-mono" id="ro-sample-mono">Ăă Ââ Îî Șș Țț</p>
 </div>
 <details class="guide-code">
 <summary>Markup HTML</summary>
@@ -821,10 +824,10 @@
 <section class="guide-section" id="utilizare" aria-labelledby="title-utilizare">
 <span class="guide-number">13</span>
 <h2 id="title-utilizare">Folosiți fișierul distribuit</h2>
-<p>Copiați stylesheet-ul dintr-un tag exact și păstrați-l nemodificat. Puneți compoziția și variațiile locale într-un fișier al proiectului.</p>
+<p>Copiați din același tag exact <code>gov2.css</code>, <code>fonts.css</code> și folderul <code>fonts/</code>, și păstrați-le nemodificate. Puneți compoziția și variațiile locale într-un fișier al proiectului.</p>
 <div class="guide-install">
 <details class="guide-code">
-<summary>Pagină independentă: doar linkul către stylesheet</summary>
+<summary>Pagină minimă: doar nucleul, cu fonturile sistemului</summary>
 <pre>
 <code id="code-19">&lt;!doctype html&gt;
 &lt;html lang=&quot;ro&quot;&gt;
@@ -865,6 +868,25 @@
 </pre>
 <button class="guide-copy" type="button" data-copy="code-21" hidden>Copiază codul</button>
 </details>
+<details class="guide-code">
+<summary>Instalare standard: legăturile către gov2.css și fonts.css</summary>
+<pre>
+<code id="code-fonts-link">&lt;link rel=&quot;stylesheet&quot; href=&quot;/assets/gov2/gov2.css&quot;&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;/assets/gov2/fonts.css&quot;&gt;  &lt;!-- folderul fonts/ rămâne lângă fonts.css --&gt;</code>
+</pre>
+<button class="guide-copy" type="button" data-copy="code-fonts-link" hidden>Copiază codul</button>
+</details>
+<details class="guide-code">
+<summary>Instalare standard: copierea dintr-un tag exact</summary>
+<pre>
+<code id="code-fonts-copy">DS=~/devbox/gov2/gov2ro-design-system   # o clonă a depozitului DS
+TAG=vX.Y.Z                              # tagul exact al versiunii alese
+git -C &quot;$DS&quot; fetch --tags
+mkdir -p assets/gov2
+git -C &quot;$DS&quot; archive &quot;$TAG&quot; gov2.css fonts.css fonts | tar -x -C assets/gov2</code>
+</pre>
+<button class="guide-copy" type="button" data-copy="code-fonts-copy" hidden>Copiază codul</button>
+</details>
 </div>
 <div class="guide-callout">
 <p>
@@ -872,7 +894,9 @@
 </p>
 <p>Stilurile de bază (text, linkuri, focus) se aplică pe întregul site. Nu este nevoie de un atribut sau de un element-înveliș. Tokenii <code>--g2-*</code> sunt publicați pe <code>:root</code>; componentele rămân opționale, prin clasele <code>.g2-*</code>.</p>
 <p>Ordinea publică a straturilor este <code>reset, gov2, utilities, app</code>. În <code>gov2</code>: <code>tokens, base, components, states</code>. Declarați ordinea înaintea oricărui alt stylesheet care creează straturi. Un reset sau o regulă de proiect care nu este într-un strat are prioritate peste tot gov2, inclusiv peste focus.</p>
-<p>Fonturile locale opționale sunt aprobate, dar neimplementate: CSS-ul încă importă Google Fonts.</p>
+<p>Fonturile locale sunt pasul standard de instalare, în fiecare proiect. Ele sunt într-un fișier separat de nucleu: <code>gov2.css</code> nu face nicio cerere pentru fonturi și rămâne lizibil fără rețea. Dacă familia <code>Inter</code> sau <code>Fragment Mono</code> lipsește, browserul folosește fonturile sistemului din <code>--g2-font-sans</code> și <code>--g2-font-mono</code>.</p>
+<p><code>fonts.css</code> declară doar <code>@font-face</code>, cu <code>font-display: swap</code> și adrese relative către <code>fonts/</code>, deci funcționează de la rădăcină și dintr-un subdosar. Ordinea celor două <code>&lt;link&gt;</code> nu contează. Cu <code>fonts.css</code>, politica CSP trebuie să permită <code>font-src 'self'</code>. Sursele, versiunile, licențele și sumele de control sunt în <code>fonts/README.md</code>.</p>
+<p>Excepții: un proiect rapid, de unică folosință, poate sări peste <code>fonts.css</code> și accepta fonturile sistemului. Un proiect care își livrează deja familiile <code>Inter</code> și <code>Fragment Mono</code> nu le încarcă a doua oară.</p>
 </div>
 <p>Tabelul vechi → nou pentru tokeni și valorile <code>data-tone</code>, exemplele verificate și limitele straturilor sunt în <a href="migration-from-0.6.0.md">ghidul de migrare de la 0.6.0</a>. Consultați și <a href="../COMPONENTS.md">referința componentelor</a>, <a href="../GUIDELINES.md">recomandările de design</a> și <a href="briefs/README.md">planul implementării</a>. Nu este configurat un CDN public.</p>
 <p class="guide-help">Variațiile locale pot adapta spațiul, densitatea și amplasarea. Verificați contrastul, focusul și hover împreună cu focus după modificare: o regulă de proiect poate suprascrie culorile de focus.</p>

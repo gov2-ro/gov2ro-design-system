@@ -13,8 +13,9 @@ This project uses the gov2 design system (DS), version <X.Y.Z>.
 DS repo: gov2-ro/gov2ro-design-system (local copy: ~/devbox/gov2/gov2ro-design-system).
 
 - Read `COMPONENTS.md` in the DS before you build UI. Use a DS component when one fits.
-- Do not edit the copy of the DS in this project: `<path to gov2.css>`.
-- To update the DS, copy `gov2.css` from a DS tag. Then set the version above.
+- Do not edit the copy of the DS in this project: `<path to gov2.css>`, `fonts.css` and `fonts/`.
+- Install and update the DS from one exact tag. Copy `gov2.css`, `fonts.css` and the whole `fonts/` folder together (`README.md` in the DS, *Install from an exact tag*). Link `fonts.css` next to `gov2.css`. Then set the version above.
+- The fonts are local files. Do not link a remote font service. Skip `fonts.css` only for a quick one-off project that accepts system fonts, or when the project already serves Inter and Fragment Mono.
 - Before you update, read `CHANGELOG.md` in the DS back to the version above. The DS is 0.x, so a minor version can break. Look for **Breaking**.
 - Put the project styles in `<path>`, with the class prefix `<prefix>-`. Use the DS tokens (`--g2-*`). Keep consumer adapters here, not in the DS. Prefer DS defaults; document useful local variations and preserve accessible behaviour.
 - Declare `@layer reset, gov2, utilities, app;` before every other stylesheet that creates layers. Put the reset in `reset`, utility classes in `utilities` and the project styles in `app`. A rule outside a layer outranks the DS. Do not add an activation attribute. See `docs/migration-from-0.6.0.md` in the DS.

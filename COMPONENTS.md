@@ -11,7 +11,7 @@ A project that uses 0.6.0 or 0.7.0 reads `docs/migration-from-0.6.0.md`.
 - Loading the file applies the base styles to the whole page and publishes the tokens on `:root`.
 - The `.g2-` classes are opt-in. A component appears only where the markup has its class.
 - `gov2.css` declares four layers, in this order: `reset`, `gov2`, `utilities`, `app`. See *Layers and project CSS*.
-- `gov2.css` loads Inter and Fragment Mono from Google Fonts with `@import`. Optional local fonts are approved (ADR 0005) but not implemented yet.
+- `gov2.css` makes no font request. Standard installation also copies `fonts.css` and the `fonts/` folder from the same tag, and links `fonts.css` next to `gov2.css`. See *Fonts*.
 - `.g2-container` sets the page width and the side padding. See *Container*. Spacing and type roles have tokens and classes: see *Spacing* and *Type roles*.
 
 ## Layers and project CSS
@@ -60,10 +60,25 @@ Length and font tokens are plain values, not RGB channels. Override a token in y
 | Status | `--g2-color-success-solid` and the 18 tone tokens in the table under *Tags* | Tags and status panels. `--g2-color-success-solid` is a solid success fill; no component reads it. |
 | Tricolour | `--g2-color-ro-blue`, `--g2-color-ro-yellow`, `--g2-color-ro-red` | Decorative marks only. Never use them for text. |
 | Charts | `--g2-color-chart-1`, `--g2-color-chart-2`, `--g2-color-chart-3`, `--g2-color-chart-4`, `--g2-color-chart-selected` | Blue series, then greys. `--g2-color-chart-selected` marks the selection. |
-| Type | `--g2-font-sans`, `--g2-font-mono` | Text family. Family for codes and aligned numbers. |
+| Type | `--g2-font-sans`, `--g2-font-mono` | Text family. Family for codes and aligned numbers. Each names Inter or Fragment Mono first, then system fonts. See *Fonts*. |
 | Type scale | `--g2-font-size-heading-page`, `--g2-font-size-heading-section`, `--g2-font-size-heading-item`, `--g2-font-size-body`, `--g2-font-size-meta`, `--g2-font-size-label`, `--g2-line-height-heading`, `--g2-line-height-body` | Font sizes in rem and two line heights. See *Type roles*. |
 | Spacing | `--g2-space-1`, `--g2-space-2`, `--g2-space-3`, `--g2-space-4`, `--g2-space-5`, `--g2-space-6`, `--g2-space-7` | Seven steps in rem, from .25rem to 3rem. See *Spacing*. |
 | Metrics | `--g2-radius` (0), `--g2-border-width-control` (2px), `--g2-container-max` (80rem), `--g2-gutter` (`clamp(1rem, 3vw, 2rem)`) | `--g2-radius` is read by buttons, chips, fields, tags, tiles and notices. `--g2-border-width-control` is the border width of buttons, chips and fields. `--g2-container-max` and `--g2-gutter` are read by `.g2-container`. |
+
+## Fonts
+
+Standard installation copies `fonts.css` and the `fonts/` folder with `gov2.css`, from one tag, and links `fonts.css` on every page. The README has the procedure under *Install from an exact tag*.
+
+- `gov2.css` makes no font request and works offline. `--g2-font-sans` is `"Inter", -apple-system, "Segoe UI", Arial, sans-serif`. `--g2-font-mono` is `"Fragment Mono", ui-monospace, SFMono-Regular, monospace`.
+- `fonts.css` declares Inter and Fragment Mono as local WOFF2 files. The URLs are relative to `fonts.css`, so it works from the site root and from a subpath if `fonts/` stays next to it.
+  Each face has `font-display: swap` and a `unicode-range` for its subset (latin or latin-ext), so the browser downloads a file only when the page uses a character from it.
+- `fonts.css` declares font faces only. It has no layer, no token and no type rule, so its load order against `gov2.css` does not matter.
+- Inter is one variable file for each subset, with weights 100 to 900. The DS uses 400, 500, 600 and 700. Fragment Mono has the weight 400 only.
+- The files contain the Romanian letters Ă ă Â â Î î Ș ș Ț ț. Fragment Mono has no Ţ ţ (the old cedilla forms of t).
+- `fonts/README.md` records the source, version, licence, size and SHA-256 of every file. The OFL notices are in `fonts/`. Copy the whole folder, so that the notices stay with the files.
+- A page that links `fonts.css` needs `font-src 'self'` and `style-src 'self'` in its Content-Security-Policy when it serves the files itself.
+- Without `fonts.css`, the page falls back to the system fonts in the two tokens above. Skip `fonts.css` only for a quick one-off project that accepts system fonts, or when the project already serves both families.
+  A project that uses other families sets `--g2-font-sans` and `--g2-font-mono` in `app`, and documents the variation.
 
 ## Base styles
 

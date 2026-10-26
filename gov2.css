@@ -1,4 +1,4 @@
-/* gov2 — stilul comun pentru proiectele gov2.ro · v0.9.1 · 26.10.2026
+/* gov2 — stilul comun pentru proiectele gov2.ro · v0.10.0 · 26.10.2026
 
    Shared stylesheet for gov2.ro projects.
    Inspired by igov.ro's GOV.UK-derived theme (brand.css, 2026-10): Inter + Fragment Mono,
@@ -10,11 +10,12 @@
    Layers: reset, gov2, utilities, app (public order). Inside gov2: tokens, base, components, states.
    A layer that an earlier stylesheet created keeps its position: declare the order first (see the migration document).
    Colours are RGB channels (--g2-color-*). Opt-in classes are prefixed .g2-.
+   Fonts: this file makes no font request. --g2-font-sans and --g2-font-mono name Inter and Fragment Mono, with system fallbacks.
+   Standard installation also copies fonts.css and fonts/, which supply the two families as local files (fonts/README.md).
    Migration from 0.6.0: docs/migration-from-0.6.0.md.
 */
 @layer reset, gov2, utilities, app;
 @layer gov2.tokens, gov2.base, gov2.components, gov2.states;
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fragment+Mono&display=swap');
 
 /* ---- Tokens: published on :root ---- */
 @layer gov2.tokens {

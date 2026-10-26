@@ -204,7 +204,7 @@ The class `.g2-btn.g2-warning` keeps its meaning: a red, destructive button. It 
 - Hovering a keyboard-focused link in `.g2-nav` no longer underlines it. Every other link already behaved this way.
 - `.g2-input` reads its border colour from `--g2-color-control-border`. `.g2-btn`, `.g2-chip` and `.g2-input` read their border width from `--g2-border-width-control`. The values are equal to before.
 - Boxed components read `--g2-radius` (value `0`).
-- The fonts are the same. `gov2.css` still imports Inter and Fragment Mono from Google Fonts until optional local fonts land (ADR 0005).
+- The font families are the same, Inter and Fragment Mono. `gov2.css` 0.8.0 to 0.9.1 still imports them from Google Fonts. The version after 0.9.1 does not: see *Changes after 0.9.1: fonts*.
 
 ## Layers
 
@@ -226,7 +226,7 @@ Inside `gov2` the order is `tokens`, `base`, `components`, `states`.
 | `utilities` | Your utility classes. |
 | `app` | Your own styles and variants. |
 
-`gov2.css` declares this order in its first lines, before any rule and before its font import.
+`gov2.css` declares this order in its first lines, before any rule.
 
 ### How the layers decide
 
@@ -439,6 +439,42 @@ Width and density customization works as before: override the tokens, or add a r
 }
 ```
 
+## Changes after 0.9.1: fonts
+
+This change is **breaking**. `gov2.css` no longer starts with `@import url('https://fonts.googleapis.com/…')`. It makes no font request, so the DS needs no third-party service (ADR 0005).
+Version 0.9.1 and earlier made that request on every page.
+
+**What you see.** A page that loads only `gov2.css` still names Inter and Fragment Mono in `--g2-font-sans` and `--g2-font-mono`, but nothing downloads them.
+The browser uses an installed Inter if the machine has one, and otherwise `-apple-system`, `Segoe UI`, Arial or the generic sans-serif font. Monospace text uses `ui-monospace`, `SFMono-Regular` or the generic monospace font.
+Text widths and line breaks differ from Inter, so a layout can change.
+
+**The fix, in one line.** Copy `fonts.css` and the `fonts/` folder from the same tag as `gov2.css`, and link `fonts.css`. This is now part of the standard installation:
+
+```html
+<link rel="stylesheet" href="/assets/gov2/gov2.css">
+<link rel="stylesheet" href="/assets/gov2/fonts.css">
+```
+
+The README has the exact command for a tag, under *Install from an exact tag*. Rules for the new files:
+
+- Keep `fonts/` next to `fonts.css`. The font URLs are relative to `fonts.css`, so the files work from the site root and from a subpath.
+- The order of the two links does not matter. `fonts.css` declares `@font-face` rules only, outside every layer.
+- Copy the whole `fonts/` folder. It holds the OFL licence notices that must stay with the font files, and `fonts/README.md` with the sources, versions, sizes and checksums.
+- If your server sets a Content-Security-Policy, allow `style-src 'self'` and `font-src 'self'`.
+- Do not edit the copies. A project that wants other families sets `--g2-font-sans` and `--g2-font-mono` in its `app` layer and supplies its own `@font-face` rules.
+
+**Exceptions.** A quick one-off project can skip `fonts.css` and accept the system fonts. A project that already serves Inter and Fragment Mono itself does not link `fonts.css`.
+If a project links both its own `@font-face` rules and `fonts.css` for the same family, the rule that is declared last wins for the characters in both `unicode-range` values. Use one source.
+
+**Clean-up.** A build step that removes the `@import` line from a copy of `gov2.css` has no line to remove. Delete the step and use the unedited file. Remove an allowance for `fonts.googleapis.com` and `fonts.gstatic.com` from the Content-Security-Policy.
+
+**Check.**
+
+1. Open the browser network panel and reload. No request goes to `fonts.googleapis.com` or `fonts.gstatic.com`.
+2. The font requests go only to the files in your `fonts/` folder and return 200. A page without Romanian letters needs the two *latin* files. A page with ă, ș or ț also needs the Inter *latin-ext* file.
+3. In the browser developer tools, check the rendered font of a heading and of Romanian text such as "Ăă Ââ Îî Șș Țț". It is Inter, and a web font.
+4. Block the font requests and reload. The text stays readable, with the system fonts, and nothing overflows horizontally.
+
 ## Checklist
 
 1. `grep -rn 'data-skin' <project>` finds nothing outside archived files.
@@ -447,3 +483,4 @@ Width and density customization works as before: override the tokens, or add a r
 4. The reset is in the `reset` layer. Project CSS is in `app` or `utilities`.
 5. The layer order is declared before every other stylesheet that creates layers.
 6. Tab through each page. Check focus, hover plus focus, selected chips, disabled buttons and field errors.
+7. A version after 0.9.1: `fonts.css` and `fonts/` are installed and linked, or you decided to skip them. The page makes no Google Fonts request.

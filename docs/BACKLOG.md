@@ -24,7 +24,10 @@ See `decisions/0001-shared-system-boundary.md` and `briefs/README.md` for the se
 - [ ] Review brief 01 (Opus): record the token inventory (names, five removals, `--g2-radius` use) and the layer structure in an ADR; accept or revise the naming choices listed in `ACTIVITY.md`; bump the version (minor, with **Breaking**) and tag.
 - [ ] Tell the projects that the project block in `project-block.md` changed (layer order, no activation attribute). Publishing is separate.
 - [x] Implement brief 02 against the current API: live guide, raw fixtures, browser checks and manual procedures. Brief 01 owns the two migration TODOs.
-- [ ] Implement brief 03: optional local fonts and reproducible file delivery.
+- [x] Implement brief 03: local fonts and reproducible file delivery (`## Unreleased` in `CHANGELOG.md`). `fonts.css` and `fonts/` (Inter variable and Fragment Mono 400, latin and latin-ext, 172,660 bytes), the Google Fonts `@import` removed, the exact-tag install procedure in `README.md`, and `tests/fonts.test.mjs` (23 checks). All 7 acceptance criteria have executable assertions (130 browser checks pass in Chrome 155). The owner directed that local fonts are the standard installation step; only quick one-off projects skip them.
+- [x] Review brief 03 (Opus): accepted the variable Inter files (declared range 100–900, the real axis of the file), the Fontsource 5.2.8 source, no layer in `fonts.css` and the install procedure. Released as 0.10.0.
+- [ ] Tell the projects that `docs/project-block.md` changed again (install `gov2.css`, `fonts.css` and `fonts/` from one tag) and that the Google Fonts import is gone (Breaking). org and stiri wait for this release. Publishing is separate.
+- [ ] Manual font checks not done for brief 03: Safari and Firefox rendering of the variable Inter file, a machine without Inter, a real host below a subpath with its real Content-Security-Policy header. See `testing.md`, *Fonts*.
 - [x] Implement brief 04: the selected page-foundation slice (container, spacing, type roles, header/nav/footer composition, fields, two example pages; `## Unreleased` in `CHANGELOG.md`). All 12 acceptance checks have executable assertions (106 browser checks pass in Chrome 155); native zoom, screen readers and other engines are recorded as manual in `testing.md`. Opus reviews it, then bumps the version and tags.
 - [x] Review brief 04 (Opus): accepted the 44px navigation targets, `overflow-wrap` on headings and fields, the 12rem scroll margin, the forced-colours rules and the disabled field look. Released as 0.9.0.
 
@@ -65,11 +68,11 @@ Items:
 - [x] **org.gov2.ro** — repo `gov2-ro/institutii-publice` (the domain is `org.gov2.ro`, not `orgs`). Report received 2026-10-26 against 0.8.0 and recorded in `compat-analysis.md`.
   - Conflicts are now with `--g2-*` and the layers: all project CSS is unlayered, and a local `:focus-visible` replaces the DS focus. The project moves its CSS into `@layer app`.
   - [-] Shared compact density. Not needed: the owner chose the DS sizes for org (2026-10-26).
-  - [ ] Owner decisions relayed 2026-10-26: DS fonts (waits for brief 03), DS sizes, local dark mode until issue #1, no tricolour text. The org adoption brief waits for a release.
+  - [ ] Owner decisions relayed 2026-10-26: DS fonts (brief 03 is implemented; org waits for the release), DS sizes, local dark mode until issue #1, no tricolour text. The org adoption brief waits for a release.
 - [ ] Issue #1, dark colour scheme for the `--g2-color-*` tokens (org; civtech assumed). Needs owner approval in the issue, then an ADR and a brief.
 - [ ] Issue #2, tricolour title treatment (org, civtech). Conflicts with "tricolour is never text". Needs owner approval of one option in the issue.
-- [ ] Cross-project questions: Is the Google Fonts `@import` permitted in each project? Do the projects need dark mode?
-- [ ] Replace the Google Fonts `@import` with `@font-face` and font files in the DS. Accepted during the transition; fix before 1.0.0.
+- [ ] Cross-project questions: Do the projects need dark mode? (The Google Fonts question is closed: brief 03 removes the import and the DS ships local fonts.)
+- [x] Replace the Google Fonts `@import` with `@font-face` and font files in the DS (Unreleased, brief 03).
 
 ## Hierarchy and link roles
 
@@ -99,7 +102,7 @@ The owner decides on 1.0.0 when all items are done.
 - [ ] The contrast of each text and background pair is measured. The ratios in the `gov2.css` comments (19:1, 7:1, 4.6:1) are not measured yet.
 - [ ] Keyboard focus is checked on each component.
 - [ ] No open `ds-proposal` issue is a breaking change.
-- [ ] No Google Fonts request.
+- [x] No Google Fonts request (Unreleased, brief 03: the import is removed and the suite fails on any external request).
 - [ ] A project passes the review checklist in `GUIDELINES.md`.
 
 ## DS gaps
@@ -125,7 +128,7 @@ Follow-ups from brief 04 (measured or decided in `ACTIVITY.md`):
 - [ ] A disabled `.g2-input` is styled with the sunken surface and muted text. Check it in Safari and on iOS, where the browser can add its own disabled style. Not measured.
 - [ ] Manual checks not done for brief 04: screen reader pass on both pages, native browser zoom at 200% and 400%, WCAG 1.4.12 text-spacing override, real forced-colours rendering on Windows, Firefox and Safari. See `testing.md`.
 - [x] `README.md` lists `docs/examples/` (maintainer, 0.9.0).
-- [ ] After brief 03: the fonts-blocked check proves that no web font loads and that an installed font renders. Inter is installed on the test machine, so it does not show a different fallback face. Add a check on a machine without Inter, or with `font-family` forced to the fallback stack.
+- [x] After brief 03: the fonts-blocked check did not show a different fallback face, because Chrome falls back to an installed Inter. `tests/fonts.test.mjs` now also removes `"Inter"` from the stack and checks the rendered family and the overflow. A run on a machine without Inter is still manual.
 
 Defects found during brief 01. They existed in 0.7.0. The migration did not change them, by design: a rendering correction is separate work.
 
@@ -136,7 +139,8 @@ Defects found during brief 01. They existed in 0.7.0. The migration did not chan
 
 ## Delivery
 
-- [ ] Set up file delivery from gov2.ro or ui.gov2.ro for quick projects.
+- [ ] Set up file delivery from gov2.ro or ui.gov2.ro for quick projects. It must serve `gov2.css`, `fonts.css` and `fonts/` together, with `font/woff2` for the files. A second origin for the fonts also needs `Access-Control-Allow-Origin` and `font-src` (untested). Hosting is a separate decision.
+- [ ] `docs/connect-a-project.md` still says that `gov2.css` loads Google Fonts (the *Google Fonts* line and the prompt 1 hint). The maintainer updates that file: brief 03 did not edit it.
 - [~] Update the copy in posturi.gov.ro (`webapp-php/static/skins/gov2.css`). The owner copied 0.4.0, and the block says 0.4.0. Not committed in posturi yet.
 
 ## Style guide
@@ -147,6 +151,8 @@ Defects found during brief 01. They existed in 0.7.0. The migration did not chan
 
 ## Verified limits
 
+- [-] Ship Fragment Mono with the cedilla t (Ţ ţ, U+0162 and U+0163). Dead end: the Fragment Mono 1.011 files do not contain them (read from the `cmap` of both shipped files); the comma-below forms Ț ț are there. The required Romanian letters are all covered. Text that uses Ţ ţ in monospace falls back for those two letters. Inter has all four cedilla and comma-below forms.
+- [-] Ship Inter as four static weights. Not chosen: 240,272 bytes in 8 files against 133,324 bytes in 2 variable files (measured, `fonts/README.md`). The variable file covers 100 to 900.
 - [-] Make the gov2 focus unbreakable by layers alone. Dead end: a rule in `utilities`, in `app` or outside every layer that sets `background` or `color` on a focusable control replaces `gov2.states`. Measured in the suite (*documented limits*). The documented mitigation is to change colours only with `:not(:focus-visible)`, or to repeat the focus rule in the same layer.
 - [-] Keep an unlayered consumer reset working by source order. Dead end: unlayered rules outrank every layer. Measured in Chrome 155 with the old reset `a{color:inherit;text-decoration:inherit}`: 122 property differences in 169 element states, including the text colour of button-styled links. The reset must go in the `reset` layer.
 - [-] Fix the layer order with a later `@layer` statement. Dead end: a layer keeps the position of its first appearance. Measured in the suite (*a layer created before the order declaration keeps its position*).

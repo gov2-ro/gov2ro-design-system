@@ -16,11 +16,13 @@ const classesOf = html => new Set([...html.matchAll(/\sclass="([^"]*)"/g)].flatM
 
 // Opens a page with external requests blocked, and records each blocked URL.
 const first = selector => `${selector} >> nth=0`;
-async function openPage(path, run, { width = 1280, height = 900, ...options } = {}) {
+// With blockFonts, the local files under /fonts/ are aborted too (a fonts.css page then falls back), and listed as the fourth argument.
+async function openPage(path, run, { width = 1280, height = 900, blockFonts = false, ...options } = {}) {
   const context = await browser.newContext({ viewport: { width, height }, ...options });
-  const blocked = [];
+  const blocked = [], fontsBlocked = [];
   await context.route('**/*', route => {
     const url = route.request().url();
+    if (blockFonts && url.startsWith(`${base}/fonts/`)) { fontsBlocked.push(url); return route.abort(); }
     if (url.startsWith(base)) return route.continue();
     blocked.push(url);
     return route.abort();
@@ -29,7 +31,7 @@ async function openPage(path, run, { width = 1280, height = 900, ...options } = 
   try {
     const response = await page.goto(base + path, { waitUntil: 'networkidle' });
     assert.equal(response.status(), 200, `Page unavailable: ${path}`);
-    await run(page, context, blocked);
+    await run(page, context, blocked, fontsBlocked);
   } finally { await context.close(); }
 }
 
@@ -175,7 +177,7 @@ test('foundation: new rules sit in the right sublayers, and examples.css sits in
     const rules = await page.evaluate(() => [...[...document.styleSheets].find(s => s.href?.endsWith('/examples.css')).cssRules].map(r => [r.constructor.name, r.name]));
     assert.deepEqual(rules, [['CSSLayerBlockRule', 'app']]);
     const sheets = await page.evaluate(() => [...document.styleSheets].map(s => s.href.replace(location.origin, '')));
-    assert.deepEqual(sheets, ['/gov2.css', '/docs/examples/examples.css']);
+    assert.deepEqual(sheets, ['/gov2.css', '/fonts.css', '/docs/examples/examples.css'], 'the page links the core, the local fonts and its own layer');
   });
 });
 
@@ -593,8 +595,10 @@ for (const { name, path } of pages) {
 
 // ---- No script, no web fonts ----
 for (const { name, path } of pages) {
-  test(`example ${name}: stays readable with JavaScript disabled and fonts blocked; navigation does not need a script (acceptance 9)`, () => openPage(path, async (page, context, blocked) => {
-    assert.ok(blocked.every(url => /^https:\/\/fonts\.(googleapis|gstatic)\.com\//.test(url)), `only font requests are blocked: ${blocked}`);
+  test(`example ${name}: stays readable with JavaScript disabled and the font files blocked; navigation does not need a script (acceptance 9)`, () => openPage(path, async (page, context, blocked, fontsBlocked) => {
+    assert.deepEqual(blocked, [], 'the page makes no external request');
+    assert.ok(fontsBlocked.length > 0, 'the page requested its local font files, and the check blocked them');
+    assert.ok(fontsBlocked.every(url => /\/fonts\/[\w-]+\.woff2$/.test(url)), `only the documented font files are blocked: ${fontsBlocked}`);
     const cdp = await context.newCDPSession(page);
     await cdp.send('DOM.enable');
     await cdp.send('CSS.enable');
@@ -603,6 +607,8 @@ for (const { name, path } of pages) {
       const { nodeId } = await cdp.send('DOM.querySelector', { nodeId: root.nodeId, selector });
       const { fonts } = await cdp.send('CSS.getPlatformFontsForNode', { nodeId });
       assert.ok(fonts.length > 0 && fonts.every(font => !font.isCustomFont), `${selector} renders with an installed font, not a web font`);
+      // Inter may be installed on the machine that runs the check, so this proves only that no web font is in use. tests/fonts.test.mjs
+      // proves the fallback stack itself, with the first family removed.
     }
     for (const link of await page.locator('.g2-nav a').all()) {
       assert.ok(await link.isVisible());
@@ -625,7 +631,7 @@ for (const { name, path } of pages) {
       await page.locator('a[href="form.html"]').first().click();
       assert.match(page.url(), /form\.html$/, 'a result title link navigates without a script');
     }
-  }, { javaScriptEnabled: false }));
+  }, { javaScriptEnabled: false, blockFonts: true }));
 }
 
 // ---- Customization under the accepted layer order ----

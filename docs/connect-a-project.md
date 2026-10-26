@@ -21,7 +21,7 @@ The prompts below describe the existing workflow. Do not interpret their compati
 
 The DS is 0.x. These issues are known and accepted during the transition. Do not work around them in the project. Do not report them as new findings, but say if one blocks the project.
 
-- **Google Fonts:** `gov2.css` loads Inter and Fragment Mono from Google Fonts with `@import`. Each page that loads `gov2.css` makes this external request. The DS will fix this later.
+- **Fonts are local files.** From 0.10.0, `gov2.css` makes no font request. Copy `fonts.css` and `fonts/` from the same tag and link `fonts.css` next to `gov2.css`. A copy older than 0.10.0 still imports Google Fonts.
 - **Before 0.6.0, link styles overrode project classes.** A project with a copy older than 0.6.0 shows all links blue and underlined, also on the dark header. Update the copy; do not add `!important` in the project. The DS has link role classes (`.g2-link-title`, `.g2-link-quiet`, `.g2-link-inverse`, `.g2-chip`).
 - **Layers decide which rule wins.** `gov2.css` declares `@layer reset, gov2, utilities, app;`. A project class wins over a DS rule when it is in `utilities` or `app`. A rule outside every layer outranks the DS, focus included. Put the reset in `reset`. Declare the order before other stylesheets that create layers. See `migration-from-0.6.0.md`.
 - **Links stay underlined.** The DS underline is in the base layer, so it wins over an element reset in `reset`, such as Tailwind preflight. To remove the underline on a project link, use a class in `app` (for example `no-underline`), and only where `GUIDELINES.md` permits it.
@@ -48,7 +48,7 @@ Do not change files in this project or in the DS.
      with the --g2-* tokens and the .g2- classes: same names, CSS resets, layers, specificity.
    - Look: fonts, header, footer, skins or themes, dark mode.
    - Constraints: rules that a DS file must follow here, for example scoping, CSP,
-     external requests (gov2.css loads Google Fonts with @import), build steps.
+     external requests, font files (fonts.css and fonts/), build steps.
    - Candidates: components in this project that the DS does not have, and that another
      gov2 project can use.
    - Adoption: the changes in this project and the changes in the DS. Give each change
