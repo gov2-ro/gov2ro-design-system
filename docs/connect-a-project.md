@@ -32,7 +32,8 @@ Use this prompt first, before a project adopts the DS. The agent reads only; it 
 
 ````text
 You work in <project repo>, the code for <domain>. The gov2 design system (DS) is at
-~/devbox/gov2/gov2ro-design-system. Write a compatibility report for the DS.
+~/devbox/gov2/gov2ro-design-system – [gov2-ro/gov2ro-design-system](https://github.com/gov2-ro/gov2ro-design-system). 
+Write a compatibility report for the DS.
 Do not change files in this project or in the DS.
 
 1. In the DS, read CLAUDE.md, COMPONENTS.md, GUIDELINES.md, gov2.css, the section
