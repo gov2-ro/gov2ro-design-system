@@ -23,7 +23,7 @@ patterns/<name>/
   <name>.png    a screenshot from the origin project
 ```
 
-- The CSS uses only DS tokens (`rgb(var(--c-…))`). It does not change how a `.g2-` class looks.
+- Prefer DS tokens (`rgb(var(--c-…))`) when their roles fit. Document useful local variations and retain accessible behaviour.
 - The pattern follows `GUIDELINES.md`.
 
 ## How to contribute a pattern
@@ -31,6 +31,8 @@ patterns/<name>/
 1. Open a `ds-proposal` issue with the type "pattern". Give the origin project and the files.
 2. The maintainer adds the folder here, and adds the pattern to the kitchen sink.
 
-## Kitchen sink
+## Live guide
 
-`docs/kitchensink.html` will show all core components and all patterns on one page. It will load `../gov2.css` and the pattern CSS files, so it always shows the current styles. The backlog tracks it. The first candidate is the job card from posturi.gov2.ro.
+`docs/index.html` is the single executable guide and component inventory. It loads `../gov2.css` directly.
+When adding a pattern, load its CSS there and label its contribution status. Keep pattern styles separate from core component styles.
+No second kitchen-sink page is needed. The pattern library is currently empty.

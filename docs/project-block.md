@@ -16,7 +16,7 @@ DS repo: gov2-ro/gov2ro-design-system (local copy: ~/devbox/gov2/gov2ro-design-s
 - Do not edit the copy of the DS in this project: `<path to gov2.css>`.
 - To update the DS, copy `gov2.css` from a DS tag. Then set the version above.
 - Before you update, read `CHANGELOG.md` in the DS back to the version above. The DS is 0.x, so a minor version can break. Look for **Breaking**.
-- Put the project styles in `<path>`, with the class prefix `<prefix>-`. Use the DS tokens. Do not change how a `.g2-` class looks.
+- Put the project styles in `<path>`, with the class prefix `<prefix>-`. Use the DS tokens. Keep consumer adapters here, not in the DS. Prefer DS defaults; document useful local variations and preserve accessible behaviour.
 - When the project needs a component, a variant or a token that other projects can use, open an issue in the DS:
   `gh issue create -R gov2-ro/gov2ro-design-system --label ds-proposal --title "[proposal] …" --body-file <file>`.
   Use the sections of `.github/ISSUE_TEMPLATE/ds-proposal.md`.

@@ -2,7 +2,7 @@
 
 This is the reference for `gov2.css`, for people and for agents. It lists each `.g2-` class, its markup and when to use it. When `gov2.css` changes, change this file in the same commit.
 
-The style guide (`docs/index.html`) shows the components. This file is the specification.
+This file is the current API specification. The live guide (`docs/index.html`) loads the shipped stylesheet and demonstrates every core class. Approved API migrations remain separate until implemented.
 
 ## Before you start
 
@@ -18,7 +18,7 @@ Colour tokens are RGB channels. Use them as `rgb(var(--c-ink))` or `rgb(var(--c-
 | Group | Tokens | Use |
 |---|---|---|
 | Surfaces | `--c-page`, `--c-sunken`, `--c-surface`, `--c-line`, `--c-line-strong` | Backgrounds and rules. `--c-sunken` for panels, footer, toolbars and tags. `--c-line-strong` for form controls. |
-| Text | `--c-ink`, `--c-ink-muted`, `--c-ink-faint` | `--c-ink-faint` for metadata only. |
+| Text | `--c-ink`, `--c-ink-muted`, `--c-ink-faint` | `--c-ink-faint` for text on white only (about 4.57:1); it fails ordinary-text contrast on `--c-sunken`. |
 | Links | `--c-gov`, `--c-gov-visited`, `--c-gov-light` | `--c-gov-light` for selected rows. |
 | Brand | `--c-brand`, `--c-gov-bar`, `--c-on-bar`, `--c-on-bar-muted`, `--c-on-bar-accent` | Header, header band, footer rule, tile rule. |
 | Action | `--c-primary` (+ `-hover`, `-shadow`), `--c-secondary-shadow`, `--c-danger` (+ `-shadow`) | Buttons, errors. |
@@ -39,7 +39,7 @@ Under `[data-skin="gov2"]`, these styles apply without a class:
 - `input`, `textarea`, `select` on focus: yellow 3px outline and a 2px ink inset.
 - With `prefers-reduced-motion: reduce`, transitions and animations stop.
 
-The `body` and link rules have the specificity of one element (0,0,1). So each project class wins over them, for example a Tailwind utility. They still win over an element reset that loads before `gov2.css`, for example Tailwind preflight. The focus rules stay strong on purpose.
+The `body` and link rules have the specificity of one element (0,0,1). Project classes win within the same cascade layer. Unlayered DS rules still outrank layered project utilities. An earlier element reset in the same layer loses to these rules. The focus rules stay strong on purpose.
 
 ## Links
 
@@ -63,7 +63,7 @@ On hover, the underline of each link is 3px. On focus, each link is yellow with 
 
 ## Chips
 
-A chip is a shortcut or a filter link. It is not a tag: a tag shows a state, and a chip goes to a place.
+A chip is a shortcut link or a toggle button. Use an anchor for navigation and a button for an action. A tag displays a state.
 
 ```html
 <a class="g2-chip" href="/?ocupatie=medic-specialist">Medic specialist <span class="g2-chip-count">76</span></a>
@@ -72,6 +72,7 @@ A chip is a shortcut or a filter link. It is not a tag: a tag shows a state, and
 
 - `.g2-chip`: grey background, ink text, no underline, at least 36px high. On hover, the background is darker.
 - `.g2-chip-count`: the count, in muted mono.
+- `aria-current="false"`, an empty `aria-current`, and `aria-pressed="false"` do not select a chip.
 - Mark the selected chip with `aria-current="true"` (a link) or `aria-pressed="true"` (a button). It gets a 2px ink border.
 
 ## Header
@@ -95,7 +96,7 @@ A black bar with an 8px brand band below it.
 ```
 
 - `.g2-header-in`: a flex row, at least 52px high, with a 24px gap. It has no width or padding; put it in the project container.
-- `.g2-wordmark`: the project name, white, 19px bold. Put the domain part in `<em>` to show it muted.
+- `.g2-wordmark`: the project name, white, 19px bold. Put the domain part in `<em>` to show it muted. On keyboard focus, both parts use ink on yellow.
 - `.g2-logo`: an SVG from `logo/`, 28px high. It is decorative: use `alt=""`.
 - `.g2-nav a`: white, 15px semibold. Set `aria-current="page"` on the current link: it gets a blue bar below. `.g2-nav` itself has no layout.
 
@@ -155,8 +156,8 @@ A short 48×4px tricolour mark above a section title.
 | `.g2-btn.g2-secondary` | Other actions. Grey. |
 | `.g2-btn.g2-warning` | A destructive action. Red. |
 
-- The button is at least 44px high and has a 2px shadow below it.
-- On focus, the button is yellow with ink text.
+- The button is at least 44px high and has a 2px shadow below it. Buttons, chips and inputs set `box-sizing:border-box` without requiring a project reset.
+- On focus, the button is yellow with ink text, including when hovered.
 - `:disabled` shows the button at 50% opacity. On a link, `:disabled` does not apply.
 
 ## Tags

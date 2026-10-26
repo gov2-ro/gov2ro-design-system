@@ -2,6 +2,31 @@
 
 Statuses: `[ ]` open, `[~]` in progress, `[x]` done, `[-]` dropped.
 
+## Current direction: audit follow-up
+
+The owner decided on 2026-10-26 that consumers adapt to gov2. Posturi skin compatibility does not constrain core CSS.
+See `decisions/0001-shared-system-boundary.md` and `briefs/README.md` for the sequential decisions and implementation packages.
+
+- [x] Remove consumer-specific stylesheet comments and paths; stop treating consumer checks as core requirements.
+- [x] Fix focus text in the wordmark, secondary hover plus focus, false chip selection and component box sizing.
+- [x] Rewrite design guidance as defaults with reasons; keep accessibility requirements separate.
+- [x] Correct the README's current installation and publication instructions.
+- [x] Verify quick corrections in Chrome 155. Eight rendered-state checks passed; measurements are in `ACTIVITY.md`.
+- [x] Settle D1: loading gov2 activates whole-site defaults. ADR 0002 records the decision; implementation is in brief 01.
+- [x] Settle D2: semantic `--g2-` tokens and one status vocabulary, with a migration table and no compatibility aliases. ADR 0003 records the decision.
+- [x] Settle D3: explicit layers and supported project customization. ADR 0004 records the decision; brief 01 is ready for handoff.
+- [x] Settle D4: optional self-hosted Inter and Fragment Mono, with no remote core font request. ADR 0005 records the decision; brief 03 is ready after brief 01.
+- [x] Settle D5: editable live guide and browser checks. ADR 0006 records the explicit implementation request.
+- [x] Settle D6: the first foundation package and two representative pages. ADR 0007 records the decision; brief 04 is ready after 01.
+- [x] Settle D1–D6 with the owner; finalize the implementation briefs.
+- [x] Preserve the prior guide bundle unchanged, record its provenance and link it from the live guide.
+- [ ] Implement brief 01: independent shared CSS contract and migration.
+- [x] Implement brief 02 against the current API: live guide, raw fixtures, browser checks and manual procedures. Brief 01 owns the two migration TODOs.
+- [ ] Implement brief 03: optional local fonts and reproducible file delivery.
+- [ ] Implement brief 04: the selected page-foundation slice.
+
+The older compatibility findings below are historical evidence, not acceptance criteria for the new core API.
+
 ## Governance
 
 - [x] Create the label `ds-proposal` on GitHub, and an issue template in `.github/ISSUE_TEMPLATE/ds-proposal.md`.
@@ -24,7 +49,7 @@ Items:
 - [ ] **posturi.gov2.ro** — repo `posturi.gov.ro`. First finding, measured on 2026-10-26: `php webapp-php/assets/check-skins.php` reports 69 problems for `gov2.css`.
   - 46 problems: `.g2-` rules outside `[data-skin]`. posturi loads all skin files on each page, so an unscoped rule leaks into the other skins (`hartie`, `govuk`, `posturi`).
   - 23 problems: DS tokens that the posturi skin contract (39 tokens) does not know, for example `--c-primary`, `--c-brand` and `--c-ro-*`.
-  - Possible DS change: scope the `.g2-` classes under `[data-skin="gov2"]`. Not decided. This is a breaking change.
+  - Superseded requirement: satisfying the posturi skin checker is consumer work. Shared activation is being decided under D1.
   - Measured: no posturi template uses a `.g2-` class, so the unscoped rules do not change pages now. The 23 unknown tokens are warnings only. `gov2.css` sets 32 of the 32 colour tokens in the contract.
   - Measured on 2026-10-26, from the owner's screenshot and the CSS: all links look the same (blue, underlined). Cause: `[data-skin="gov2"] a` (0,1,1) is stronger than the Tailwind utilities (0,1,0), for example `.text-on-bar-muted`. Header links: 2.73:1 (visited 1.94:1) instead of the intended 12.2:1. `check-skins.php` passes, because it checks the tokens, not the page.
   - Italic job titles come from posturi (`font-display italic`), not from the DS.
@@ -42,7 +67,7 @@ From the posturi test. `GUIDELINES.md` has the rules.
 - [x] Wrap the base rules of `gov2.css` in `:where()`, so that a project class is stronger than a DS base rule (0.6.0). No project depended on the old specificity: only posturi uses the DS, and it needed the opposite.
 - [x] Add the link role classes: `.g2-link-title`, `.g2-link-quiet`, `.g2-link-inverse` (0.6.0).
 - [x] Add `.g2-chip` and `.g2-chip-count` (shortcut and filter links, with a count and a selected state) (0.6.0).
-- [ ] Check `:visited` and `:hover` of the link classes in a real browser. The headless test cannot show them.
+- [ ] Check visited states with an explicit history procedure. Hover is testable in headless Chrome; the earlier claimed limitation was incorrect.
 - [ ] Use the link classes in posturi (job title, institution, shortcuts, build stamp). This is posturi work.
 - [ ] Add `.g2-icon-btn` (icon button with a label and a 44px target).
 - [ ] Add a type scale (page title, section title, item title, body, metadata, label).
@@ -50,16 +75,16 @@ From the posturi test. `GUIDELINES.md` has the rules.
 
 ## Patterns and kitchen sink
 
-- [ ] Write `docs/kitchensink.html` by hand. It loads `../gov2.css` and the pattern CSS, and shows each core component and each pattern. Brief for Sonnet.
+- [x] Use `docs/index.html` as the single live guide and component inventory. It loads `../gov2.css` directly; no separate kitchen sink is needed.
 - [ ] First pattern: the job card from posturi.gov2.ro (`patterns/job-card/`).
 
 ## Checklist for 1.0.0
 
 The owner decides on 1.0.0 when all items are done.
 
-- [ ] At least two live projects use the DS, with no overrides of `.g2-` classes.
+- [ ] At least two live projects use the shared API. Local variations follow the accepted customization contract and retain accessible behaviour.
 - [x] `COMPONENTS.md` exists. Keep it in agreement with `gov2.css`.
-- [ ] The style guide is regenerated from the current `gov2.css`.
+- [x] The editable live guide loads the current `gov2.css` directly and demonstrates each core class.
 - [ ] The contrast of each text and background pair is measured. The ratios in the `gov2.css` comments (19:1, 7:1, 4.6:1) are not measured yet.
 - [ ] Keyboard focus is checked on each component.
 - [ ] No open `ds-proposal` issue is a breaking change.
@@ -84,8 +109,8 @@ Found while writing `COMPONENTS.md`. Each gap is also listed in `COMPONENTS.md` 
 
 ## Style guide
 
-- [ ] Find out which tool generates `docs/index.html`, and document how to regenerate it. The guide does not load `gov2.css`, so it can show old styles.
-- [ ] Update the usage section of the guide when delivery is decided. It still shows the CDN and says that `@1` gets the fixes automatically.
+- [x] Replace the generated bundle with an editable live guide; no regeneration is needed.
+- [x] Remove obsolete CDN and `@1` claims. Describe the current installation and distinguish approved but unimplemented migrations.
 - [ ] Decide if GitHub Pages publishes the guide. Pages is not enabled now, and the repo is private.
 
 ## Verified limits

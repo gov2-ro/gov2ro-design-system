@@ -6,19 +6,27 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 The gov2 design system (DS): one shared stylesheet (`gov2.css`) and a style guide for gov2.ro projects (posturi, civtech, org…). Repo: https://github.com/gov2-ro/gov2ro-design-system.
 
-The DS follows the GOV.UK-derived theme of igov.ro: Inter + Fragment Mono, square corners, underlined links, yellow focus, green primary button, six status tones and an optional Romanian tricolour mark. The repo has no build, lint or test tooling.
+The DS follows the GOV.UK-derived theme of igov.ro: Inter + Fragment Mono, square corners, underlined links, yellow focus, green primary button, six status tones and an optional Romanian tricolour mark. The guide has no build step. `npm run dev` serves it; `npm test` runs the Playwright browser checks. See `docs/testing.md`.
 
 ## How gov2.css is structured
 
-- **Everything is scoped to `[data-skin="gov2"]`.** Tokens and base element styles (body, links, focus) apply only when the page sets `<html data-skin="gov2">`. Component classes are opt-in and use the prefix `.g2-` (`.g2-header`, `.g2-btn`, `.g2-tag`, `.g2-tile`…).
+- **Current activation:** tokens and base rules are scoped to `[data-skin="gov2"]`; component rules are not. Tokens and base element styles (body, links, focus) apply only when the page sets `<html data-skin="gov2">`. Component classes are opt-in and use the prefix `.g2-` (`.g2-header`, `.g2-btn`, `.g2-tag`, `.g2-tile`…).
 - **Colour tokens are bare RGB channels** (`--c-ink: 11 12 12;`). Use them as `rgb(var(--c-ink))` or `rgb(var(--c-ink) / .5)`. Give each new token the same format, with the hex value in a trailing comment.
-- **Token names are a contract with the projects.** The status tones are neutral, info, progress, note, ok and alert, each with `-bg`, `-line` and `-ink`. In markup, `data-tone=warn` uses `note` and `data-tone=bad` uses `alert`. These names come from posturi.gov.ro.
+- **The current token names are the existing API, pending revision.** The status tones are neutral, info, progress, note, ok and alert, each with `-bg`, `-line` and `-ink`. In markup, `data-tone=warn` uses `note` and `data-tone=bad` uses `alert`. Their origin does not constrain the shared API. See `docs/decisions/0001-shared-system-boundary.md`.
 - **Design rules in the tokens:** the radius is always 0, there are no decorative shadows (`--shadow-lift: none`), and the tricolour colours (`--c-ro-*`) are decorative only, never text. The default tricolour mark is `.g2-ro-corner`; the alternatives are `.g2-ro-bar` and `.g2-ro-dots`.
 - Component rules are minified, one rule per line, and grouped under `/* ---- Section ---- */` comments. Keep that style.
 
 ## Style guide (`docs/index.html`)
 
-The file is for GitHub Pages, but Pages is not enabled now, and the repo is private. A tool generated it as a self-contained bundle (`__bundler/manifest` and `template` script blocks, with lines of several hundred KB). The bundle does not load `../gov2.css`, so a stylesheet change does not show in the guide. Do not edit the layout or styles by hand. A plain text replacement (for example a URL) is safe, because the template has no integrity hash. The guide text is in Romanian.
+The guide is editable HTML in Romanian and loads `../gov2.css` directly.
+`docs/guide.css` provides documentation layout; it must not repair or duplicate `.g2-*` component appearance.
+`docs/guide.js` adds copy, toggle and dismissal demonstrations. Essential content and markup stay available without JavaScript.
+Keep every implemented component and documented state represented. Label approved but unimplemented work separately.
+Run `npm test` after changing component examples or shared behaviour; see `docs/testing.md` for browser setup and manual coverage.
+`tests/contract.html` tests raw components without documentation CSS. Reuse the suite when implementing briefs 01 and 03.
+The live guide replaces the historical bundle. The owner requested preserving that bundle in `docs/archive/` for reference.
+Keep the archived snapshot byte-for-byte unchanged; record provenance in its README. Do not migrate its tokens or embedded runtime.
+No hosted guide or CDN is configured.
 
 ## Logos
 
@@ -30,9 +38,16 @@ The file is for GitHub Pages, but Pages is not enabled now, and the repo is priv
 ## How projects use the DS
 
 - **Only one version exists: the latest.** There are no release branches and no backports.
-- **Bigger projects include a copy of the files.** posturi.gov.ro has a copy in `webapp-php/static/skins/gov2.css`. A project with a copy stays on that version until it updates. When it updates, it goes to the latest version and reads `CHANGELOG.md` back to its old version. The project copies the file as it is and does not edit the copy.
+- **Projects may include a copy of the files.** The consumer chooses its own asset path. A project with a copy stays on that version until it updates. When it updates, it goes to the latest version and reads `CHANGELOG.md` back to its old version. The project copies the file as it is and does not edit the copy.
 - **Quick projects will load the files from gov2.ro or ui.gov2.ro.** This is not set up yet. CDN delivery is not set up either.
-- A project keeps its own styles in its own file, with its own class prefix. It uses the `--c-*` tokens and the `.g2-*` classes, but it does not change how a `.g2-*` class looks. When a project needs an override, the DS probably needs a new variant.
+- A project keeps its own styles in its own file, with its own class prefix. Prefer shared components where they fit. Document useful local variations and retain accessible behaviour. The customization contract is accepted in ADR 0004 and specified for implementation in `docs/briefs/01-shared-css-contract.md`.
+
+## Shared system boundary
+
+The DS defines its own API. Consumer skin contracts, token lists, frameworks and paths do not constrain it.
+Consumers, including posturi, adapt in their own repositories. Do not put consumer compatibility adapters in `gov2.css`.
+Design guidance expresses defaults and reasons; separate accessibility requirements from aesthetic preferences.
+See `docs/decisions/0001-shared-system-boundary.md` and the decision sequence in `docs/briefs/README.md`.
 
 ## How the DS changes
 

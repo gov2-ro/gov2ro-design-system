@@ -2,6 +2,14 @@
 
 This page gives the prompts that connect an agent session in a project to the gov2 design system (DS). Paste a prompt into the project session, and replace the values in `<…>`.
 
+## Shared system boundary
+
+Consumers adapt to the DS. Their skin checkers, token lists and frameworks do not define the shared CSS contract.
+Keep compatibility adapters in the consumer repository. Report generic defects and reusable needs to the DS.
+See `decisions/0001-shared-system-boundary.md`. The new API and neutral integration workflow are being specified in `briefs/01-shared-css-contract.md`.
+
+The prompts below describe the existing workflow. Do not interpret their compatibility analysis as a requirement to preserve a consumer skin API.
+
 ## How sessions find each other
 
 - **The DS repo:** `~/devbox/gov2/gov2ro-design-system`, on GitHub `gov2-ro/gov2ro-design-system` (private).

@@ -18,14 +18,50 @@ optional Romanian tricolour mark (default: `.g2-ro-corner`).
 
 ## Use it
 
-<!-- ```html
+The current API is 0.x. Pin an exact tag when you copy the stylesheet into a project.
+Copy the file without editing it. Put project styles in a separate file.
+Consumers adapt to the DS; the DS does not implement consumer skin compatibility.
+
+```html
+<!doctype html>
 <html lang="ro" data-skin="gov2">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/gov2-ro/gov2ro-design-system@0.6.0/gov2.css">
-``` -->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/assets/gov2.css">
+</head>
+<body>…</body>
+</html>
+```
 
-The design system is at 0.x: a proposal, not tested yet. A minor version can break, so pin an exact version.
+This example describes the current API. The approved activation and naming migration is specified in
+[the follow-up plan](docs/briefs/README.md). The current CSS also loads Google Fonts.
+No public CDN or hosted guide is configured.
 
-<!-- posturi.gov.ro: copy `gov2.css` into `webapp-php/static/skins/` and pick it in the style picker. -->
+Read [COMPONENTS.md](COMPONENTS.md) for the API and [GUIDELINES.md](GUIDELINES.md) for design defaults and accessibility.
+
+## Preview and check the guide
+
+The guide is plain HTML. Editing `gov2.css` changes its examples immediately; no build is required.
+
+```sh
+npm ci
+npm run dev
+```
+
+Open `http://127.0.0.1:4173/docs/`. The examples remain readable without JavaScript.
+The [previous bundled guide](docs/archive/index.html) is preserved as a historical reference, with its original file and provenance.
+
+To run the browser checks:
+
+```sh
+npx playwright install chromium
+npm test
+```
+
+For an installed Chrome, use `PLAYWRIGHT_CHANNEL=chrome npm test`.
+See [testing instructions](docs/testing.md) for coverage, screenshots and manual checks.
+The current activation and layer migrations have explicit TODO checks; they are not claimed as implemented.
 
 ## Header markup
 
@@ -42,13 +78,17 @@ The design system is at 0.x: a proposal, not tested yet. A minor version can bre
 ## Contents
 
 - `gov2.css` — tokens (`--c-*`, RGB channels) and opt-in `.g2-*` classes
-- `docs/index.html` — the style guide (self-contained, served by GitHub Pages)
+- `docs/index.html` — the editable live guide; it loads `gov2.css` directly
+- `docs/guide.css` and `docs/guide.js` — documentation layout and optional helpers
+- `docs/testing.md` — repeatable browser checks and manual verification procedures
 - `logo/` — project marks (SVG, monochrome, white on the header)
 - `CHANGELOG.md`
+- `docs/briefs/` — decision sequence and implementation briefs
+- `docs/decisions/` — accepted shared design decisions
 
 ## Releasing
 
-1. Edit `gov2.css`, note the change in `CHANGELOG.md`.
-2. Tag: `git tag v1.0.1 && git push --tags`.
-<!-- 3. jsDelivr picks the tag up within minutes. Purge if needed:
-   https://purge.jsdelivr.net/gh/gov2-ro/gov2ro-design-system@0.6.0/gov2.css -->
+Keep the stylesheet header, changelog version and tag consistent. Follow the version policy in `AGENTS.md` and `CLAUDE.md`.
+Document public API removals and renames under **Breaking** and provide migration instructions.
+A local tag does not publish a release. Push, release creation and deployment require a separate publishing request.
+The owner decides when the DS reaches 1.0.0.

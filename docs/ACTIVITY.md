@@ -1,5 +1,147 @@
 # Activity
 
+## 2026-10-26 — Foundation scope accepted and original guide preserved
+
+**Done**
+- Recorded accepted D6 in ADR 0007 and finalized brief 04 for implementation after brief 01.
+- Specified the container, spacing/type defaults, header/footer composition, field recovery, two static example pages and acceptance checks.
+- Restored the prior bundle to `archive/2026-10-26-bundled-guide.html` from source commit `0fe519de926e52b15312e769baf35d3694544712` (tag `v0.6.0`).
+- Added a labeled historical archive page, provenance README and links from the live guide and repository README.
+- Updated future implementation briefs and contributor guidance to preserve archive bytes during API migrations.
+
+**Hard**
+- Verified byte equality against the source git blob: 501,498 bytes, SHA-256 `3cdbe56f9a4bec755eb6b03e7c44344b38d5e0009a48dc2e89b3116607451952`.
+- Chrome 155.0.8059.85: all nine focused archive, metadata/link, no-JavaScript and reflow checks passed in 7.59 seconds.
+- Verified both the archive wrapper and the original bundle's rendered heading. The snapshot's embedded runtime remains unchanged.
+- The archive displays the old guide's v0.2 visual proposal; its source commit is tagged v0.6.0. The archive explains that distinction.
+
+**Decided**
+- The owner accepted the first foundation package and requested retaining the prior guide for reference.
+- All six audit-follow-up decisions are settled. Brief 02 is implemented against the current API; 01, 03 and 04 are ready in dependency order.
+- Keep the live guide current and the archived bundle immutable. Its old token/API/CDN examples are historical reference.
+- No larger foundation implementation, consumer changes, commit, tag or publication was performed.
+
+## 2026-10-26 — Live guide implemented and verified
+
+**Done**
+- Replaced the generated bundle with editable Romanian HTML loading `../gov2.css` directly.
+- Added 14 sections, examples of all 29 core classes and 19 copyable markup blocks.
+- Preserved guidance on hierarchy, data provenance, readable status, typography and decorative identity.
+- Added documentation-only layout CSS and progressive copy, toggle and notice-dismissal demonstrations.
+- Added Node preview tooling, pinned Playwright 1.56.1 with a lockfile, raw component fixtures and browser checks.
+- Updated contributor instructions, references, pattern contribution guidance and briefs for the guide-first implementation order.
+- Recorded D5 in ADR 0006. Brief 01 must migrate this guide and suite rather than replace or duplicate them.
+
+**Hard**
+- Chrome 155.0.8059.85: 34 browser checks passed, zero failures, two explicit migration TODOs. Final run: 29.03 seconds.
+- Checked 1280, 768, 390 and 320 CSS pixel widths with expanded code, plus a 200% CSS zoom fixture.
+- Checked no-JavaScript reading, copy success/failure feedback, toggle state, dismissal focus, labels, links, keyboard/hover states, raw geometry with/without reset, contrast, forced-colour focus and reduced motion.
+- Reviewed desktop and mobile full-page screenshots in `/tmp/gov2-live-guide/`. Preview runs at `http://127.0.0.1:4173/docs/`.
+- The old HTML was 501,498 bytes. New HTML is 34,486 bytes, with 7,173 bytes of guide CSS and 1,547 bytes of helper JavaScript.
+- Wrong turn: the first preview-server implementation retained a trailing root slash, causing its path boundary check to return 404. Normalizing the root with `resolve()` fixed it; fixture navigation now asserts HTTP 200 immediately.
+- The sandbox blocked npm registry access and local listeners. Approved execution installed the dependency and ran the browser suite.
+- External requests were blocked for repeatable system-font fallback tests. The existing remote font import is still present pending brief 03.
+- Manual visited-state, screen-reader, native browser zoom, other engines and real OS high-contrast checks remain unperformed. Procedures are in `testing.md`.
+
+**Decided**
+- The owner explicitly requested replacing the guide now. D5 is implemented against the current runtime API.
+- Whole-site activation, token/status migration and CSS layer integration remain brief 01 work; two TODO checks identify that dependency.
+- Brief 03 owns local font delivery. D6 foundation scope remains undecided.
+- Keep one live guide and one regression suite. No generation step, second kitchen sink or framework runtime is needed.
+- Changes remain uncommitted and unpublished. No consumer repository was changed.
+
+## 2026-10-26 — Optional local fonts accepted; brief 03 ready
+
+**Done**
+- Recorded ADR 0005 and finalized brief 03 for implementation after brief 01.
+- Added font asset provenance, weight and glyph checks, fixture ownership and a handoff prompt.
+- Kept the package independent of the pending guide-replacement decision.
+
+**Hard**
+- No font assets were downloaded or runtime imports changed. Network and glyph acceptance checks belong to the implementation.
+- Font versions, required notices and payload sizes must come from the actual sourced files.
+
+**Decided**
+- The owner accepted optional self-hosted Inter and Fragment Mono, system fallbacks and no remote core font request.
+- Briefs 01 and 03 are ready. The guide and foundation briefs remain drafts.
+- D5 live documentation and verification is next. Changes remain uncommitted; no other model was started.
+
+## 2026-10-26 — Cascade and customization accepted; brief 01 ready
+
+**Done**
+- Recorded ADR 0004 and marked brief 01 ready for implementation.
+- Specified a public layer order, customization examples, baseline test ownership and a handoff prompt.
+- Removed the circular fixture dependency: package 01 provides baseline checks; package 02 extends them.
+
+**Hard**
+- A layer order cannot rearrange layers already established by earlier CSS. The integration examples must establish order first.
+- Later consumer rules can still break accessible states. The brief requires checks of the documented customization examples.
+- No runtime CSS changed in this step; this is a specification handoff, not an implementation claim.
+
+**Decided**
+- The owner accepted explicit layers and project customization with documented variations and accessibility checks.
+- Projects can adjust layout, spacing, density and useful variants while keeping the distributed stylesheet unchanged.
+- Brief 01 is ready. Other packages remain drafts, and no other model or consumer work was started.
+- D4 font delivery is the next owner decision. Changes remain uncommitted.
+
+## 2026-10-26 — Semantic public API accepted
+
+**Done**
+- Recorded ADR 0003 and updated the plan, briefs and backlog for accepted D2.
+- Specified the status migration and retained the absent-tone neutral default.
+
+**Hard**
+- No runtime CSS changed. The full token inventory and old-to-new migration table belong to brief 01.
+- A token's equal value or lack of a core reference alone does not justify deleting a public role.
+
+**Decided**
+- The owner accepted namespaced semantic tokens and neutral/info/progress/warning/success/danger in both tokens and markup.
+- Keep component classes, colour values and RGB channels. Do not add compatibility aliases.
+- D3 cascade and customization is the next decision. Brief 01 remains a draft until D3 is settled.
+
+## 2026-10-26 — Whole-site activation accepted
+
+**Done**
+- Recorded ADR 0002 and updated the decision plan and brief 01.
+- Added concrete semantic token and status naming examples for the next owner decision.
+
+**Hard**
+- Removing the scoped focus prefix will change specificity. Brief 01 requires component-state verification under the accepted cascade.
+- No runtime CSS changed in this decision-recording step. The earlier quick-fix measurements remain the current baseline.
+
+**Decided**
+- The owner accepted automatic whole-site activation. Tokens will be on `:root`; components retain `.g2-*` classes.
+- No activation attribute or wrapper will be required. Implement this with brief 01 after D2 and D3 are settled.
+- D2 naming and D3 cascade/customization remain pending. Changes remain uncommitted.
+
+## 2026-10-26 — Shared system boundary, audit corrections and draft briefs
+
+**Done**
+- Recorded ADR 0001: the DS defines its API. Posturi adapts in its own repository.
+- Removed consumer paths, skin metadata and legacy naming rationales from stylesheet comments.
+- Fixed wordmark focus, secondary hover plus focus, false chip selection and component box sizing.
+- Rewrote design guidance as defaults with reasons and separate accessibility requirements.
+- Corrected the current installation example, publication instructions and layer-precedence claims.
+- Added `briefs/README.md` and four draft implementation briefs with scope, migration and acceptance criteria.
+- Updated the existing untracked `AGENTS.md` alongside `CLAUDE.md`. No commit, tag, push or consumer change was made.
+
+**Hard**
+- Verified in Chrome 155.0.8059.85 using temporary static fixtures and the actual stylesheet. External font requests were blocked.
+- Eight rendered-state checks passed: wordmark text and suffix are ink on focus; secondary hover plus focus stays yellow; native/link buttons are 44px; native/link chips are 36px; text input is 40px; a false-current chip has a transparent border; title hover has a 3px underline.
+- Measured before correction: button-styled link 64px, link chip 52px and text input 54px without a reset.
+- The existing layered-utility fixture still returns the DS link colour. Layer integration is pending D3, not claimed fixed.
+- The bundled guide still renders without title/language metadata and does not load the shared CSS. Its replacement is draft brief 02.
+- Earlier claims that headless Chrome cannot show hover were incorrect. Visited-state verification remains separate.
+- The fixture and browser output are temporary audit tools. Checked-in repeatable regression tooling is specified in brief 02.
+
+**Decided**
+- Consumer skin compatibility is not a core requirement. Owner instruction in this session supersedes the old compatibility premise.
+- A component's origin alone does not make it consumer-specific. Retain useful shared behaviour; inventory inherited names before changing the API.
+- Activation, public naming, layers/customization, fonts, guide replacement and next component scope are sequential owner decisions.
+- D1 was presented with automatic whole-site activation as the recommendation. No answer is recorded yet.
+- Quick corrections are implemented. The four larger briefs remain drafts until their stated decisions are accepted.
+- Changes remain uncommitted while the owner reviews the decision sequence. The changelog records this work under Unreleased.
+
 ## 2026-10-26 — Link specificity fix and link role classes (0.6.0)
 
 **Done**

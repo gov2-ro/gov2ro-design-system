@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="ro" data-skin="gov2">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gov2 component contract fixture</title>
+  <script>
+    if (new URLSearchParams(location.search).has('reset')) {
+      document.write('<style>*,::before,::after{box-sizing:border-box}a{color:inherit;text-decoration:inherit}</style>');
+    }
+  </script>
+  <link rel="stylesheet" href="../gov2.css">
+</head>
+<body>
+  <header class="g2-header">
+    <div class="g2-header-in">
+      <a class="g2-wordmark" id="wordmark" href="#content">proiect<em>.gov2.ro</em></a>
+      <nav class="g2-nav" aria-label="Principal"><a id="current" href="#content" aria-current="page">Acasă</a><a id="nav" href="#content">Despre</a></nav>
+    </div>
+  </header>
+  <main id="content">
+    <h1>Contract: componente fără CSS de documentație</h1>
+    <p><a id="plain" href="#content">Link în text</a> <a class="g2-link-title" id="title" href="#content">Titlul instituției</a> <a class="g2-link-quiet" id="quiet" href="#content">Metadate</a></p>
+    <p><button class="g2-btn" id="primary" type="button">Caută</button> <a class="g2-btn" id="link-button" href="#content">Caută</a> <button class="g2-btn g2-secondary" id="secondary" type="button">Înapoi</button> <button class="g2-btn g2-warning" id="danger" type="button">Șterge</button> <button class="g2-btn" id="disabled" type="button" disabled>Indisponibil</button></p>
+    <p><a class="g2-chip" id="chip" href="#content">Filtru <span class="g2-chip-count">76</span></a> <button class="g2-chip" id="chip-button" type="button" aria-pressed="false">Filtru</button> <a class="g2-chip" id="chip-current" href="#content" aria-current="true">Curent</a> <a class="g2-chip" id="chip-false" href="#content" aria-current="false">Fals</a> <a class="g2-chip" id="chip-empty" href="#content" aria-current="">Gol</a></p>
+    <p><label for="input">Nume</label> <input class="g2-input" id="input" type="text"></p>
+    <div class="g2-field-error"><label for="invalid">E-mail</label><p class="g2-error-msg" id="email-error">Scrieți o adresă completă.</p><input class="g2-input" id="invalid" aria-describedby="email-error" aria-invalid="true" type="email"></div>
+    <p><strong class="g2-tag">Arhivat</strong> <strong class="g2-tag" data-tone="info">Nou</strong> <strong class="g2-tag" data-tone="progress">În lucru</strong> <strong class="g2-tag" data-tone="warn">Atenție</strong> <strong class="g2-tag" data-tone="ok">Activ</strong> <strong class="g2-tag" data-tone="bad">Închis</strong></p>
+  </main>
+</body>
+</html>

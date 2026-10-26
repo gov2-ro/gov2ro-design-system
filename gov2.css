@@ -1,14 +1,13 @@
-/* @skin gov2 — stilul comun pentru proiectele gov2.ro · v0.6.0 · 26.10.2026
+/* gov2 — stilul comun pentru proiectele gov2.ro · v0.7.0 · 26.10.2026
 
-   Shared skin for posturi.gov2.ro, civtech.gov2.ro, org.gov2.ro and siblings.
+   Shared stylesheet for gov2.ro projects.
    Inspired by igov.ro's GOV.UK-derived theme (brand.css, 2026-10): Inter + Fragment Mono,
    black header with a brand band, square corners, underlined links, yellow focus,
    green primary button, six-tone status palette. Optional Romanian tricolour band.
 
-   posturi.gov.ro: copy to webapp-php/static/skins/gov2.css.
    Repo: https://github.com/gov2-ro/gov2ro-design-system
-   CDN:  https://cdn.jsdelivr.net/gh/gov2-ro/gov2ro-design-system@0.6.0/gov2.css
-   Other projects: load this file, set <html data-skin="gov2">, use rgb(var(--c-ink)) etc.
+   Current activation: load this file and set <html data-skin="gov2">.
+   The shared stylesheet contract is being revised; see docs/briefs/README.md.
    Colours are RGB channels. Opt-in classes are prefixed .g2-.
 */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fragment+Mono&display=swap');
@@ -24,7 +23,7 @@
   /* Text */
   --c-ink:       11 12 12;       /* #0b0c0c  19:1 */
   --c-ink-muted: 80 90 95;       /* #505a5f  7:1 */
-  --c-ink-faint: 111 119 123;    /* #6f777b  4.6:1, meta only */
+  --c-ink-faint: 111 119 123;    /* #6f777b  4.57:1 on white; not for text on sunken */
 
   /* Brand + action */
   --c-gov:         29 79 191;    /* #1d4fbf  links */
@@ -47,7 +46,7 @@
   --c-focus:     255 221 0;      /* #ffdd00 */
   --c-focus-ink: 11 12 12;
 
-  /* Status tones: bg / line / ink. note = warn, alert = bad (names kept for posturi). */
+  /* Status tones: bg / line / ink. Current markup maps warn to note, bad to alert. */
   --c-neutral-bg:  229 230 231; --c-neutral-line:  80 90 95;   --c-neutral-ink:  56 63 67;
   --c-info-bg:     210 226 241; --c-info-line:     29 112 184; --c-info-ink:     12 45 74;
   --c-progress-bg: 219 213 233; --c-progress-line: 76 44 146;  --c-progress-ink: 61 35 117;
@@ -84,8 +83,8 @@
 }
 
 /* ---- Opt-in base ----
-   Element rules have the specificity of one element (0,0,1), so that any project class wins.
-   They still win over an element reset (e.g. Tailwind preflight) that loads before this file.
+   Element rules have the specificity of one element (0,0,1).
+   Project classes win within the same cascade layer. Unlayered rules outrank layered rules.
    Focus rules stay strong on purpose: the yellow focus must show on every element. */
 :where([data-skin="gov2"]) body{margin:0;background:rgb(var(--c-page));color:rgb(var(--c-ink));font:17px/1.55 var(--font-sans);-webkit-font-smoothing:antialiased}
 :where([data-skin="gov2"]) a{color:rgb(var(--c-gov));text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.15em}
@@ -94,7 +93,10 @@
 [data-skin="gov2"] :focus-visible{outline:3px solid transparent;background:rgb(var(--c-focus));color:rgb(var(--c-focus-ink));box-shadow:0 -2px rgb(var(--c-focus)),0 4px rgb(var(--c-focus-ink));text-decoration:none}
 [data-skin="gov2"] :is(input,textarea,select):focus-visible{background:#fff;outline:3px solid rgb(var(--c-focus));outline-offset:0;box-shadow:inset 0 0 0 2px rgb(var(--c-ink))}
 
-/* ---- Links: one class for each role (GUIDELINES.md) ----
+/* ---- Component sizing: independent of the host reset ---- */
+:where(.g2-btn,.g2-chip,.g2-input){box-sizing:border-box}
+
+/* ---- Links: defaults for common roles (GUIDELINES.md) ----
    Plain <a> = in-text link. States use :where() so that the focus rule above stays stronger. */
 .g2-link-title{color:rgb(var(--c-gov));font-weight:700;font-size:19px;line-height:1.3;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.15em}
 .g2-link-title:where(:visited){color:rgb(var(--c-gov-visited))}
@@ -104,7 +106,7 @@
 /* Chip: a shortcut or filter link. Mark the selected chip with aria-current or aria-pressed="true". */
 .g2-chip{display:inline-flex;align-items:baseline;gap:6px;min-height:36px;padding:6px 10px;border:2px solid transparent;background:rgb(var(--c-sunken));color:rgb(var(--c-ink));font:500 15px/1.3 var(--font-sans);text-decoration:none}
 .g2-chip:where(:hover){background:rgb(var(--c-neutral-bg))}
-.g2-chip:where([aria-current],[aria-pressed=true]){border-color:rgb(var(--c-ink))}
+.g2-chip:where([aria-current]:not([aria-current=false],[aria-current=""]),[aria-pressed=true]){border-color:rgb(var(--c-ink))}
 .g2-chip-count{font:14px/1.3 var(--font-mono);color:rgb(var(--c-ink-muted))}
 
 /* ---- Header, band, footer ---- */
@@ -125,8 +127,9 @@
 /* Notice bar: above the header, dismissible (store the choice, e.g. localStorage). */
 .g2-notice-bar{display:flex;align-items:center;gap:10px;padding:6px 8px 6px 24px;background:rgb(var(--c-sunken));border-bottom:1px solid rgb(var(--c-line));font-size:15px}
 .g2-notice-bar>button{flex:none;width:44px;height:36px;border:0;background:transparent;color:rgb(var(--c-ink));font-size:22px;cursor:pointer}
-.g2-wordmark{display:inline-flex;align-items:center;gap:10px;color:#fff!important;font-size:19px;font-weight:700;letter-spacing:-.03em;text-decoration:none}
+.g2-wordmark{display:inline-flex;align-items:center;gap:10px;color:rgb(var(--c-on-bar));font-size:19px;font-weight:700;letter-spacing:-.03em;text-decoration:none}
 .g2-wordmark em{font-style:normal;font-weight:500;color:rgb(var(--c-on-bar-muted))}
+.g2-wordmark:focus-visible em{color:inherit}
 .g2-logo{display:block;height:28px;width:auto}
 .g2-nav a{color:#fff;text-decoration:none;font-weight:600;font-size:15px;padding:0 12px}
 .g2-nav a:hover{text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:6px}
@@ -142,7 +145,7 @@
 .g2-btn{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:8px 16px;border:2px solid transparent;border-radius:0;background:rgb(var(--c-primary));color:#fff;font:600 17px/1.2 var(--font-sans);box-shadow:0 2px rgb(var(--c-primary-shadow));cursor:pointer;text-decoration:none}
 .g2-btn:hover{background:rgb(var(--c-primary-hover))}
 .g2-btn.g2-secondary{background:rgb(var(--c-sunken));color:rgb(var(--c-ink));box-shadow:0 2px rgb(var(--c-secondary-shadow))}
-.g2-btn.g2-secondary:hover{background:#dbdad9}
+.g2-btn.g2-secondary:where(:hover){background:#dbdad9}
 .g2-btn.g2-warning{background:rgb(var(--c-danger));box-shadow:0 2px rgb(var(--c-danger-shadow))}
 .g2-btn:focus-visible{background:rgb(var(--c-focus));color:rgb(var(--c-ink));box-shadow:0 2px rgb(var(--c-ink))}
 .g2-btn:disabled{opacity:.5;cursor:not-allowed}
