@@ -33,3 +33,12 @@ Brief 03 is ready for implementation after brief 01 establishes the shared API a
 Check core-only and optional-font modes, network requests, Romanian coverage, fallback rendering and subpath URLs.
 Record the actual font versions and asset sizes instead of assuming an unmeasured performance benefit.
 The existing import remains until brief 03 is implemented; this ADR does not claim the runtime has changed.
+
+## Amendment (2026-10-26): local fonts are the default installation
+
+The owner directed that fonts should almost always be local.
+The technical decision does not change: `gov2.css` makes no font request, and `fonts.css` with `fonts/` stays a separate file set.
+The installation guidance changes: every project copies and links `fonts.css` and `fonts/` as a standard step.
+Only a quick one-off project skips them and uses the system fallback stacks.
+A project that already self-hosts the same families can keep its own files.
+Documentation does not describe the local fonts as the optional, minority choice.

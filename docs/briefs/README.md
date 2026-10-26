@@ -1,7 +1,7 @@
 # Gov2 audit follow-up
 
 Date: 2026-10-26
-Status: D1–D6 accepted. Briefs 02, 01 and 04 are implemented; brief 03 is ready.
+Status: D1–D6 accepted. Briefs 02, 01 and 04 are implemented; brief 03 is in progress. Briefs 05 and 06 follow it in order.
 
 The owner wants quick corrections now and implementation briefs for another model.
 Take the decisions in order. Record each answer here and in the affected brief before starting dependent work.
@@ -52,12 +52,14 @@ Brief 04 is implemented in 0.9.0. Brief 03 is ready.
 
 1. `01-shared-css-contract.md` — **Implemented (0.8.0):** activation, token and state vocabulary, cascade and customization.
 2. `02-live-guide-and-checks.md` — **Implemented:** executable documentation and regression checks then migrated to the 0.8.0 API by brief 01.
-3. `03-fonts-and-delivery.md` — **Ready:** optional local fonts and reproducible installation.
+3. `03-fonts-and-delivery.md` — **In progress:** local fonts as the default installation (ADR 0005 and its amendment), and reproducible installation.
 4. `04-page-foundations.md` — **Implemented (0.9.0):** the accepted foundation and two representative pages.
+5. `05-dark-scheme.md` — **Ready after 03:** opt-in dark values for the colour tokens (ADR 0009, issue #1).
+6. `06-tricolour-title-sweep.md` — **Ready after 05:** `.g2-ro-sweep`, with two deliberate WCAG deviations (ADR 0010, issue #2).
 
 The owner requested package 02 first. Its guide, fixtures and test runner now exist.
 Package 01 migrated those files and turned the two TODOs into real assertions. Do not create a second fixture framework.
-Next implement 03.
+Brief 03 is in progress. Then implement 05, then 06. Each one edits `gov2.css` and the suite, so they run one after another.
 The prior bundle is preserved under `docs/archive/` for historical reference. Keep its snapshot unchanged during migrations.
 
 Each package ends with an implementation report: changes, commands, measured results, remaining assumptions and migration notes.
