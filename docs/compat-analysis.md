@@ -98,16 +98,16 @@ The stiri session relayed it at the operator's request. No GitHub issues were op
 | # | Type | Need | DS status |
 |---|---|---|---|
 | 1 | component | Page container with side gutters; `--shell` had no class | Covered by brief 04 (`.g2-container`, `--g2-gutter`), in progress |
-| 2 | component | Breadcrumbs: `ol`, `/` separators, `aria-current="page"` on the last item | Issue #3 |
-| 3 | component | Pagination: plain links, 44px targets, a position line | Issue #4 |
-| 4 | component | Table: sunken header, numeric column, stacked layout under 720px with `data-label` | Issue #5 |
-| 5 | component | Summary list (`dl`): 14px muted label, one rule per row | Issue #6 |
+| 2 | component | Breadcrumbs: `ol`, `/` separators, `aria-current="page"` on the last item | Issue #3, approved 2026-10-27; brief 07 |
+| 3 | component | Pagination: plain links, 44px targets, a position line | Issue #4, approved 2026-10-27; brief 07 |
+| 4 | component | Table: sunken header, numeric column, stacked layout under 720px with `data-label` | Issue #5, approved 2026-10-27; brief 07 |
+| 5 | component | Summary list (`dl`): 14px muted label, one rule per row | Issue #6, approved 2026-10-27; brief 07 |
 | 6 | pattern | Result list: item title, mono date and quiet links on a meta line, snippet | Brief 04's directory page shows a local version. Candidate for `patterns/` when a second project needs it |
-| 7 | component | Skip link that shows on focus | Issue #7. Related defect: `:focus-visible` fills a focused `<main tabindex="-1">` with yellow |
+| 7 | component | Skip link that shows on focus | Issue #7, approved 2026-10-27; brief 07. Related defect: `:focus-visible` fills a focused `<main tabindex="-1">` with yellow |
 | 8 | fix | `.g2-notice-bar{display:flex}` overrides `hidden`; `> p` keeps its margin and does not grow | Fixed in 0.9.1 |
 | 9 | component | `.g2-nav` layout: flex, wrap, 44px targets | Covered by brief 04 (header/nav composition), in progress |
 | 10 | variant | `.g2-input` on `<select>` | Brief 04 adds select only if an example page needs it. Otherwise open |
-| 11 | token | Highlight colour for `<mark>`; yellow focus must stay distinct | Issue #8. stiri uses `--c-note-bg` (0.8.0: `--g2-color-warning-bg`) |
+| 11 | token | Highlight colour for `<mark>`; yellow focus must stay distinct | Issue #8, approved 2026-10-27; brief 07. stiri uses `--c-note-bg` (0.8.0: `--g2-color-warning-bg`) |
 | 12 | question | Font delivery without the Google Fonts `@import` | Accepted in ADR 0005; brief 03 ships optional local fonts and removes the import |
 
 ### Notes for the DS
