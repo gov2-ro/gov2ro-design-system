@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ro" data-skin="gov2">
+<html lang="ro">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -42,7 +42,7 @@
 <p>Exemplele încarcă direct stylesheet-ul din acest depozit.</p>
 <p>Modifici CSS-ul, vezi rezultatul aici.</p>
 <p>
-<a href="#utilizare">API actual și migrarea aprobată</a>
+<a href="#utilizare">Instalare și migrarea de la 0.6.0</a>
 </p>
 </aside>
 </div>
@@ -123,86 +123,86 @@
 <section class="guide-section" id="culoare" aria-labelledby="title-culoare">
 <span class="guide-number">02</span>
 <h2 id="title-culoare">Culoarea are un rol</h2>
-<p>Tokenii sunt canale RGB. Folosiți <code>rgb(var(--c-ink))</code> sau adăugați transparență cu <code>rgb(var(--c-ink) / .5)</code>.</p>
+<p>Tokenii sunt canale RGB. Folosiți <code>rgb(var(--g2-color-text))</code> sau adăugați transparență cu <code>rgb(var(--g2-color-text) / .5)</code>.</p>
 <div class="guide-swatches">
 <div class="guide-swatch">
-<div class="guide-swatch-color" style="--guide-swatch:var(--c-ink)" aria-hidden="true">
+<div class="guide-swatch-color" style="--guide-swatch:var(--g2-color-text)" aria-hidden="true">
 </div>
 <div class="guide-swatch-body">
 <strong>Text principal</strong>
-<code>--c-ink</code>
+<code>--g2-color-text</code>
 <span>#0b0c0c</span>
 </div>
 </div>
 <div class="guide-swatch">
-<div class="guide-swatch-color" style="--guide-swatch:var(--c-ink-muted)" aria-hidden="true">
+<div class="guide-swatch-color" style="--guide-swatch:var(--g2-color-text-muted)" aria-hidden="true">
 </div>
 <div class="guide-swatch-body">
 <strong>Text secundar</strong>
-<code>--c-ink-muted</code>
+<code>--g2-color-text-muted</code>
 <span>#505a5f</span>
 </div>
 </div>
 <div class="guide-swatch">
-<div class="guide-swatch-color" style="--guide-swatch:var(--c-sunken)" aria-hidden="true">
+<div class="guide-swatch-color" style="--guide-swatch:var(--g2-color-surface-sunken)" aria-hidden="true">
 </div>
 <div class="guide-swatch-body">
 <strong>Suprafață secundară</strong>
-<code>--c-sunken</code>
+<code>--g2-color-surface-sunken</code>
 <span>#f3f2f1</span>
 </div>
 </div>
 <div class="guide-swatch">
-<div class="guide-swatch-color" style="--guide-swatch:var(--c-gov)" aria-hidden="true">
+<div class="guide-swatch-color" style="--guide-swatch:var(--g2-color-link)" aria-hidden="true">
 </div>
 <div class="guide-swatch-body">
 <strong>Link</strong>
-<code>--c-gov</code>
+<code>--g2-color-link</code>
 <span>#1d4fbf</span>
 </div>
 </div>
 <div class="guide-swatch">
-<div class="guide-swatch-color" style="--guide-swatch:var(--c-gov-visited)" aria-hidden="true">
+<div class="guide-swatch-color" style="--guide-swatch:var(--g2-color-link-visited)" aria-hidden="true">
 </div>
 <div class="guide-swatch-body">
 <strong>Link vizitat</strong>
-<code>--c-gov-visited</code>
+<code>--g2-color-link-visited</code>
 <span>#4c2c92</span>
 </div>
 </div>
 <div class="guide-swatch">
-<div class="guide-swatch-color" style="--guide-swatch:var(--c-brand)" aria-hidden="true">
+<div class="guide-swatch-color" style="--guide-swatch:var(--g2-color-brand)" aria-hidden="true">
 </div>
 <div class="guide-swatch-body">
 <strong>Identitate</strong>
-<code>--c-brand</code>
+<code>--g2-color-brand</code>
 <span>#0b3d91</span>
 </div>
 </div>
 <div class="guide-swatch">
-<div class="guide-swatch-color" style="--guide-swatch:var(--c-primary)" aria-hidden="true">
+<div class="guide-swatch-color" style="--guide-swatch:var(--g2-color-action)" aria-hidden="true">
 </div>
 <div class="guide-swatch-body">
 <strong>Acțiune principală</strong>
-<code>--c-primary</code>
+<code>--g2-color-action</code>
 <span>#00703c</span>
 </div>
 </div>
 <div class="guide-swatch">
-<div class="guide-swatch-color" style="--guide-swatch:var(--c-danger)" aria-hidden="true">
+<div class="guide-swatch-color" style="--guide-swatch:var(--g2-color-danger-solid)" aria-hidden="true">
 </div>
 <div class="guide-swatch-body">
 <strong>Eroare / acțiune distructivă</strong>
-<code>--c-danger</code>
+<code>--g2-color-danger-solid</code>
 <span>#d4351c</span>
 </div>
 </div>
 <div class="guide-swatch">
-<div class="guide-swatch-color" style="--guide-swatch:var(--c-focus)" aria-hidden="true">
+<div class="guide-swatch-color" style="--guide-swatch:var(--g2-color-focus)" aria-hidden="true">
 </div>
 <div class="guide-swatch-body">
 <strong>Focus, cu text închis</strong>
-<code>--c-focus</code>
+<code>--g2-color-focus</code>
 <span>#ffdd00</span>
 </div>
 </div>
@@ -237,12 +237,12 @@
 <td>Text discret / alb</td>
 <td>4,57:1</td>
 <td>
-<code>--c-ink-faint</code>, numai pe alb</td>
+<code>--g2-color-text-faint</code>, numai pe alb</td>
 </tr>
 <tr>
 <td>Text discret / suprafață secundară</td>
 <td>4,08:1</td>
-<td>Insuficient pentru text obișnuit; folosiți <code>--c-ink-muted</code>
+<td>Insuficient pentru text obișnuit; folosiți <code>--g2-color-text-muted</code>
 </td>
 </tr>
 </tbody>
@@ -376,9 +376,9 @@
 <strong class="g2-tag">Arhivat</strong>
 <strong class="g2-tag" data-tone="info">Nou</strong>
 <strong class="g2-tag" data-tone="progress">În verificare</strong>
-<strong class="g2-tag" data-tone="warn">Necesită atenție</strong>
-<strong class="g2-tag" data-tone="ok">Activ</strong>
-<strong class="g2-tag" data-tone="bad">Închis</strong>
+<strong class="g2-tag" data-tone="warning">Necesită atenție</strong>
+<strong class="g2-tag" data-tone="success">Activ</strong>
+<strong class="g2-tag" data-tone="danger">Închis</strong>
 </div>
 </div>
 <details class="guide-code">
@@ -387,13 +387,13 @@
 <code id="code-7">&lt;strong class=&quot;g2-tag&quot;&gt;Arhivat&lt;/strong&gt;
 &lt;strong class=&quot;g2-tag&quot; data-tone=&quot;info&quot;&gt;Nou&lt;/strong&gt;
 &lt;strong class=&quot;g2-tag&quot; data-tone=&quot;progress&quot;&gt;În verificare&lt;/strong&gt;
-&lt;strong class=&quot;g2-tag&quot; data-tone=&quot;warn&quot;&gt;Necesită atenție&lt;/strong&gt;
-&lt;strong class=&quot;g2-tag&quot; data-tone=&quot;ok&quot;&gt;Activ&lt;/strong&gt;
-&lt;strong class=&quot;g2-tag&quot; data-tone=&quot;bad&quot;&gt;Închis&lt;/strong&gt;</code>
+&lt;strong class=&quot;g2-tag&quot; data-tone=&quot;warning&quot;&gt;Necesită atenție&lt;/strong&gt;
+&lt;strong class=&quot;g2-tag&quot; data-tone=&quot;success&quot;&gt;Activ&lt;/strong&gt;
+&lt;strong class=&quot;g2-tag&quot; data-tone=&quot;danger&quot;&gt;Închis&lt;/strong&gt;</code>
 </pre>
 <button class="guide-copy" type="button" data-copy="code-7" hidden>Copiază codul</button>
 </details>
-<p class="guide-help">Acestea sunt valorile din CSS-ul actual. Vocabularul aprobat pentru migrare este <code>neutral / info / progress / warning / success / danger</code>; nu este încă implementat.</p>
+<p class="guide-help">Aceleași șase nume apar în markup (<code>data-tone</code>) și în tokeni (<code>--g2-color-warning-bg</code>): <code>neutral / info / progress / warning / success / danger</code>. Absența atributului înseamnă <code>neutral</code>. Valorile vechi <code>warn</code>, <code>ok</code> și <code>bad</code> nu mai sunt recunoscute.</p>
 </section>
 <section class="guide-section" id="campuri" aria-labelledby="title-campuri">
 <span class="guide-number">08</span>
@@ -665,10 +665,10 @@
 <p>Copiați stylesheet-ul dintr-un tag exact și păstrați-l nemodificat. Puneți compoziția și variațiile locale într-un fișier al proiectului.</p>
 <div class="guide-install">
 <details class="guide-code">
-<summary>Instalarea API-ului actual</summary>
+<summary>Pagină independentă: doar linkul către stylesheet</summary>
 <pre>
 <code id="code-19">&lt;!doctype html&gt;
-&lt;html lang=&quot;ro&quot; data-skin=&quot;gov2&quot;&gt;
+&lt;html lang=&quot;ro&quot;&gt;
 &lt;head&gt;
   &lt;meta charset=&quot;utf-8&quot;&gt;
   &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
@@ -681,16 +681,42 @@
 </pre>
 <button class="guide-copy" type="button" data-copy="code-19" hidden>Copiază codul</button>
 </details>
+<details class="guide-code">
+<summary>Pagină cu reset și CSS de proiect, în straturi</summary>
+<pre>
+<code id="code-20">&lt;head&gt;
+  &lt;meta charset=&quot;utf-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+  &lt;style&gt;@layer reset, gov2, utilities, app;&lt;/style&gt;
+  &lt;link rel=&quot;stylesheet&quot; href=&quot;/assets/reset.css&quot;&gt;    &lt;!-- regulile sunt în @layer reset --&gt;
+  &lt;link rel=&quot;stylesheet&quot; href=&quot;/assets/gov2.css&quot;&gt;
+  &lt;link rel=&quot;stylesheet&quot; href=&quot;/assets/app.css&quot;&gt;      &lt;!-- regulile sunt în @layer app --&gt;
+&lt;/head&gt;</code>
+</pre>
+<button class="guide-copy" type="button" data-copy="code-20" hidden>Copiază codul</button>
+</details>
+<details class="guide-code">
+<summary>app.css: lățimea paginii și o variantă compactă</summary>
+<pre>
+<code id="code-21">@layer app {
+  :root { --g2-container-max: 60rem; }
+  .site-container { max-width: var(--g2-container-max); margin-inline: auto; padding-inline: 1rem; }
+  .btn-compact { min-height: 36px; padding: 4px 12px; font-size: 15px; }
+}</code>
+</pre>
+<button class="guide-copy" type="button" data-copy="code-21" hidden>Copiază codul</button>
+</details>
 </div>
 <div class="guide-callout">
 <p>
-<strong>API actual și decizii aprobate</strong>
+<strong>Ce se aplică la încărcarea fișierului</strong>
 </p>
-<p>Ghidul folosește API-ul prezent în fișier: <code>data-skin="gov2"</code>, tokeni <code>--c-*</code> și valorile de stare de mai sus.</p>
-<p>Activarea automată, tokenii <code>--g2-*</code> și straturile CSS sunt aprobate, dar urmează să fie implementate. Fonturile locale opționale sunt de asemenea aprobate; CSS-ul actual încă importă Google Fonts.</p>
+<p>Stilurile de bază (text, linkuri, focus) se aplică pe întregul site. Nu este nevoie de un atribut sau de un element-înveliș. Tokenii <code>--g2-*</code> sunt publicați pe <code>:root</code>; componentele rămân opționale, prin clasele <code>.g2-*</code>.</p>
+<p>Ordinea publică a straturilor este <code>reset, gov2, utilities, app</code>. În <code>gov2</code>: <code>tokens, base, components, states</code>. Declarați ordinea înaintea oricărui alt stylesheet care creează straturi. Un reset sau o regulă de proiect care nu este într-un strat are prioritate peste tot gov2, inclusiv peste focus.</p>
+<p>Fonturile locale opționale sunt aprobate, dar neimplementate: CSS-ul încă importă Google Fonts.</p>
 </div>
-<p>Consultați <a href="../COMPONENTS.md">referința componentelor</a>, <a href="../GUIDELINES.md">recomandările de design</a> și <a href="briefs/README.md">planul implementării</a>. Nu este configurat un CDN public.</p>
-<p class="guide-help">Variațiile locale pot adapta spațiul, densitatea și amplasarea. Verificați contrastul și stările interactive după modificare.</p>
+<p>Tabelul vechi → nou pentru tokeni și valorile <code>data-tone</code>, exemplele verificate și limitele straturilor sunt în <a href="migration-from-0.6.0.md">ghidul de migrare de la 0.6.0</a>. Consultați și <a href="../COMPONENTS.md">referința componentelor</a>, <a href="../GUIDELINES.md">recomandările de design</a> și <a href="briefs/README.md">planul implementării</a>. Nu este configurat un CDN public.</p>
+<p class="guide-help">Variațiile locale pot adapta spațiul, densitatea și amplasarea. Verificați contrastul, focusul și hover împreună cu focus după modificare: o regulă de proiect poate suprascrie culorile de focus.</p>
 </section>
 <section class="guide-section" id="verificare" aria-labelledby="title-verificare">
 <span class="guide-number">13</span>

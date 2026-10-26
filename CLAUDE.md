@@ -10,10 +10,11 @@ The DS follows the GOV.UK-derived theme of igov.ro: Inter + Fragment Mono, squar
 
 ## How gov2.css is structured
 
-- **Current activation:** tokens and base rules are scoped to `[data-skin="gov2"]`; component rules are not. Tokens and base element styles (body, links, focus) apply only when the page sets `<html data-skin="gov2">`. Component classes are opt-in and use the prefix `.g2-` (`.g2-header`, `.g2-btn`, `.g2-tag`, `.g2-tile`…).
-- **Colour tokens are bare RGB channels** (`--c-ink: 11 12 12;`). Use them as `rgb(var(--c-ink))` or `rgb(var(--c-ink) / .5)`. Give each new token the same format, with the hex value in a trailing comment.
-- **The current token names are the existing API, pending revision.** The status tones are neutral, info, progress, note, ok and alert, each with `-bg`, `-line` and `-ink`. In markup, `data-tone=warn` uses `note` and `data-tone=bad` uses `alert`. Their origin does not constrain the shared API. See `docs/decisions/0001-shared-system-boundary.md`.
-- **Design rules in the tokens:** the radius is always 0, there are no decorative shadows (`--shadow-lift: none`), and the tricolour colours (`--c-ro-*`) are decorative only, never text. The default tricolour mark is `.g2-ro-corner`; the alternatives are `.g2-ro-bar` and `.g2-ro-dots`.
+- **Activation:** loading `gov2.css` applies the base styles (body, links, focus) to the whole page and publishes the tokens on `:root`. The page needs no attribute and no wrapper (ADR 0002). Component classes are opt-in and use the prefix `.g2-` (`.g2-header`, `.g2-btn`, `.g2-tag`, `.g2-tile`…).
+- **Layers (ADR 0004):** the first lines declare `@layer reset, gov2, utilities, app;` and then `gov2.tokens, gov2.base, gov2.components, gov2.states`. No rule sits outside a layer. Put component defaults and hover in `components`. Put focus, selection, disabled and error in `states`. A layer decides before specificity, so test each combined state.
+- **Colour tokens are bare RGB channels** (`--g2-color-text: 11 12 12;`). Use them as `rgb(var(--g2-color-text))` or `rgb(var(--g2-color-text) / .5)`. Give each new token the `--g2-` prefix and the same format, with the hex value in a trailing comment.
+- **Names follow ADR 0003:** tokens describe a role (`--g2-color-link`, `--g2-color-header-bg`). The six status names are neutral, info, progress, warning, success and danger. Tokens (`-bg`, `-line`, `-ink`) and `data-tone` values use the same names. Do not add aliases for old names; `docs/migration-from-0.6.0.md` lists them. Their origin does not constrain the shared API. See `docs/decisions/0001-shared-system-boundary.md`.
+- **Design rules in the tokens:** the radius is always 0 (`--g2-radius`), there are no decorative shadows, and the tricolour colours (`--g2-color-ro-*`) are decorative only, never text. The default tricolour mark is `.g2-ro-corner`; the alternatives are `.g2-ro-bar` and `.g2-ro-dots`.
 - Component rules are minified, one rule per line, and grouped under `/* ---- Section ---- */` comments. Keep that style.
 
 ## Style guide (`docs/index.html`)
@@ -23,7 +24,8 @@ The guide is editable HTML in Romanian and loads `../gov2.css` directly.
 `docs/guide.js` adds copy, toggle and dismissal demonstrations. Essential content and markup stay available without JavaScript.
 Keep every implemented component and documented state represented. Label approved but unimplemented work separately.
 Run `npm test` after changing component examples or shared behaviour; see `docs/testing.md` for browser setup and manual coverage.
-`tests/contract.html` tests raw components without documentation CSS. Reuse the suite when implementing briefs 01 and 03.
+The suite runs the code blocks marked `<!-- example: … -->` in `docs/migration-from-0.6.0.md`, and it compares the token tables there with `gov2.css`. Change both together.
+`tests/contract.html` tests raw components without documentation CSS. Extend the same suite for later briefs.
 The live guide replaces the historical bundle. The owner requested preserving that bundle in `docs/archive/` for reference.
 Keep the archived snapshot byte-for-byte unchanged; record provenance in its README. Do not migrate its tokens or embedded runtime.
 No hosted guide or CDN is configured.

@@ -23,7 +23,7 @@ patterns/<name>/
   <name>.png    a screenshot from the origin project
 ```
 
-- Prefer DS tokens (`rgb(var(--c-…))`) when their roles fit. Document useful local variations and retain accessible behaviour.
+- Prefer DS tokens (`rgb(var(--g2-color-…))`) when their roles fit. Document useful local variations and retain accessible behaviour.
 - The pattern follows `GUIDELINES.md`.
 
 ## How to contribute a pattern

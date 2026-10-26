@@ -1,4 +1,4 @@
-/* gov2 — stilul comun pentru proiectele gov2.ro · v0.7.0 · 26.10.2026
+/* gov2 — stilul comun pentru proiectele gov2.ro · v0.8.0 · 26.10.2026
 
    Shared stylesheet for gov2.ro projects.
    Inspired by igov.ro's GOV.UK-derived theme (brand.css, 2026-10): Inter + Fragment Mono,
@@ -6,170 +6,199 @@
    green primary button, six-tone status palette. Optional Romanian tricolour band.
 
    Repo: https://github.com/gov2-ro/gov2ro-design-system
-   Current activation: load this file and set <html data-skin="gov2">.
-   The shared stylesheet contract is being revised; see docs/briefs/README.md.
-   Colours are RGB channels. Opt-in classes are prefixed .g2-.
+   Activation: load this file. It applies the site defaults and publishes the tokens on :root.
+   Layers: reset, gov2, utilities, app (public order). Inside gov2: tokens, base, components, states.
+   A layer that an earlier stylesheet created keeps its position: declare the order first (see the migration document).
+   Colours are RGB channels (--g2-color-*). Opt-in classes are prefixed .g2-.
+   Migration from 0.6.0: docs/migration-from-0.6.0.md.
 */
+@layer reset, gov2, utilities, app;
+@layer gov2.tokens, gov2.base, gov2.components, gov2.states;
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fragment+Mono&display=swap');
 
-[data-skin="gov2"] {
+/* ---- Tokens: published on :root ---- */
+@layer gov2.tokens {
+:root {
   /* Surfaces */
-  --c-page:        255 255 255;
-  --c-sunken:      243 242 241;  /* #f3f2f1  panels, footer, toolbars, tags */
-  --c-surface:     255 255 255;
-  --c-line:        177 180 182;  /* #b1b4b6  rules, card borders */
-  --c-line-strong: 11 12 12;     /* #0b0c0c  form controls (2px) */
+  --g2-color-page:                     255 255 255; /* #ffffff */
+  --g2-color-surface:                  255 255 255; /* #ffffff */
+  --g2-color-surface-sunken:           243 242 241; /* #f3f2f1  panels, footer, toolbars, notice bar, tags */
+  --g2-color-line:                     177 180 182; /* #b1b4b6  rules, card borders */
+  --g2-color-control-border:           11 12 12; /* #0b0c0c  form controls */
 
   /* Text */
-  --c-ink:       11 12 12;       /* #0b0c0c  19:1 */
-  --c-ink-muted: 80 90 95;       /* #505a5f  7:1 */
-  --c-ink-faint: 111 119 123;    /* #6f777b  4.57:1 on white; not for text on sunken */
+  --g2-color-text:                     11 12 12; /* #0b0c0c  19:1 on white */
+  --g2-color-text-muted:               80 90 95; /* #505a5f  7:1 on white */
+  --g2-color-text-faint:               111 119 123; /* #6f777b  4.57:1 on white; not for text on the sunken surface */
 
-  /* Brand + action */
-  --c-gov:         29 79 191;    /* #1d4fbf  links */
-  --c-gov-visited: 76 44 146;    /* #4c2c92 */
-  --c-gov-light:   210 226 241;  /* #d2e2f1  selected rows */
-  --c-on-gov:      255 255 255;
-  --c-brand:       11 61 145;    /* #0b3d91  header band, footer rule, tile rules */
-  --c-gov-bar:       11 12 12;   /* header */
-  --c-on-bar:        255 255 255;
-  --c-on-bar-muted:  204 204 204;
-  --c-on-bar-accent: 140 198 255; /* #8cc6ff  current nav item */
+  /* Links and selection */
+  --g2-color-link:                     29 79 191; /* #1d4fbf  links */
+  --g2-color-link-visited:             76 44 146; /* #4c2c92 */
+  --g2-color-selected-bg:              210 226 241; /* #d2e2f1  selected rows */
+  --g2-color-on-link:                  255 255 255; /* #ffffff  text on a link-colour fill */
 
-  --c-primary:        0 112 60;  /* #00703c  primary button */
-  --c-primary-hover:  0 90 48;   /* #005a30 */
-  --c-primary-shadow: 0 45 24;   /* #002d18 */
-  --c-secondary-shadow: 146 145 145; /* #929191 */
-  --c-danger:        212 53 28;  /* #d4351c  errors, destructive */
-  --c-danger-shadow: 85 21 11;
+  /* Brand and header */
+  --g2-color-brand:                    11 61 145; /* #0b3d91  header band, footer rule, tile rules */
+  --g2-color-header-bg:                11 12 12; /* #0b0c0c  header and other dark surfaces */
+  --g2-color-on-header:                255 255 255; /* #ffffff */
+  --g2-color-on-header-muted:          204 204 204; /* #cccccc */
+  --g2-color-header-accent:            140 198 255; /* #8cc6ff  current nav item */
 
-  --c-focus:     255 221 0;      /* #ffdd00 */
-  --c-focus-ink: 11 12 12;
+  /* Actions: buttons and errors */
+  --g2-color-action:                   0 112 60; /* #00703c  primary button */
+  --g2-color-action-hover:             0 90 48; /* #005a30 */
+  --g2-color-action-shadow:            0 45 24; /* #002d18 */
+  --g2-color-action-secondary-shadow:  146 145 145; /* #929191 */
+  --g2-color-danger-solid:             212 53 28; /* #d4351c  errors, destructive button */
+  --g2-color-danger-shadow:            85 21 11; /* #55150b */
 
-  /* Status tones: bg / line / ink. Current markup maps warn to note, bad to alert. */
-  --c-neutral-bg:  229 230 231; --c-neutral-line:  80 90 95;   --c-neutral-ink:  56 63 67;
-  --c-info-bg:     210 226 241; --c-info-line:     29 112 184; --c-info-ink:     12 45 74;
-  --c-progress-bg: 219 213 233; --c-progress-line: 76 44 146;  --c-progress-ink: 61 35 117;
-  --c-note-bg:     255 247 191; --c-note-line:     181 136 0;  --c-note-ink:     89 77 0;
-  --c-ok-bg:       204 226 216; --c-ok-line:       0 112 60;   --c-ok-ink:       0 90 48;
-  --c-alert-bg:    244 205 198; --c-alert-line:    212 53 28;  --c-alert-ink:    42 11 6;
-  --c-ok-solid:    0 112 60;
+  /* Focus: keyboard focus only */
+  --g2-color-focus:                    255 221 0; /* #ffdd00 */
+  --g2-color-on-focus:                 11 12 12; /* #0b0c0c */
+
+  /* Status tones: bg / line / ink. Markup: data-tone with the same names as the tokens. */
+  --g2-color-neutral-bg:               229 230 231; /* #e5e6e7 */
+  --g2-color-neutral-line:             80 90 95; /* #505a5f */
+  --g2-color-neutral-ink:              56 63 67; /* #383f43 */
+  --g2-color-info-bg:                  210 226 241; /* #d2e2f1 */
+  --g2-color-info-line:                29 112 184; /* #1d70b8 */
+  --g2-color-info-ink:                 12 45 74; /* #0c2d4a */
+  --g2-color-progress-bg:              219 213 233; /* #dbd5e9 */
+  --g2-color-progress-line:            76 44 146; /* #4c2c92 */
+  --g2-color-progress-ink:             61 35 117; /* #3d2375 */
+  --g2-color-warning-bg:               255 247 191; /* #fff7bf */
+  --g2-color-warning-line:             181 136 0; /* #b58800 */
+  --g2-color-warning-ink:              89 77 0; /* #594d00 */
+  --g2-color-success-bg:               204 226 216; /* #cce2d8 */
+  --g2-color-success-line:             0 112 60; /* #00703c */
+  --g2-color-success-ink:              0 90 48; /* #005a30 */
+  --g2-color-danger-bg:                244 205 198; /* #f4cdc6 */
+  --g2-color-danger-line:              212 53 28; /* #d4351c */
+  --g2-color-danger-ink:               42 11 6; /* #2a0b06 */
+  --g2-color-success-solid:            0 112 60; /* #00703c */
 
   /* Tricolour (decorative only, never text) */
-  --c-ro-blue:   0 43 127;       /* #002b7f */
-  --c-ro-yellow: 252 209 22;     /* #fcd116 */
-  --c-ro-red:    206 17 38;      /* #ce1126 */
+  --g2-color-ro-blue:                  0 43 127; /* #002b7f */
+  --g2-color-ro-yellow:                252 209 22; /* #fcd116 */
+  --g2-color-ro-red:                   206 17 38; /* #ce1126 */
 
-  /* Chart ramp: blue series, greys for the rest, ink marks the selection */
-  --c-chart-1: 29 112 184;
-  --c-chart-2: 11 61 145;
-  --c-chart-3: 80 90 95;
-  --c-chart-4: 177 180 182;
-  --c-chart-sel: 11 12 12;
+  /* Chart ramp: blue series, greys for the rest, the dark colour marks the selection */
+  --g2-color-chart-1:                  29 112 184; /* #1d70b8 */
+  --g2-color-chart-2:                  11 61 145; /* #0b3d91 */
+  --g2-color-chart-3:                  80 90 95; /* #505a5f */
+  --g2-color-chart-4:                  177 180 182; /* #b1b4b6 */
+  --g2-color-chart-selected:           11 12 12; /* #0b0c0c */
 
   /* Type */
-  --font-display: "Inter", -apple-system, "Segoe UI", Arial, sans-serif;
-  --font-sans:    "Inter", -apple-system, "Segoe UI", Arial, sans-serif;
-  --font-mono:    "Fragment Mono", ui-monospace, SFMono-Regular, monospace;
+  --g2-font-sans:                      "Inter", -apple-system, "Segoe UI", Arial, sans-serif;
+  --g2-font-mono:                      "Fragment Mono", ui-monospace, SFMono-Regular, monospace;
 
   /* Metrics: square, flat */
-  --radius:      0;
-  --radius-md:   0;
-  --radius-lg:   0;
-  --radius-pill: 0;
-  --border-ink:  2px;
-  --shadow-lift: none;
-  --shell:       1280px;
+  --g2-radius:                         0;
+  --g2-border-width-control:           2px;
+  --g2-container-max:                  1280px;
+}
 }
 
-/* ---- Opt-in base ----
-   Element rules have the specificity of one element (0,0,1).
-   Project classes win within the same cascade layer. Unlayered rules outrank layered rules.
-   Focus rules stay strong on purpose: the yellow focus must show on every element. */
-:where([data-skin="gov2"]) body{margin:0;background:rgb(var(--c-page));color:rgb(var(--c-ink));font:17px/1.55 var(--font-sans);-webkit-font-smoothing:antialiased}
-:where([data-skin="gov2"]) a{color:rgb(var(--c-gov));text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.15em}
-:where([data-skin="gov2"]) a:where(:visited){color:rgb(var(--c-gov-visited))}
-:where([data-skin="gov2"]) a:where(:hover){text-decoration-thickness:3px}
-[data-skin="gov2"] :focus-visible{outline:3px solid transparent;background:rgb(var(--c-focus));color:rgb(var(--c-focus-ink));box-shadow:0 -2px rgb(var(--c-focus)),0 4px rgb(var(--c-focus-ink));text-decoration:none}
-[data-skin="gov2"] :is(input,textarea,select):focus-visible{background:#fff;outline:3px solid rgb(var(--c-focus));outline-offset:0;box-shadow:inset 0 0 0 2px rgb(var(--c-ink))}
+/* ---- Base: whole-site defaults ----
+   A rule in a later layer wins over these, whatever its specificity.
+   Unlayered rules outrank every layer, gov2 states included. */
+@layer gov2.base {
+body{margin:0;background:rgb(var(--g2-color-page));color:rgb(var(--g2-color-text));font:17px/1.55 var(--g2-font-sans);-webkit-font-smoothing:antialiased}
+a{color:rgb(var(--g2-color-link));text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.15em}
+a:where(:visited){color:rgb(var(--g2-color-link-visited))}
+a:where(:hover){text-decoration-thickness:3px}
+/* Important declarations invert the layer order: this rule wins over project rules in later layers. */
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+}
 
+/* ---- Components: opt-in .g2- classes, with their hover treatment ----
+   Focus, selection, disabled and error treatments are in the states layer, which follows this one. */
+@layer gov2.components {
 /* ---- Component sizing: independent of the host reset ---- */
 :where(.g2-btn,.g2-chip,.g2-input){box-sizing:border-box}
 
 /* ---- Links: defaults for common roles (GUIDELINES.md) ----
-   Plain <a> = in-text link. States use :where() so that the focus rule above stays stronger. */
-.g2-link-title{color:rgb(var(--c-gov));font-weight:700;font-size:19px;line-height:1.3;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.15em}
-.g2-link-title:where(:visited){color:rgb(var(--c-gov-visited))}
-.g2-link-quiet{color:rgb(var(--c-ink));text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.15em}
-.g2-link-inverse{color:rgb(var(--c-on-bar));text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.15em}
+   Plain <a> = in-text link (base layer). Visited and hover use :where() to keep one specificity. */
+.g2-link-title{color:rgb(var(--g2-color-link));font-weight:700;font-size:19px;line-height:1.3;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.15em}
+.g2-link-title:where(:visited){color:rgb(var(--g2-color-link-visited))}
+.g2-link-quiet{color:rgb(var(--g2-color-text));text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.15em}
+.g2-link-inverse{color:rgb(var(--g2-color-on-header));text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.15em}
 .g2-link-title:where(:hover),.g2-link-quiet:where(:hover),.g2-link-inverse:where(:hover){text-decoration-thickness:3px}
-/* Chip: a shortcut or filter link. Mark the selected chip with aria-current or aria-pressed="true". */
-.g2-chip{display:inline-flex;align-items:baseline;gap:6px;min-height:36px;padding:6px 10px;border:2px solid transparent;background:rgb(var(--c-sunken));color:rgb(var(--c-ink));font:500 15px/1.3 var(--font-sans);text-decoration:none}
-.g2-chip:where(:hover){background:rgb(var(--c-neutral-bg))}
-.g2-chip:where([aria-current]:not([aria-current=false],[aria-current=""]),[aria-pressed=true]){border-color:rgb(var(--c-ink))}
-.g2-chip-count{font:14px/1.3 var(--font-mono);color:rgb(var(--c-ink-muted))}
+/* Chip: a shortcut or filter link. The selected chip (aria-current or aria-pressed="true") is in the states layer. */
+.g2-chip{display:inline-flex;align-items:baseline;gap:6px;min-height:36px;padding:6px 10px;border:var(--g2-border-width-control) solid transparent;border-radius:var(--g2-radius);background:rgb(var(--g2-color-surface-sunken));color:rgb(var(--g2-color-text));font:500 15px/1.3 var(--g2-font-sans);text-decoration:none}
+.g2-chip:where(:hover){background:rgb(var(--g2-color-neutral-bg))}
+.g2-chip-count{font:14px/1.3 var(--g2-font-mono);color:rgb(var(--g2-color-text-muted))}
 
 /* ---- Header, band, footer ---- */
-.g2-header{background:rgb(var(--c-gov-bar));color:rgb(var(--c-on-bar));border-bottom:8px solid rgb(var(--c-brand))}
+.g2-header{background:rgb(var(--g2-color-header-bg));color:rgb(var(--g2-color-on-header));border-bottom:8px solid rgb(var(--g2-color-brand))}
 .g2-header-in{min-height:52px;display:flex;align-items:center;gap:24px}
 /* Tricolour variant: the stripe sits above everything (notice bar included); the header drops its blue band. */
-.g2-ro-bar{height:6px;background:linear-gradient(90deg,rgb(var(--c-ro-blue)) 33.33%,rgb(var(--c-ro-yellow)) 33.33% 66.66%,rgb(var(--c-ro-red)) 66.66%)}
+.g2-ro-bar{height:6px;background:linear-gradient(90deg,rgb(var(--g2-color-ro-blue)) 33.33%,rgb(var(--g2-color-ro-yellow)) 33.33% 66.66%,rgb(var(--g2-color-ro-red)) 66.66%)}
 .g2-header.g2-tricolor{border-bottom:0}
 /* Smaller marks; the header keeps its blue band. Decorative: add aria-hidden="true".
    Default for gov2 projects: .g2-ro-corner. */
 .g2-header{position:relative}
-.g2-ro-corner{position:absolute;top:0;right:24px;width:54px;height:6px;background:linear-gradient(90deg,rgb(var(--c-ro-blue)) 33.33%,rgb(var(--c-ro-yellow)) 33.33% 66.66%,rgb(var(--c-ro-red)) 66.66%)}
+.g2-ro-corner{position:absolute;top:0;right:24px;width:54px;height:6px;background:linear-gradient(90deg,rgb(var(--g2-color-ro-blue)) 33.33%,rgb(var(--g2-color-ro-yellow)) 33.33% 66.66%,rgb(var(--g2-color-ro-red)) 66.66%)}
 .g2-ro-dots{display:inline-flex;gap:4px;margin-left:2px}
 .g2-ro-dots::before,.g2-ro-dots::after,.g2-ro-dots>i{content:"";display:block;width:7px;height:7px;border-radius:50%}
-.g2-ro-dots::before{background:rgb(var(--c-ro-blue));box-shadow:0 0 0 1px #3a5aa0}
-.g2-ro-dots>i{background:rgb(var(--c-ro-yellow))}
-.g2-ro-dots::after{background:rgb(var(--c-ro-red))}
+.g2-ro-dots::before{background:rgb(var(--g2-color-ro-blue));box-shadow:0 0 0 1px #3a5aa0}
+.g2-ro-dots>i{background:rgb(var(--g2-color-ro-yellow))}
+.g2-ro-dots::after{background:rgb(var(--g2-color-ro-red))}
 /* Notice bar: above the header, dismissible (store the choice, e.g. localStorage). */
-.g2-notice-bar{display:flex;align-items:center;gap:10px;padding:6px 8px 6px 24px;background:rgb(var(--c-sunken));border-bottom:1px solid rgb(var(--c-line));font-size:15px}
-.g2-notice-bar>button{flex:none;width:44px;height:36px;border:0;background:transparent;color:rgb(var(--c-ink));font-size:22px;cursor:pointer}
-.g2-wordmark{display:inline-flex;align-items:center;gap:10px;color:rgb(var(--c-on-bar));font-size:19px;font-weight:700;letter-spacing:-.03em;text-decoration:none}
-.g2-wordmark em{font-style:normal;font-weight:500;color:rgb(var(--c-on-bar-muted))}
-.g2-wordmark:focus-visible em{color:inherit}
+.g2-notice-bar{display:flex;align-items:center;gap:10px;padding:6px 8px 6px 24px;background:rgb(var(--g2-color-surface-sunken));border-bottom:1px solid rgb(var(--g2-color-line));font-size:15px}
+.g2-notice-bar>button{flex:none;width:44px;height:36px;border:0;background:transparent;color:rgb(var(--g2-color-text));font-size:22px;cursor:pointer}
+.g2-wordmark{display:inline-flex;align-items:center;gap:10px;color:rgb(var(--g2-color-on-header));font-size:19px;font-weight:700;letter-spacing:-.03em;text-decoration:none}
+.g2-wordmark em{font-style:normal;font-weight:500;color:rgb(var(--g2-color-on-header-muted))}
 .g2-logo{display:block;height:28px;width:auto}
 .g2-nav a{color:#fff;text-decoration:none;font-weight:600;font-size:15px;padding:0 12px}
 .g2-nav a:hover{text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:6px}
-.g2-nav a[aria-current=page]{box-shadow:inset 0 -4px rgb(var(--c-on-bar-accent))}
-.g2-footer{background:rgb(var(--c-sunken));color:rgb(var(--c-ink));border-top:10px solid rgb(var(--c-brand))}
-.g2-footer a{color:rgb(var(--c-ink))}
+.g2-nav a[aria-current=page]{box-shadow:inset 0 -4px rgb(var(--g2-color-header-accent))}
+.g2-footer{background:rgb(var(--g2-color-surface-sunken));color:rgb(var(--g2-color-text));border-top:10px solid rgb(var(--g2-color-brand))}
+.g2-footer a{color:rgb(var(--g2-color-text))}
 
 /* Short tricolour dash for section titles */
-.g2-dash{display:block;width:48px;height:4px;background:linear-gradient(90deg,rgb(var(--c-ro-blue)) 33.33%,rgb(var(--c-ro-yellow)) 33.33% 66.66%,rgb(var(--c-ro-red)) 66.66%)}
-.g2-dash.g2-red{background:rgb(var(--c-ro-red))}
+.g2-dash{display:block;width:48px;height:4px;background:linear-gradient(90deg,rgb(var(--g2-color-ro-blue)) 33.33%,rgb(var(--g2-color-ro-yellow)) 33.33% 66.66%,rgb(var(--g2-color-ro-red)) 66.66%)}
+.g2-dash.g2-red{background:rgb(var(--g2-color-ro-red))}
 
 /* ---- Buttons ---- */
-.g2-btn{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:8px 16px;border:2px solid transparent;border-radius:0;background:rgb(var(--c-primary));color:#fff;font:600 17px/1.2 var(--font-sans);box-shadow:0 2px rgb(var(--c-primary-shadow));cursor:pointer;text-decoration:none}
-.g2-btn:hover{background:rgb(var(--c-primary-hover))}
-.g2-btn.g2-secondary{background:rgb(var(--c-sunken));color:rgb(var(--c-ink));box-shadow:0 2px rgb(var(--c-secondary-shadow))}
+.g2-btn{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:8px 16px;border:var(--g2-border-width-control) solid transparent;border-radius:var(--g2-radius);background:rgb(var(--g2-color-action));color:#fff;font:600 17px/1.2 var(--g2-font-sans);box-shadow:0 2px rgb(var(--g2-color-action-shadow));cursor:pointer;text-decoration:none}
+.g2-btn:hover{background:rgb(var(--g2-color-action-hover))}
+.g2-btn.g2-secondary{background:rgb(var(--g2-color-surface-sunken));color:rgb(var(--g2-color-text));box-shadow:0 2px rgb(var(--g2-color-action-secondary-shadow))}
 .g2-btn.g2-secondary:where(:hover){background:#dbdad9}
-.g2-btn.g2-warning{background:rgb(var(--c-danger));box-shadow:0 2px rgb(var(--c-danger-shadow))}
-.g2-btn:focus-visible{background:rgb(var(--c-focus));color:rgb(var(--c-ink));box-shadow:0 2px rgb(var(--c-ink))}
-.g2-btn:disabled{opacity:.5;cursor:not-allowed}
+.g2-btn.g2-warning{background:rgb(var(--g2-color-danger-solid));box-shadow:0 2px rgb(var(--g2-color-danger-shadow))}
 
 /* ---- Tags: square, the text names the state ---- */
-.g2-tag{display:inline-block;padding:2px 8px;font:600 14px/1.35 var(--font-sans);background:rgb(var(--c-neutral-bg));color:rgb(var(--c-neutral-ink))}
-.g2-tag[data-tone=info]{background:rgb(var(--c-info-bg));color:rgb(var(--c-info-ink))}
-.g2-tag[data-tone=progress]{background:rgb(var(--c-progress-bg));color:rgb(var(--c-progress-ink))}
-.g2-tag[data-tone=warn]{background:rgb(var(--c-note-bg));color:rgb(var(--c-note-ink))}
-.g2-tag[data-tone=ok]{background:rgb(var(--c-ok-bg));color:rgb(var(--c-ok-ink))}
-.g2-tag[data-tone=bad]{background:rgb(var(--c-alert-bg));color:rgb(var(--c-alert-ink))}
+.g2-tag{display:inline-block;padding:2px 8px;border-radius:var(--g2-radius);font:600 14px/1.35 var(--g2-font-sans);background:rgb(var(--g2-color-neutral-bg));color:rgb(var(--g2-color-neutral-ink))}
+.g2-tag[data-tone=info]{background:rgb(var(--g2-color-info-bg));color:rgb(var(--g2-color-info-ink))}
+.g2-tag[data-tone=progress]{background:rgb(var(--g2-color-progress-bg));color:rgb(var(--g2-color-progress-ink))}
+.g2-tag[data-tone=warning]{background:rgb(var(--g2-color-warning-bg));color:rgb(var(--g2-color-warning-ink))}
+.g2-tag[data-tone=success]{background:rgb(var(--g2-color-success-bg));color:rgb(var(--g2-color-success-ink))}
+.g2-tag[data-tone=danger]{background:rgb(var(--g2-color-danger-bg));color:rgb(var(--g2-color-danger-ink))}
 
 /* ---- Fields ---- */
-.g2-input{min-height:40px;padding:5px 8px;border:2px solid rgb(var(--c-ink));border-radius:0;font:17px var(--font-sans);background:#fff;color:rgb(var(--c-ink))}
-.g2-field-error{padding-left:15px;border-left:5px solid rgb(var(--c-danger))}
-.g2-field-error .g2-input{border-color:rgb(var(--c-danger))}
-.g2-error-msg{color:rgb(var(--c-danger));font-weight:700}
+.g2-input{min-height:40px;padding:5px 8px;border:var(--g2-border-width-control) solid rgb(var(--g2-color-control-border));border-radius:var(--g2-radius);font:17px var(--g2-font-sans);background:#fff;color:rgb(var(--g2-color-text))}
+.g2-field-error{padding-left:15px;border-left:5px solid rgb(var(--g2-color-danger-solid))}
+.g2-error-msg{color:rgb(var(--g2-color-danger-solid));font-weight:700}
 
 /* ---- Panels ---- */
-.g2-inset{padding:12px 16px;border-left:5px solid rgb(var(--c-line))}
-.g2-notice{border:5px solid rgb(var(--c-info-line));background:rgb(var(--c-info-line))}
+.g2-inset{padding:12px 16px;border-left:5px solid rgb(var(--g2-color-line))}
+.g2-notice{border:5px solid rgb(var(--g2-color-info-line));border-radius:var(--g2-radius);background:rgb(var(--g2-color-info-line))}
 .g2-notice>*:first-child{margin:0;padding:2px 15px 7px;color:#fff;font-weight:700}
 .g2-notice>*:last-child{margin:0;padding:12px 15px 14px;background:#fff}
-.g2-tile{padding:20px;border:1px solid rgb(var(--c-line));border-top:5px solid rgb(var(--c-brand))}
-.g2-mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+.g2-tile{padding:20px;border:1px solid rgb(var(--g2-color-line));border-top:5px solid rgb(var(--g2-color-brand));border-radius:var(--g2-radius)}
+.g2-mono{font-family:var(--g2-font-mono);font-variant-numeric:tabular-nums}
+}
 
-@media(prefers-reduced-motion:reduce){[data-skin="gov2"] *{transition:none!important;animation:none!important}}
+/* ---- States: they win over the component defaults above ----
+   Selection, disabled and error set properties that the focus rules do not set. The specific focus rules follow the general one.
+   Hover is not here: it stays with each component default, so a variant default can still outrank it. */
+@layer gov2.states {
+.g2-chip:where([aria-current]:not([aria-current=false],[aria-current=""]),[aria-pressed=true]){border-color:rgb(var(--g2-color-text))}
+.g2-btn:disabled{opacity:.5;cursor:not-allowed}
+.g2-field-error .g2-input{border-color:rgb(var(--g2-color-danger-solid))}
+:focus-visible{outline:3px solid transparent;background:rgb(var(--g2-color-focus));color:rgb(var(--g2-color-on-focus));box-shadow:0 -2px rgb(var(--g2-color-focus)),0 4px rgb(var(--g2-color-on-focus));text-decoration:none}
+:is(input,textarea,select):focus-visible{background:#fff;outline:3px solid rgb(var(--g2-color-focus));outline-offset:0;box-shadow:inset 0 0 0 2px rgb(var(--g2-color-text))}
+.g2-btn:focus-visible{background:rgb(var(--g2-color-focus));color:rgb(var(--g2-color-on-focus));box-shadow:0 2px rgb(var(--g2-color-text))}
+.g2-wordmark:focus-visible em{color:inherit}
+}

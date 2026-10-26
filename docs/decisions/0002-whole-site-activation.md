@@ -37,4 +37,4 @@ Core CSS contains no remaining `data-skin` activation selector.
 
 Consumers choose to load gov2 as their site stylesheet and adapt their own styles to its public contract.
 Token naming and cascade/customization are accepted separately in ADRs 0003 and 0004.
-This records the future contract; the stylesheet still uses its existing activation until brief 01 is implemented.
+Brief 01 implemented this contract in 0.8.0. ADR 0008 records the implementation choices.

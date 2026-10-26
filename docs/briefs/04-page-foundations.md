@@ -1,6 +1,6 @@
 # Brief 04: Page foundations through representative pages
 
-Status: Ready for implementation after brief 01. D6 is accepted in ADR 0007.
+Status: Ready for implementation. Brief 01 landed in 0.8.0. D6 is accepted in ADR 0007.
 The live guide and test runner already exist. Brief 03 can land before this package, but local fonts are not a functional prerequisite.
 Do not implement an entire component catalogue from this brief.
 

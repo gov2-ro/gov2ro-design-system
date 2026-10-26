@@ -20,7 +20,9 @@ See `decisions/0001-shared-system-boundary.md` and `briefs/README.md` for the se
 - [x] Settle D6: the first foundation package and two representative pages. ADR 0007 records the decision; brief 04 is ready after 01.
 - [x] Settle D1–D6 with the owner; finalize the implementation briefs.
 - [x] Preserve the prior guide bundle unchanged, record its provenance and link it from the live guide.
-- [ ] Implement brief 01: independent shared CSS contract and migration.
+- [x] Implement brief 01: independent shared CSS contract and migration (Unreleased in `CHANGELOG.md`; 59 browser checks pass in Chrome 155). Opus reviews it, then bumps the version and tags.
+- [ ] Review brief 01 (Opus): record the token inventory (names, five removals, `--g2-radius` use) and the layer structure in an ADR; accept or revise the naming choices listed in `ACTIVITY.md`; bump the version (minor, with **Breaking**) and tag.
+- [ ] Tell the projects that the project block in `project-block.md` changed (layer order, no activation attribute). Publishing is separate.
 - [x] Implement brief 02 against the current API: live guide, raw fixtures, browser checks and manual procedures. Brief 01 owns the two migration TODOs.
 - [ ] Implement brief 03: optional local fonts and reproducible file delivery.
 - [ ] Implement brief 04: the selected page-foundation slice.
@@ -95,12 +97,19 @@ The owner decides on 1.0.0 when all items are done.
 
 Found while writing `COMPONENTS.md`. Each gap is also listed in `COMPONENTS.md` under *Not in the DS yet*.
 
-- [ ] Page container and grid. The token `--shell` exists, but no class uses it.
+- [ ] Page container and grid. The token `--g2-container-max` exists, but no class uses it.
 - [ ] Layout for `.g2-nav` and `.g2-footer` (no flex, no padding).
 - [ ] Classes for `textarea`, `select`, checkboxes and radios.
 - [ ] Tables, pagination, breadcrumbs, tabs and summary lists.
 - [ ] A hover state for `.g2-btn.g2-warning`.
 - [ ] Dark mode.
+
+Defects found during brief 01. They existed in 0.7.0. The migration did not change them, by design: a rendering correction is separate work.
+
+- [ ] A disabled `.g2-btn` still changes its background on hover (measured: primary `#00703c` to `#005a30`, secondary `#f3f2f1` to `#dbdad9`, at 50% opacity). Guard the hover rules with `:not(:disabled)`.
+- [ ] The general `:focus-visible` rule gives any focused element the yellow background. Measured: `<main tabindex="-1">` after a skip-link activation turns fully yellow. Whole-site activation makes this more likely. Decide how to limit it (for example, exclude `[tabindex="-1"]`).
+- [ ] Some components use colour literals where a token role exists: `#fff` (button text, navigation links, notice text, input background), `#dbdad9` (secondary hover), `#3a5aa0` (tricolour dot ring). A project that overrides `--g2-color-on-header` does not change the navigation link colour.
+- [ ] The class `.g2-btn.g2-warning` is red (destructive), but the status `warning` is yellow. Decide whether the class gets a new name. ADR 0003 keeps the class names, so this needs a decision.
 
 ## Delivery
 
@@ -115,4 +124,6 @@ Found while writing `COMPONENTS.md`. Each gap is also listed in `COMPONENTS.md` 
 
 ## Verified limits
 
-(none yet)
+- [-] Make the gov2 focus unbreakable by layers alone. Dead end: a rule in `utilities`, in `app` or outside every layer that sets `background` or `color` on a focusable control replaces `gov2.states`. Measured in the suite (*documented limits*). The documented mitigation is to change colours only with `:not(:focus-visible)`, or to repeat the focus rule in the same layer.
+- [-] Keep an unlayered consumer reset working by source order. Dead end: unlayered rules outrank every layer. Measured in Chrome 155 with the old reset `a{color:inherit;text-decoration:inherit}`: 122 property differences in 169 element states, including the text colour of button-styled links. The reset must go in the `reset` layer.
+- [-] Fix the layer order with a later `@layer` statement. Dead end: a layer keeps the position of its first appearance. Measured in the suite (*a layer created before the order declaration keeps its position*).

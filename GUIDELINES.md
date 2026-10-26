@@ -63,8 +63,8 @@ A status needs a textual or other accessible explanation; colour alone must not 
 The tricolour marks are decorative. They do not convey status.
 
 Text and background form a pair. A text token is not safe on every surface.
-For example, `--c-ink-faint` measures about 4.57:1 on white and 4.08:1 on `--c-sunken`.
-Use `--c-ink-muted` for ordinary metadata on the sunken surface.
+For example, `--g2-color-text-faint` measures about 4.57:1 on white and 4.08:1 on `--g2-color-surface-sunken`.
+Use `--g2-color-text-muted` for ordinary metadata on the sunken surface.
 
 ## Accessibility
 
@@ -73,7 +73,7 @@ Target WCAG 2.2 AA. Validate applicable criteria, not only a screenshot or a lis
 - Ordinary text generally needs 4.5:1 contrast; qualifying large text needs 3:1.
 - Essential control boundaries and graphical information generally need 3:1 against adjacent colours.
 - Each interactive element needs an accessible name and appropriate keyboard behaviour.
-- Keyboard focus must remain visible, including when hover and focus occur together.
+- Keyboard focus must remain visible, including when hover and focus occur together. A project rule can replace the gov2 focus colours: see `docs/migration-from-0.6.0.md`.
 - Aim for 44×44px targets for important controls when practical. WCAG 2.2 AA has a 24×24px minimum with exceptions.
 - Check reflow, text enlargement and forced colours on representative pages.
 

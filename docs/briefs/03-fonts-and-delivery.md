@@ -1,6 +1,6 @@
 # Brief 03: Fonts and file delivery
 
-Status: Ready for implementation after brief 01. D4 is accepted in ADR 0005.
+Status: Ready for implementation. Brief 01 landed in 0.8.0. D4 is accepted in ADR 0005.
 Use the accepted token names and baseline tooling from brief 01. D5 does not block this package.
 Hosting destination and publication remain separate decisions.
 

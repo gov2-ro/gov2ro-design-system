@@ -6,7 +6,11 @@ import { chromium } from 'playwright';
 import { createServer } from '../scripts/serve.mjs';
 
 let browser, server, base;
-const css = await readFile(new URL('../gov2.css', import.meta.url), 'utf8');
+const root = new URL('../', import.meta.url);
+const read = path => readFile(new URL(path, root), 'utf8');
+const css = await read('gov2.css');
+const migration = await read('docs/migration-from-0.6.0.md');
+const reference = await read('COMPONENTS.md');
 const artifacts = process.env.GUIDE_ARTIFACT_DIR;
 
 before(async () => {
@@ -35,12 +39,48 @@ async function withPage(run, { path = '/docs/', ...options } = {}) {
   } finally { await context.close(); }
 }
 const fixture = run => withPage(run, { path: '/tests/contract.html' });
+// A code block of docs/migration-from-0.6.0.md, marked with <!-- example: name -->. The tests run the documented text.
+function example(name) {
+  const fence = '`'.repeat(3);
+  const match = migration.match(new RegExp(`<!-- example: ${name} -->\\s*${fence}\\w+\\n([\\s\\S]*?)${fence}`));
+  assert.ok(match, `docs/migration-from-0.6.0.md has no example "${name}"`);
+  return match[1];
+}
+// Serves in-memory files (by path) on the test origin. Other local paths come from the repository.
+async function withSite(files, run, { entry = '/index.html', ...options } = {}) {
+  const context = await browser.newContext({ viewport: { width: 1280, height: 900 }, ...options });
+  await context.route('**/*', route => {
+    const url = new URL(route.request().url());
+    if (url.origin !== base) return route.abort();
+    if (!(url.pathname in files)) return route.continue();
+    return route.fulfill({ contentType: url.pathname.endsWith('.css') ? 'text/css' : 'text/html', body: files[url.pathname] });
+  });
+  const page = await context.newPage();
+  try {
+    const response = await page.goto(base + entry, { waitUntil: 'networkidle' });
+    assert.equal(response.status(), 200, `Page unavailable: ${entry}`);
+    await run(page, context);
+  } finally { await context.close(); }
+}
+const standaloneSite = () => ({ '/index.html': example('standalone-page'), '/assets/gov2.css': css });
+const layeredSite = () => ({ '/index.html': example('layered-page'), '/assets/reset.css': example('reset-css'), '/assets/app.css': example('app-css'), '/assets/gov2.css': css });
 const styles = (page, selector) => page.locator(selector).evaluate(el => {
   const s = getComputedStyle(el), r = el.getBoundingClientRect();
-  return { color: s.color, background: s.backgroundColor, border: s.borderColor, height: r.height,
+  return { color: s.color, background: s.backgroundColor, border: s.borderColor, height: r.height, width: r.width,
     outline: s.outlineStyle, outlineWidth: s.outlineWidth, outlineColor: s.outlineColor,
-    shadow: s.boxShadow, decoration: s.textDecorationThickness, focused: el.matches(':focus-visible') };
+    shadow: s.boxShadow, decoration: s.textDecorationThickness, focused: el.matches(':focus-visible'),
+    opacity: s.opacity, cursor: s.cursor, paddingLeft: s.paddingLeft, fontSize: s.fontSize };
 });
+// Keyboard focus, then keyboard focus with the pointer over the control: both must show the gov2 focus treatment.
+async function assertFocusReadable(page, selector) {
+  await keyboardFocus(page, selector);
+  for (let state = 0; state < 2; state++) {
+    if (state) await page.locator(selector).hover();
+    const s = await styles(page, selector);
+    assert.equal(s.background, 'rgb(255, 221, 0)', `${selector} loses the focus background${state ? ' on hover' : ''}`);
+    assert.ok(contrast(s.color, s.background) >= 4.5, `${selector} focus text is unreadable${state ? ' on hover' : ''}`);
+  }
+}
 function contrast(a, b) {
   const luminance = value => {
     const channels = value.match(/[\d.]+/g).slice(0, 3).map(Number).map(v => {
@@ -204,7 +244,7 @@ test('text enlargement at 200% retains readable content without page overflow', 
 }));
 
 // Raw component fixtures have no guide CSS, so documentation cannot hide regressions.
-for (const path of ['/tests/contract.html', '/tests/contract.html?reset=1']) {
+for (const path of ['/tests/contract.html', '/tests/contract.html?reset=1', '/tests/contract.html?reset=unlayered']) {
   test(`consistent button/chip/input geometry: ${path}`, () => withPage(async page => {
     for (const selector of ['#primary', '#link-button']) assert.equal((await styles(page, selector)).height, 44);
     for (const selector of ['#chip', '#chip-button']) assert.equal((await styles(page, selector)).height, 36);
@@ -281,5 +321,279 @@ test('reduced motion disables a project transition on a component', () => withPa
   assert.equal(motion.animation, 'none');
 }, { path: '/tests/contract.html', reducedMotion: 'reduce' }));
 
-test.todo('brief 01: whole-site activation without data-skin, after the accepted API migration');
-test.todo('brief 01: reset/gov2/utilities/app layer precedence, after the accepted API migration');
+// ---- Brief 01: the shared CSS contract (activation, names, layers, customization, migration) ----
+const tokenDefinitions = source => Object.fromEntries([...source.matchAll(/^\s*(--[\w-]+):\s*([^;]+);/gm)].map(m => [m[1], m[2].trim()]));
+const tokens = tokenDefinitions(css);
+const classes = [...new Set(css.match(/\.g2-[\w-]+/g))];
+const statuses = ['neutral', 'info', 'progress', 'warning', 'success', 'danger'];
+// Files that describe the current API. History (changelog, activity, ADRs, briefs, migration) may name old identifiers.
+const currentFiles = ['gov2.css', 'COMPONENTS.md', 'GUIDELINES.md', 'README.md', 'AGENTS.md', 'CLAUDE.md', 'patterns/README.md', 'docs/index.html', 'docs/guide.css', 'docs/guide.js',
+  'docs/archive/index.html', 'docs/project-block.md', 'docs/connect-a-project.md', 'docs/testing.md', 'tests/contract.html'];
+
+test('contract: stylesheet has no activation gate, consumer reference or un-namespaced token, and every var() resolves', () => {
+  assert.doesNotMatch(css, /data-skin/);
+  assert.doesNotMatch(css, /posturi|check-skins|skin contract|skin file/i);
+  const names = [...css.matchAll(/(--[\w-]+)\s*:/g)].map(m => m[1]);
+  assert.equal(names.length, Object.keys(tokens).length, 'a custom property is declared more than once or outside :root');
+  for (const name of names) assert.match(name, /^--g2-/, `${name} is not namespaced`);
+  for (const use of css.matchAll(/var\((--[\w-]+)/g)) assert.ok(tokens[use[1]], `${use[1]} is not defined`);
+});
+
+test('contract: current files use no activation attribute, legacy token or legacy status value', async () => {
+  for (const file of currentFiles) {
+    const text = await read(file);
+    assert.doesNotMatch(text, /data-skin/, `${file} names the activation attribute`);
+    assert.doesNotMatch(text, /--(c|font|radius|border-ink|shadow-lift|shell)([^a-z0-9]|$)/m, `${file} names a legacy token`);
+    assert.doesNotMatch(text, /data-tone=("|&quot;)?(warn|ok|bad)\b/, `${file} uses a legacy data-tone value`);
+  }
+});
+
+test('contract: guide, archive page and fixtures resolve every var() against gov2.css', async () => {
+  const files = ['docs/guide.css', 'docs/index.html', 'docs/archive/index.html', 'tests/contract.html'];
+  const texts = await Promise.all(files.map(read));
+  const local = new Set(texts.flatMap(text => [...text.matchAll(/(--[\w-]+)\s*:/g)].map(m => m[1])));
+  texts.forEach((text, i) => {
+    for (const use of text.matchAll(/var\((--[\w-]+)/g)) assert.ok(tokens[use[1]] || local.has(use[1]), `${files[i]}: ${use[1]} is not defined`);
+  });
+});
+
+test('contract: the reference documents every public token and class, and no token or class that does not exist', () => {
+  for (const name of Object.keys(tokens)) assert.ok(reference.includes(`\`${name}\``), `COMPONENTS.md does not document ${name}`);
+  for (const name of classes) assert.ok(reference.includes(name), `COMPONENTS.md does not document ${name}`);
+  for (const name of new Set(reference.match(/--g2-[\w-]+/g))) assert.ok(tokens[name], `COMPONENTS.md names ${name}, which gov2.css does not define`);
+});
+
+test('contract: the migration tables cover every 0.6.0 token with its exact value and every new token', () => {
+  const rows = [...migration.matchAll(/^\| `(--[\w-]+)` \| (`--[\w-]+`|none) \| `([^`]+)` \|/gm)].map(m => ({ old: m[1], next: m[2] === 'none' ? null : m[2].slice(1, -1), value: m[3] }));
+  assert.equal(rows.length, 62, 'the 0.6.0 stylesheet defined 62 tokens');
+  assert.equal(new Set(rows.map(r => r.old)).size, 62);
+  const retained = rows.filter(r => r.next);
+  assert.equal(retained.length, Object.keys(tokens).length, 'every token of gov2.css needs one row');
+  for (const row of retained) assert.equal(tokens[row.next], row.value, `${row.old} -> ${row.next}: the value changed`);
+  for (const row of rows) assert.equal(row.old in tokens, false, `${row.old} is still defined`);
+  for (const row of rows.filter(r => !r.next)) assert.equal(row.next, null);
+  assert.deepEqual(rows.filter(r => !r.next).map(r => r.old).sort(), ['--font-display', '--radius-lg', '--radius-md', '--radius-pill', '--shadow-lift']);
+  for (const [oldName, newName] of [['--c-ink', '--g2-color-text'], ['--c-gov', '--g2-color-link'], ['--c-gov-bar', '--g2-color-header-bg'], ['--c-note-bg', '--g2-color-warning-bg'],
+    ['--font-sans', '--g2-font-sans'], ['--shell', '--g2-container-max'], ['--c-ok-bg', '--g2-color-success-bg'], ['--c-alert-ink', '--g2-color-danger-ink']]) {
+    assert.equal(rows.find(r => r.old === oldName)?.next, newName, `${oldName} must map to the accepted name ${newName}`);
+  }
+});
+
+test('contract: the six status names agree in tokens, rules, reference, guide and fixture', async () => {
+  const guide = await read('docs/index.html'), fixtureHtml = await read('tests/contract.html');
+  for (const tone of statuses) {
+    for (const part of ['bg', 'line', 'ink']) assert.ok(tokens[`--g2-color-${tone}-bg`] && tokens[`--g2-color-${tone}-${part}`], `missing --g2-color-${tone}-${part}`);
+    if (tone !== 'neutral') {
+      assert.ok(css.includes(`.g2-tag[data-tone=${tone}]{background:rgb(var(--g2-color-${tone}-bg));color:rgb(var(--g2-color-${tone}-ink))}`), `no tag rule for ${tone}`);
+      assert.ok(reference.includes(`\`${tone}\``) && guide.includes(`data-tone="${tone}"`) && fixtureHtml.includes(`data-tone="${tone}"`), `${tone} is missing from the reference, guide or fixture`);
+    }
+  }
+  assert.equal([...css.matchAll(/\.g2-tag\[data-tone=(\w+)\]/g)].length, 5);
+  for (const old of ['note', 'ok', 'alert']) for (const part of ['bg', 'line', 'ink']) assert.equal(`--c-${old}-${part}` in tokens, false);
+});
+
+test('contract: each status renders its same-named tokens; the legacy values are not aliased', () => fixture(async page => {
+  const result = await page.evaluate(() => {
+    const root = getComputedStyle(document.documentElement);
+    const rgb = name => `rgb(${root.getPropertyValue(name).trim().split(/\s+/).join(', ')})`;
+    const tags = {};
+    for (const tag of document.querySelectorAll('.g2-tag')) {
+      const tone = tag.dataset.tone || 'neutral', s = getComputedStyle(tag);
+      tags[tone] = { background: s.backgroundColor, color: s.color, expectedBackground: rgb(`--g2-color-${tone}-bg`), expectedColor: rgb(`--g2-color-${tone}-ink`) };
+    }
+    const legacy = {};
+    for (const value of ['warn', 'ok', 'bad']) {
+      const tag = Object.assign(document.createElement('strong'), { className: 'g2-tag' });
+      tag.dataset.tone = value;
+      document.body.append(tag);
+      legacy[value] = getComputedStyle(tag).backgroundColor;
+    }
+    return { tags, legacy, neutral: rgb('--g2-color-neutral-bg') };
+  });
+  assert.deepEqual(Object.keys(result.tags).sort(), [...statuses].sort());
+  for (const [tone, tag] of Object.entries(result.tags)) {
+    assert.equal(tag.background, tag.expectedBackground, `${tone} background`);
+    assert.equal(tag.color, tag.expectedColor, `${tone} text`);
+  }
+  for (const [value, background] of Object.entries(result.legacy)) assert.equal(background, result.neutral, `data-tone="${value}" must fall back to neutral`);
+}));
+
+// Whole-site activation.
+test('contract: a minimal page gets the whole-site defaults from the stylesheet link alone', () => withSite(standaloneSite(), async page => {
+  const state = await page.evaluate(() => {
+    const root = getComputedStyle(document.documentElement), body = getComputedStyle(document.body), link = getComputedStyle(document.querySelector('a'));
+    return { attributes: document.documentElement.getAttributeNames(), bodyChildren: [...document.body.children].map(el => el.tagName), links: document.querySelectorAll('link[rel=stylesheet]').length,
+      text: root.getPropertyValue('--g2-color-text').trim(), container: root.getPropertyValue('--g2-container-max').trim(),
+      font: body.fontFamily, size: body.fontSize, line: body.lineHeight, color: body.color, background: body.backgroundColor, margin: body.marginTop,
+      link: link.color, decoration: link.textDecorationLine };
+  });
+  assert.deepEqual(state.attributes, ['lang']);
+  assert.deepEqual(state.bodyChildren, ['MAIN']);
+  assert.equal(state.links, 1);
+  assert.equal(state.text, '11 12 12');
+  assert.equal(state.container, '1280px');
+  assert.match(state.font, /^Inter,/);
+  assert.equal(state.size, '17px');
+  assert.equal(state.line, '26.35px');
+  assert.equal(state.color, 'rgb(11, 12, 12)');
+  assert.equal(state.background, 'rgb(255, 255, 255)');
+  assert.equal(state.margin, '0px');
+  assert.equal(state.link, 'rgb(29, 79, 191)');
+  assert.equal(state.decoration, 'underline');
+  await assertFocusReadable(page, 'a');
+  await assertFocusReadable(page, 'button.g2-btn');
+  assert.equal((await styles(page, 'button.g2-btn')).height, 44);
+}));
+
+for (const path of ['/tests/contract.html', '/docs/', '/docs/archive/']) {
+  test(`contract: ${path} sets no activation attribute and still gets the defaults`, () => withPage(async page => {
+    assert.deepEqual(await page.evaluate(() => document.documentElement.getAttributeNames()), ['lang']);
+    const state = await page.evaluate(() => ({ text: getComputedStyle(document.documentElement).getPropertyValue('--g2-color-text').trim(), font: getComputedStyle(document.body).fontFamily }));
+    assert.equal(state.text, '11 12 12');
+    assert.match(state.font, /^Inter,/);
+  }, { path }));
+}
+
+// Layers.
+test('contract: gov2.css declares the public layer order first and keeps every rule inside a layer', () => withSite(standaloneSite(), async page => {
+  const sheet = await page.evaluate(() => {
+    const rules = [...[...document.styleSheets].find(s => s.href?.endsWith('/assets/gov2.css')).cssRules];
+    const kind = rule => rule.constructor.name;
+    return { kinds: rules.map(kind), statements: rules.filter(r => kind(r) === 'CSSLayerStatementRule').map(r => [...r.nameList]),
+      blocks: Object.fromEntries(rules.filter(r => kind(r) === 'CSSLayerBlockRule').map(r => [r.name, [...r.cssRules].map(x => x.selectorText ?? x.conditionText)])) };
+  });
+  assert.deepEqual(sheet.kinds.slice(0, 2), ['CSSLayerStatementRule', 'CSSLayerStatementRule']);
+  assert.deepEqual(sheet.statements, [['reset', 'gov2', 'utilities', 'app'], ['gov2.tokens', 'gov2.base', 'gov2.components', 'gov2.states']]);
+  assert.deepEqual(Object.keys(sheet.blocks), ['gov2.tokens', 'gov2.base', 'gov2.components', 'gov2.states']);
+  assert.deepEqual(sheet.kinds.filter(kind => !['CSSLayerStatementRule', 'CSSLayerBlockRule', 'CSSImportRule'].includes(kind)), [], 'a rule sits outside every layer');
+  assert.deepEqual(sheet.blocks['gov2.tokens'], [':root']);
+  const components = sheet.blocks['gov2.components'].join('\n'), states = sheet.blocks['gov2.states'].join('\n');
+  assert.doesNotMatch(components, /focus-visible|:disabled|aria-pressed|field-error \.g2-input/);
+  for (const state of [':focus-visible', ':disabled', 'aria-pressed', '.g2-field-error .g2-input']) assert.ok(states.includes(state), `${state} belongs in gov2.states`);
+  assert.match(components, /:hover/, 'hover stays with the component defaults');
+  assert.doesNotMatch(states, /:hover/);
+}));
+
+test('contract: reset < gov2 < utilities < app, whatever the specificity; unlayered rules outrank all of them', () => fixture(async page => {
+  const padding = async () => (await styles(page, '#chip')).paddingLeft;
+  await page.locator('#chip').evaluate(el => el.classList.add('probe'));
+  assert.equal(await padding(), '10px', 'gov2 default');
+  await page.addStyleTag({ content: '@layer reset{#chip{padding-left:1px}}' });
+  assert.equal(await padding(), '10px', 'an id selector in reset still loses to a gov2 class rule');
+  await page.addStyleTag({ content: '@layer utilities{.probe{padding-left:3px}}' });
+  assert.equal(await padding(), '3px', 'utilities beat gov2');
+  await page.addStyleTag({ content: '@layer app{.probe{padding-left:4px}}' });
+  assert.equal(await padding(), '4px', 'app beats utilities');
+  await page.addStyleTag({ content: '@layer utilities{#chip.probe{padding-left:9px}}' });
+  assert.equal(await padding(), '4px', 'a more specific utilities rule still loses to app');
+  await page.addStyleTag({ content: '.probe{padding-left:5px}' });
+  assert.equal(await padding(), '5px', 'an unlayered rule beats every layer');
+}));
+
+test('contract: the documented layered page lets project rules in app win while gov2 focus stays visible', () => withSite(layeredSite(), async page => {
+  const compact = 'button.btn-compact:not(.btn-promo)', link = 'a.btn-compact', promo = 'button.btn-promo';
+  assert.deepEqual(await page.evaluate(() => document.documentElement.getAttributeNames()), ['lang']);
+  assert.equal(await page.locator('p').first().evaluate(el => getComputedStyle(el).marginTop), '0px', 'the reset layer applies');
+  assert.equal((await styles(page, 'a[href="/despre"]')).color, 'rgb(29, 79, 191)', 'gov2 base beats the reset link rule');
+  // Page-width token override and a project container.
+  assert.equal(await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--g2-container-max').trim()), '60rem');
+  assert.equal((await styles(page, '.site-container')).width, 960);
+  // Compact variant: project class next to the component class.
+  for (const selector of [compact, link, promo]) {
+    const s = await styles(page, selector);
+    assert.equal(s.height, 36, `${selector} height`);
+    assert.equal(s.fontSize, '15px', `${selector} font size`);
+    assert.equal(s.paddingLeft, '12px', `${selector} padding`);
+  }
+  // Keyboard focus and hover plus focus after customization.
+  for (const selector of [compact, link, promo]) await assertFocusReadable(page, selector);
+  await keyboardFocus(page, '#q');
+  const field = await styles(page, '#q');
+  assert.equal(field.outline, 'solid');
+  assert.equal(field.outlineColor, 'rgb(255, 221, 0)');
+  // Recoloured variant: contrast at rest and on hover.
+  await page.locator('body').click({ position: { x: 1, y: 1 } });
+  await page.evaluate(() => document.activeElement.blur());
+  await page.mouse.move(0, 0);
+  const rest = await styles(page, promo);
+  assert.equal(rest.background, 'rgb(122, 31, 92)');
+  assert.ok(contrast(rest.color, rest.background) >= 4.5, 'recoloured button contrast');
+  await page.locator(promo).hover();
+  const hover = await styles(page, promo);
+  assert.equal(hover.background, 'rgb(96, 24, 72)');
+  assert.ok(contrast(hover.color, hover.background) >= 4.5, 'recoloured button hover contrast');
+}));
+
+test('contract: documented limits hold: late-layer colours beat gov2 focus, unlayered rules beat all layers', () => withSite(layeredSite(), async page => {
+  const compact = 'button.btn-compact:not(.btn-promo)';
+  await page.addStyleTag({ content: '@layer app{.btn-compact{background:rgb(1,2,3)}}' });
+  await keyboardFocus(page, compact);
+  assert.equal((await styles(page, compact)).background, 'rgb(1, 2, 3)', 'a project background in app replaces the gov2 focus background');
+  await page.addStyleTag({ content: '@layer utilities{.btn-compact{color:rgb(4,5,6)}}' });
+  assert.notEqual((await styles(page, compact)).color, 'rgb(11, 12, 12)', 'a utilities colour replaces the gov2 focus text colour unless app sets none');
+  await page.addStyleTag({ content: 'a{color:rgb(7,8,9)}' });
+  assert.equal((await styles(page, 'a.btn-compact')).color, 'rgb(7, 8, 9)', 'an unlayered rule beats every gov2 layer');
+}));
+
+test('contract: a layer created before the order declaration keeps its position', async () => {
+  const page = head => ({ '/index.html': `<!doctype html><html lang="ro"><head><meta charset="utf-8"><title>x</title>${head}<link rel="stylesheet" href="/assets/gov2.css"><style>@layer utilities{.u-flush{padding-left:3px}}</style></head><body><a class="g2-chip u-flush" href="/x">Filtru</a></body></html>`, '/assets/gov2.css': css });
+  await withSite(page('<style>@layer reset, gov2, utilities, app;</style>'), async p => assert.equal((await styles(p, '.g2-chip')).paddingLeft, '3px', 'order declared first: utilities beat gov2'));
+  await withSite(page('<style>@layer utilities;</style>'), async p => assert.equal((await styles(p, '.g2-chip')).paddingLeft, '10px', 'utilities created first sit before gov2 and lose'));
+});
+
+test('contract: documented @import into layers keeps the public order', () => withSite({
+  '/index.html': '<!doctype html><html lang="ro"><head><meta charset="utf-8"><title>x</title><link rel="stylesheet" href="/assets/project.css"></head><body><p><a href="/x">Link</a></p><button class="g2-btn" type="button">Caută</button></body></html>',
+  '/assets/project.css': example('import-css'),
+  '/assets/vendor-reset.css': 'a{color:inherit}p{margin:0}',
+  '/assets/gov2.css': css,
+  '/assets/app.css': '.g2-btn{padding-left:3px}',
+}, async page => {
+  assert.equal(await page.locator('p').evaluate(el => getComputedStyle(el).marginTop), '0px', 'unlayered reset imported into the reset layer applies');
+  assert.equal((await styles(page, 'a')).color, 'rgb(29, 79, 191)', 'gov2 beats the reset');
+  assert.equal((await styles(page, '.g2-btn')).paddingLeft, '3px', 'unlayered project CSS imported into app beats gov2');
+  await assertFocusReadable(page, '.g2-btn');
+}));
+
+// Component states under the layered cascade.
+test('contract: disabled controls keep their appearance, also under the pointer', () => fixture(async page => {
+  for (const hovered of [false, true]) {
+    if (hovered) await page.locator('#disabled').hover({ force: true });
+    const s = await styles(page, '#disabled');
+    assert.equal(s.opacity, '0.5');
+    assert.equal(s.cursor, 'not-allowed');
+  }
+}));
+
+test('contract: a selected chip keeps its border under keyboard focus and hover', () => fixture(async page => {
+  await assertFocusReadable(page, '#chip-current');
+  assert.equal((await styles(page, '#chip-current')).border, 'rgb(11, 12, 12)');
+}));
+
+test('contract: a field error shows at rest, on hover and with focus', () => fixture(async page => {
+  assert.equal((await styles(page, '#invalid')).border, 'rgb(212, 53, 28)');
+  assert.equal((await styles(page, '#email-error')).color, 'rgb(212, 53, 28)');
+  await page.locator('#invalid').hover();
+  assert.equal((await styles(page, '#invalid')).border, 'rgb(212, 53, 28)');
+  await keyboardFocus(page, '#invalid');
+  const s = await styles(page, '#invalid');
+  assert.equal(s.border, 'rgb(212, 53, 28)');
+  assert.equal(s.outlineColor, 'rgb(255, 221, 0)');
+  assert.equal(s.background, 'rgb(255, 255, 255)');
+}));
+
+test('contract: the focused current navigation link shows the standard focus bars, not the current-page bar', () => fixture(async page => {
+  assert.match((await styles(page, '#current')).shadow, /^rgb\(140, 198, 255\) 0px -4px 0px 0px inset$/, 'current-page bar at rest');
+  await assertFocusReadable(page, '#current');
+  assert.equal((await styles(page, '#current')).shadow, 'rgb(255, 221, 0) 0px -2px 0px 0px, rgb(11, 12, 12) 0px 4px 0px 0px');
+  assert.equal((await styles(page, '#current')).decoration, 'auto', 'hover does not underline a focused navigation link');
+}));
+
+test('contract: guide controls under the app-layer guide styles keep the gov2 focus treatment', () => withPage(async page => {
+  const details = page.locator('details').first();
+  await details.locator('summary').click();
+  const id = await details.locator('[data-copy]').getAttribute('data-copy');
+  assert.equal((await styles(page, `[data-copy="${id}"]`)).background, 'rgb(255, 255, 255)', 'copy button at rest');
+  await assertFocusReadable(page, `[data-copy="${id}"]`);
+  await assertFocusReadable(page, '.guide-toc a[href="#culoare"]');
+  await assertFocusReadable(page, '#primary-button');
+}));

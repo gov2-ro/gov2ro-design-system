@@ -19,7 +19,7 @@ Document manual coverage separately from automated results.
 
 The owner requested the guide replacement before implementation of brief 01.
 The guide therefore demonstrates the current API and explicitly describes the approved migration as pending.
-Tests for whole-site activation and the accepted layer contract remain TODO until brief 01 lands.
+Brief 01 (0.8.0) replaced the two TODO tests with executable activation and layer assertions.
 Brief 01 must migrate the live guide and existing fixtures along with the shared API.
 Brief 03 extends the same suite for optional local fonts.
 Do not create duplicate guide or test frameworks.

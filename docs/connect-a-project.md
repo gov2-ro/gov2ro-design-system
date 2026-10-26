@@ -6,7 +6,7 @@ This page gives the prompts that connect an agent session in a project to the go
 
 Consumers adapt to the DS. Their skin checkers, token lists and frameworks do not define the shared CSS contract.
 Keep compatibility adapters in the consumer repository. Report generic defects and reusable needs to the DS.
-See `decisions/0001-shared-system-boundary.md`. The new API and neutral integration workflow are being specified in `briefs/01-shared-css-contract.md`.
+See `decisions/0001-shared-system-boundary.md`. `COMPONENTS.md` is the shared API. `migration-from-0.6.0.md` covers the move from 0.6.0 and 0.7.0.
 
 The prompts below describe the existing workflow. Do not interpret their compatibility analysis as a requirement to preserve a consumer skin API.
 
@@ -22,8 +22,9 @@ The prompts below describe the existing workflow. Do not interpret their compati
 The DS is 0.x. These issues are known and accepted during the transition. Do not work around them in the project. Do not report them as new findings, but say if one blocks the project.
 
 - **Google Fonts:** `gov2.css` loads Inter and Fragment Mono from Google Fonts with `@import`. Each page that loads `gov2.css` makes this external request. The DS will fix this later.
-- **Before 0.6.0, link styles overrode project classes.** A project with a copy older than 0.6.0 shows all links blue and underlined, also on the dark header. Update the copy; do not add `!important` in the project. From 0.6.0, project classes win, and the DS has link role classes (`.g2-link-title`, `.g2-link-quiet`, `.g2-link-inverse`, `.g2-chip`).
-- **Links stay underlined.** From 0.6.0, the DS underline still wins over an element reset such as Tailwind preflight. To remove the underline on a project link, use a class (for example `no-underline`), and only where `GUIDELINES.md` permits it.
+- **Before 0.6.0, link styles overrode project classes.** A project with a copy older than 0.6.0 shows all links blue and underlined, also on the dark header. Update the copy; do not add `!important` in the project. The DS has link role classes (`.g2-link-title`, `.g2-link-quiet`, `.g2-link-inverse`, `.g2-chip`).
+- **Layers decide which rule wins.** `gov2.css` declares `@layer reset, gov2, utilities, app;`. A project class wins over a DS rule when it is in `utilities` or `app`. A rule outside every layer outranks the DS, focus included. Put the reset in `reset`. Declare the order before other stylesheets that create layers. See `migration-from-0.6.0.md`.
+- **Links stay underlined.** The DS underline is in the base layer, so it wins over an element reset in `reset`, such as Tailwind preflight. To remove the underline on a project link, use a class in `app` (for example `no-underline`), and only where `GUIDELINES.md` permits it.
 
 ## Prompt 1: Compatibility report
 
@@ -43,7 +44,7 @@ Do not change files in this project or in the DS.
    - Live code: repo, branch or worktree, deploy.
    - Stack: framework, CSS method (Tailwind, plain CSS, other), build, how the CSS loads.
    - Tokens and classes: the CSS variables and class names that exist. List each conflict
-     with the --c-* tokens and the .g2- classes: same names, CSS resets, specificity.
+     with the --g2-* tokens and the .g2- classes: same names, CSS resets, layers, specificity.
    - Look: fonts, header, footer, skins or themes, dark mode.
    - Constraints: rules that a DS file must follow here, for example scoping, CSP,
      external requests (gov2.css loads Google Fonts with @import), build steps.
@@ -106,7 +107,8 @@ Update the gov2 design system (DS) in this project to version <X.Y.Z>.
    "Design system (gov2 DS)" block of AGENTS.md up to <X.Y.Z>. List each Breaking change.
 2. Copy gov2.css from the tag v<X.Y.Z> into the path that the block gives. Do not edit the copy.
 3. Fix the project for each Breaking change. Replace local versions of components
-   that the DS now has.
+   that the DS now has. When the old version is 0.6.0 or 0.7.0, follow
+   docs/migration-from-0.6.0.md.
 4. Set the version in the block, in AGENTS.md and in CLAUDE.md.
 5. Run the checks of the project. Report what you measured and what you assumed.
 ````

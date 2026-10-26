@@ -1,7 +1,7 @@
 # Gov2 audit follow-up
 
 Date: 2026-10-26
-Status: D1–D6 accepted. Brief 02 is implemented; briefs 01, 03 and 04 are ready in their documented dependency order.
+Status: D1–D6 accepted. Briefs 02 and 01 are implemented; briefs 03 and 04 are ready.
 
 The owner wants quick corrections now and implementation briefs for another model.
 Take the decisions in order. Record each answer here and in the affected brief before starting dependent work.
@@ -44,20 +44,20 @@ These corrections do not depend on D1–D6:
 - [x] Repair the README's installation and release instructions.
 
 Whole-site activation, semantic naming and cascade/customization are accepted in ADRs 0002–0004.
-Briefs 01 and 03 are ready for implementation; brief 03 follows brief 01.
-The live guide is implemented against the current API. Brief 04's foundation scope is accepted and ready after 01.
-The quick corrections do not yet remove `data-skin` or rename inherited tokens.
+Brief 01 is implemented in 0.8.0: whole-site activation, `--g2-` tokens, one status vocabulary and the layer order.
+ADR 0008 records the token names and layer placement that the brief left to the implementer.
+Briefs 03 and 04 are ready. They build on the 0.8.0 API.
 
 ## Implementation packages
 
-1. `01-shared-css-contract.md` — **Ready:** activation, token and state vocabulary, cascade and customization.
-2. `02-live-guide-and-checks.md` — **Implemented:** executable documentation and regression checks against the current API. API-specific checks await 01.
-3. `03-fonts-and-delivery.md` — **Ready after 01:** optional local fonts and reproducible installation.
-4. `04-page-foundations.md` — **Ready after 01:** the accepted foundation and two representative pages.
+1. `01-shared-css-contract.md` — **Implemented (0.8.0):** activation, token and state vocabulary, cascade and customization.
+2. `02-live-guide-and-checks.md` — **Implemented:** executable documentation and regression checks then migrated to the 0.8.0 API by brief 01.
+3. `03-fonts-and-delivery.md` — **Ready:** optional local fonts and reproducible installation.
+4. `04-page-foundations.md` — **Ready:** the accepted foundation and two representative pages.
 
 The owner requested package 02 first. Its guide, fixtures and test runner now exist.
-Next implement 01 by migrating those files; then implement 03 and the selected slice of 04.
-Package 01 turns the two migration TODOs into real assertions. Do not create a second fixture framework.
+Package 01 migrated those files and turned the two TODOs into real assertions. Do not create a second fixture framework.
+Next implement the selected slice of 04, then 03.
 The prior bundle is preserved under `docs/archive/` for historical reference. Keep its snapshot unchanged during migrations.
 
 Each package ends with an implementation report: changes, commands, measured results, remaining assumptions and migration notes.

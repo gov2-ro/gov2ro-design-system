@@ -1,5 +1,40 @@
 # Changelog
 
+## 0.8.0 — 2026-10-26 (proposal, untested)
+
+Brief 01 (shared CSS contract). ADR 0008 records the token names and the layer placement. Read `docs/migration-from-0.6.0.md` before you update a project.
+
+**Breaking**
+- **Activation.** `<html data-skin="gov2">` is removed. Loading `gov2.css` applies the base styles to the whole page and publishes the tokens on `:root`. No attribute and no wrapper is needed (ADR 0002). The stylesheet ignores the old attribute.
+- **Token names.** Every custom property has the `--g2-` namespace and a role name (ADR 0003). The colour values and the RGB-channel format are unchanged. There are no aliases. The DS had 62 tokens and has 57:
+  - Surfaces: `--c-page` → `--g2-color-page`; `--c-surface` → `--g2-color-surface`; `--c-sunken` → `--g2-color-surface-sunken`; `--c-line` → `--g2-color-line`; `--c-line-strong` → `--g2-color-control-border`.
+  - Text: `--c-ink` → `--g2-color-text`; `--c-ink-muted` → `--g2-color-text-muted`; `--c-ink-faint` → `--g2-color-text-faint`.
+  - Links and selection: `--c-gov` → `--g2-color-link`; `--c-gov-visited` → `--g2-color-link-visited`; `--c-gov-light` → `--g2-color-selected-bg`; `--c-on-gov` → `--g2-color-on-link`.
+  - Brand and header: `--c-brand` → `--g2-color-brand`; `--c-gov-bar` → `--g2-color-header-bg`; `--c-on-bar` → `--g2-color-on-header`; `--c-on-bar-muted` → `--g2-color-on-header-muted`; `--c-on-bar-accent` → `--g2-color-header-accent`.
+  - Actions: `--c-primary` → `--g2-color-action`; `--c-primary-hover` → `--g2-color-action-hover`; `--c-primary-shadow` → `--g2-color-action-shadow`; `--c-secondary-shadow` → `--g2-color-action-secondary-shadow`; `--c-danger` → `--g2-color-danger-solid`; `--c-danger-shadow` → `--g2-color-danger-shadow`.
+  - Focus: `--c-focus` → `--g2-color-focus`; `--c-focus-ink` → `--g2-color-on-focus`.
+  - Status: `--c-neutral-bg` → `--g2-color-neutral-bg`; `--c-neutral-line` → `--g2-color-neutral-line`; `--c-neutral-ink` → `--g2-color-neutral-ink`; `--c-info-bg` → `--g2-color-info-bg`; `--c-info-line` → `--g2-color-info-line`; `--c-info-ink` → `--g2-color-info-ink`; `--c-progress-bg` → `--g2-color-progress-bg`; `--c-progress-line` → `--g2-color-progress-line`; `--c-progress-ink` → `--g2-color-progress-ink`; `--c-note-bg` → `--g2-color-warning-bg`; `--c-note-line` → `--g2-color-warning-line`; `--c-note-ink` → `--g2-color-warning-ink`; `--c-ok-bg` → `--g2-color-success-bg`; `--c-ok-line` → `--g2-color-success-line`; `--c-ok-ink` → `--g2-color-success-ink`; `--c-alert-bg` → `--g2-color-danger-bg`; `--c-alert-line` → `--g2-color-danger-line`; `--c-alert-ink` → `--g2-color-danger-ink`; `--c-ok-solid` → `--g2-color-success-solid`.
+  - Tricolour: `--c-ro-blue` → `--g2-color-ro-blue`; `--c-ro-yellow` → `--g2-color-ro-yellow`; `--c-ro-red` → `--g2-color-ro-red`.
+  - Charts: `--c-chart-1` → `--g2-color-chart-1`; `--c-chart-2` → `--g2-color-chart-2`; `--c-chart-3` → `--g2-color-chart-3`; `--c-chart-4` → `--g2-color-chart-4`; `--c-chart-sel` → `--g2-color-chart-selected`.
+  - Type: `--font-display` removed; `--font-sans` → `--g2-font-sans`; `--font-mono` → `--g2-font-mono`.
+  - Metrics: `--radius` → `--g2-radius`; `--radius-md` removed; `--radius-lg` removed; `--radius-pill` removed; `--border-ink` → `--g2-border-width-control`; `--shadow-lift` removed; `--shell` → `--g2-container-max`.
+- **Removed tokens.** `--font-display` (same value as `--g2-font-sans`; use that), `--radius-md`, `--radius-lg` and `--radius-pill` (use `--g2-radius`) and `--shadow-lift` (no replacement; no component has a lift state). Each reason is in the migration document.
+- **Status names.** One set of six names in tokens and markup: neutral, info, progress, warning, success, danger. Token groups `note`, `ok` and `alert` are now `warning`, `success` and `danger` (see the lists above). `data-tone="warn"` is now `"warning"`, `"ok"` is `"success"` and `"bad"` is `"danger"`. A tag with an old value renders as neutral.
+- **Cascade layers.** `gov2.css` declares `@layer reset, gov2, utilities, app;` and the sublayers `gov2.tokens`, `gov2.base`, `gov2.components` and `gov2.states` before any rule (ADR 0004). Every rule is in a layer. A project reset or rule that is outside every layer now outranks gov2, focus included. Put the reset in `reset` and project CSS in `app` or `utilities`. A project that links `gov2.css` after an unlayered reset sees different link, button and focus colours until it moves the reset into a layer.
+- **Behaviour.** A keyboard-focused link in `.g2-nav` shows the standard focus bars (yellow above, ink below) instead of the blue current-page bar. Hovering that link no longer underlines it. Both changes follow from the layered focus rules. They are the only rendered differences in a one-time comparison of 169 element states against 0.7.0 in Chrome 155.
+
+**Changed**
+- `.g2-input` reads its border colour from `--g2-color-control-border`. `.g2-btn`, `.g2-chip` and `.g2-input` read their border width from `--g2-border-width-control`. `.g2-btn`, `.g2-chip`, `.g2-input`, `.g2-tag`, `.g2-tile` and `.g2-notice` read `--g2-radius`. The rendered values are the same as before.
+- Focus, the selected chip, the disabled button and the field error are in `gov2.states`. Hover stays with each component default, so `.g2-btn.g2-warning` keeps its colour on hover.
+- No `.g2-*` class is renamed or removed. `.g2-btn.g2-warning` is still the red destructive button.
+- The live guide, the archive landing page, `tests/contract.html` and the documentation use the new names and the layers. The archived bundle (`docs/archive/2026-10-26-bundled-guide.html`) is unchanged.
+- `README.md`, `COMPONENTS.md`, `GUIDELINES.md`, `AGENTS.md`, `CLAUDE.md`, `docs/project-block.md` and `docs/connect-a-project.md` describe the new contract. The project block now tells projects to declare the layer order.
+
+**Added**
+- `docs/migration-from-0.6.0.md`: the old-to-new table for 62 tokens, the status mapping, the layer rules and limits, and verified examples (a standalone page, a page with a reset, a compact variant, a page-width token override and a recoloured variant that keeps focus). It covers 0.6.0 and 0.7.0, because their runtime API is the same.
+- Browser checks: 59 tests replace 36 tests and 2 TODOs. New checks cover whole-site activation, the `--g2-` namespace, token and reference completeness, migration-table values, the status vocabulary, layer order and precedence, the documented examples, documented limits and the combined states.
+- The old posturi skin checker is retired for this core. `gov2.css` does not pass it and does not try to.
+
 ## 0.7.0 — 2026-10-26 (proposal, untested)
 
 **Fixed**
