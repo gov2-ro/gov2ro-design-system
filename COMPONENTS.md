@@ -59,7 +59,7 @@ Length and font tokens are plain values, not RGB channels. Override a token in y
 | Actions | `--g2-color-action`, `--g2-color-action-hover`, `--g2-color-action-shadow`, `--g2-color-action-secondary-shadow`, `--g2-color-action-secondary-hover`, `--g2-color-danger-solid`, `--g2-color-danger-shadow`, `--g2-color-on-solid` | Buttons. `--g2-color-action-secondary-hover` is the hover background of the secondary button. `--g2-color-danger-solid` is also the colour of error text and the error bar. `--g2-color-on-solid` is the text colour on a saturated fill: the primary and danger buttons and the title band of a notice. |
 | Focus | `--g2-color-focus`, `--g2-color-on-focus` | Focus state only. |
 | Status | `--g2-color-success-solid` and the 18 tone tokens in the table under *Tags* | Tags and status panels. `--g2-color-success-solid` is a solid success fill; no component reads it. |
-| Tricolour | `--g2-color-ro-blue`, `--g2-color-ro-yellow`, `--g2-color-ro-red`, `--g2-color-ro-blue-ring` | Decorative marks only. Never use them for text. `--g2-color-ro-blue-ring` is the ring around the blue dot of `.g2-ro-dots`. |
+| Tricolour | `--g2-color-ro-blue`, `--g2-color-ro-yellow`, `--g2-color-ro-red`, `--g2-color-ro-blue-ring` | Decorative marks only: never text, except `.g2-ro-sweep` (ADR 0010). `--g2-color-ro-blue-ring` is the ring around the blue dot of `.g2-ro-dots`. |
 | Charts | `--g2-color-chart-1`, `--g2-color-chart-2`, `--g2-color-chart-3`, `--g2-color-chart-4`, `--g2-color-chart-selected` | Blue series, then greys. `--g2-color-chart-selected` marks the selection. |
 | Type | `--g2-font-sans`, `--g2-font-mono` | Text family. Family for codes and aligned numbers. Each names Inter or Fragment Mono first, then system fonts. See *Fonts*. |
 | Type scale | `--g2-font-size-heading-page`, `--g2-font-size-heading-section`, `--g2-font-size-heading-item`, `--g2-font-size-body`, `--g2-font-size-meta`, `--g2-font-size-label`, `--g2-line-height-heading`, `--g2-line-height-body` | Font sizes in rem and two line heights. See *Type roles*. |
@@ -264,6 +264,32 @@ Use one mark for each page. All marks are decorative: add `aria-hidden="true"`.
 | `.g2-ro-corner` | First child of `.g2-header` | **Default.** A 54×6px stripe at the top right. The header keeps its brand band. |
 | `.g2-ro-bar` | Before the notice bar and the header | A 6px stripe across the page. Add `.g2-tricolor` to the header to remove its brand band. |
 | `.g2-ro-dots` | Next to the wordmark | Three 7px dots. Markup: `<span class="g2-ro-dots" aria-hidden="true"><i></i></span>`. |
+
+### Title sweep
+
+`.g2-ro-sweep` is the only tricolour text (ADR 0010). A narrow blue, yellow and red band crosses the site title, then the title rests.
+It is opt-in, and it has two deliberate deviations from WCAG. Read the list below before you use it.
+
+```html
+<a class="g2-wordmark" href="/"><span class="g2-ro-sweep">Instituții publice</span></a>
+```
+
+- Put it on one inline element that contains only the title text. The element sits in `.g2-wordmark` or in a title heading inside `.g2-header`.
+  Use it once for each page. Do not use it on body text, on a content link or on a status. The sweep never carries information.
+- At rest, the glyphs have the colour of the host (`currentColor`), so the title follows the header and the colour scheme.
+  The band reads `--g2-color-ro-blue`, `--g2-color-ro-yellow` and `--g2-color-ro-red`. The class adds no token.
+- Timing: the cycle is 9s (`animation: g2-ro-sweep 9s linear infinite`). The band sweeps for 3s of each cycle and is over the glyphs for about 2s of that. The title rests for the other 6s.
+- The title is plain text, with no band, in six cases: with `prefers-reduced-motion: reduce`, in forced colours, in print, in a browser without `background-clip: text`, with the animation removed, and while the host link has keyboard focus.
+  A focused host link shows the standard focus colours with ink text on yellow. The focus rule is in `gov2.states`.
+- The technique is a gradient background, clipped to the text, with a transparent text fill. The text stays real text: the accessible name does not change, and the reader can select it.
+  Selected text stays visible, but with less contrast than plain text, because the browser draws the selection over the transparent glyphs.
+- **Deviation 1, WCAG 2.2.2 Pause, Stop, Hide (level A).** The sweep starts by itself, loops and has no pause control. `prefers-reduced-motion: reduce` is the only stop.
+  The owner accepted this, because the sweep is slow and small.
+- **Deviation 2, WCAG 1.4.3 Contrast (Minimum) (level AA).** While the band crosses a glyph, that glyph can fall below 4.5:1.
+  On the header (`#0b0c0c`) the blue segment has 1.54:1 and the red segment 3.48:1; the yellow segment has 13.31:1. On a white page the yellow segment has 1.47:1.
+- A project that must conform to WCAG 2.1 or 2.2 level AA does not use `.g2-ro-sweep`. A project that uses it lists both deviations in its accessibility statement.
+  Suggested wording: "The title of this site shows a tricolour band that crosses the text every nine seconds. The user cannot pause the band; the system setting for reduced motion stops it.
+  While the band crosses a letter, the contrast of that letter can be below 4.5:1. This deviates from WCAG 2.2 success criteria 2.2.2 (level A) and 1.4.3 (level AA)."
 
 ## Notice bar
 

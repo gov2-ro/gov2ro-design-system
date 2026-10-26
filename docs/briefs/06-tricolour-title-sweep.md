@@ -1,6 +1,6 @@
 # Brief 06: Tricolour title sweep
 
-Status: Ready for implementation after brief 05 lands. ADR 0010 records the decision and its two deliberate WCAG deviations. Issue #2.
+Status: Implemented in 0.13.0. ADR 0010 records the decision and its two deliberate WCAG deviations. Issue #2.
 The sweep reads the text colour of its surface, which brief 05 makes scheme-dependent. Start from the commit that releases brief 05.
 
 ## Problem and outcome

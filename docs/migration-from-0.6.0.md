@@ -147,9 +147,9 @@ Tokens added after 0.8.0 have no 0.6.0 name, so they have no row. See *Changes a
 
 | 0.6.0 token | New token | Value | Note |
 |---|---|---|---|
-| `--c-ro-blue` | `--g2-color-ro-blue` | `0 43 127` | Decorative only, never text. |
-| `--c-ro-yellow` | `--g2-color-ro-yellow` | `252 209 22` | Decorative only, never text. |
-| `--c-ro-red` | `--g2-color-ro-red` | `206 17 38` | Decorative only, never text. |
+| `--c-ro-blue` | `--g2-color-ro-blue` | `0 43 127` | Decorative only, never text, except `.g2-ro-sweep` (ADR 0010). |
+| `--c-ro-yellow` | `--g2-color-ro-yellow` | `252 209 22` | Decorative only, never text, except `.g2-ro-sweep` (ADR 0010). |
+| `--c-ro-red` | `--g2-color-ro-red` | `206 17 38` | Decorative only, never text, except `.g2-ro-sweep` (ADR 0010). |
 
 #### Charts
 

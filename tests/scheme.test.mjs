@@ -196,11 +196,13 @@ test('scheme: the baseline file is the release 0.11.0, byte for byte', () => {
 
 // ---- Browser: acceptance 1, the computed styles do not change without an opt-in ----
 // A fingerprint of every element: all longhand properties except color-scheme (the one property that is meant to change) and the custom properties (the new tokens are meant to appear).
+// An element with .g2-ro-sweep (brief 06) is skipped: the 0.11.0 stylesheet has no rule for a class that did not exist, so its style differs by design.
+// Its host, its siblings and every other element are still compared, and tests/sweep.test.mjs checks the sweep itself.
 const fingerprint = (page, selector = 'html, html *') => page.evaluate(selector => {
   const hash = text => { let h = 2166136261; for (let i = 0; i < text.length; i++) { h ^= text.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; };
   const out = [];
   for (const el of document.querySelectorAll(selector)) {
-    if (el.closest('script,style') || el.closest('iframe')) continue;
+    if (el.closest('script,style') || el.closest('iframe') || el.matches('.g2-ro-sweep')) continue;
     const read = pseudo => { const s = getComputedStyle(el, pseudo); return [...s].filter(p => p !== 'color-scheme' && !p.startsWith('--')).map(p => `${p}:${s.getPropertyValue(p)}`).join(';'); };
     const label = `${el.tagName.toLowerCase()}${el.id ? '#' + el.id : ''}${typeof el.className === 'string' && el.className ? '.' + el.className.trim().split(/\s+/).join('.') : ''}`;
     const text = read(null) + (el.matches('.g2-ro-dots, .g2-ro-dots *') ? '|' + read('::before') + '|' + read('::after') : '');
@@ -363,7 +365,7 @@ test('scheme: a native select, textarea, date field and the system colours follo
   assert.notEqual(results.light['n-button'][0], results.dark['n-button'][0], 'ButtonFace changes with the scheme');
 });
 
-test('scheme: the scrollbar of a native scroll container follows the active scheme (acceptance 3)', async () => {
+test('scheme: the scrollbar of a native scroll container follows the active scheme (acceptance 3)', async t => {
   // Playwright hides scrollbars in headless Chrome by default. This check starts its own browser with classic scrollbars and reads the pixels of the track and the thumb.
   const own = await chromium.launch({ channel: process.env.PLAYWRIGHT_CHANNEL || undefined, ignoreDefaultArgs: ['--hide-scrollbars'] });
   try {
@@ -384,7 +386,8 @@ test('scheme: the scrollbar of a native scroll container follows the active sche
       await setScheme(page, scheme);
       await page.evaluate(() => { const box = document.createElement('div'); box.id = 'scroller'; box.style.cssText = 'width:200px;height:80px;overflow:scroll'; box.innerHTML = '<div style="width:400px;height:300px">x</div>'; document.querySelector('main').prepend(box); });
       const gutter = await page.evaluate(() => { const el = document.getElementById('scroller'); return el.offsetWidth - el.clientWidth; });
-      assert.ok(gutter > 0, 'this browser draws a classic scrollbar');
+      // macOS draws overlay scrollbars (no gutter) when no mouse is attached. Then there is nothing to read: skip, and check by hand (docs/testing.md).
+      if (gutter === 0) { await context.close(); t.skip('overlay scrollbars on this machine: no gutter to measure'); return; }
       const box = await page.locator('#scroller').boundingBox();
       measured[scheme ?? 'none'] = (await colours(await page.screenshot({ clip: { x: box.x + box.width - gutter, y: box.y, width: gutter, height: box.height - gutter } }))).slice(0, 2);
       await context.close();

@@ -37,6 +37,7 @@ The owner accepts these deviations for `.g2-ro-sweep` only:
 
 1. **WCAG 2.2.2 Pause, Stop, Hide (level A).** The sweep starts automatically, loops and has no pause control. Reason given by the owner: it is slow and small. `prefers-reduced-motion: reduce` is the only stop.
 2. **WCAG 1.4.3 Contrast (Minimum) (level AA).** While the band crosses a glyph, that glyph can fall below 4.5:1. The yellow segment fails on white and the blue segment fails on the header.
+   Selected sweep text is also lower: 3.18:1 against 4.74:1 for plain text with Chrome's default selection colours (measured in brief 06). A `::selection` rule cannot restore the fill, so this is part of the same deviation.
 
 A project that must conform to WCAG 2.1 or 2.2 level AA does not use `.g2-ro-sweep`.
 A project that uses it lists both deviations in its accessibility statement.

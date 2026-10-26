@@ -18,7 +18,7 @@ Open `http://127.0.0.1:4173/docs/`.
 If Chrome is already installed, use `PLAYWRIGHT_CHANNEL=chrome npm test` instead of downloading Chromium.
 Generate review screenshots with `GUIDE_ARTIFACT_DIR=/tmp/gov2-guide PLAYWRIGHT_CHANNEL=chrome npm test`.
 The tests start their own server on a free local port and close it when finished.
-`npm test` runs every `tests/*.test.mjs` file: `guide.test.mjs` (guide, contract, layers, migration), `foundation.test.mjs` (page foundations and the example pages), `fonts.test.mjs` (local fonts and file delivery) and `scheme.test.mjs` (the dark colour scheme).
+`npm test` runs every `tests/*.test.mjs` file: `guide.test.mjs` (guide, contract, layers, migration), `foundation.test.mjs` (page foundations and the example pages), `fonts.test.mjs` (local fonts and file delivery), `scheme.test.mjs` (the dark colour scheme) and `sweep.test.mjs` (the title sweep).
 `tests/helpers.mjs` holds the shared set-up: server, browser, page openers, the contrast and focus helpers, `tokenBlocks` (the light and the dark token values read from `gov2.css`), `setScheme` and `contrastReport`. `tests/woff2.mjs` reads the `cmap`, `fvar` and `name` tables of a WOFF2 file with Node's built-in Brotli. Neither is a test file.
 With `GUIDE_ARTIFACT_DIR` set, the example-page reflow checks also save full-page screenshots at 1280, 390 and 320px (`example-directory-1280.png`, and so on).
 The scheme checks also save the guide and both example pages in the light and the dark scheme at 1280 and 320px, in chunks of 3000px (`scheme-guide-dark-320-01.png`, and so on). Each chunk is checked against its expected size: a single full-page capture of a very tall page can repeat content.
@@ -103,6 +103,34 @@ Browser checks (acceptance 1 to 11 of brief 05):
 - **Acceptance 9.** Every `var(--g2-…)` of `gov2.css`, `guide.css` and `examples.css` has a value in the light, dark and auto schemes.
 - **Acceptance 11.** The guide and both example pages have no horizontal overflow in either scheme at 1280 and 320px.
 
+### Title sweep (`tests/sweep.test.mjs`)
+
+The band is measured from pixels. A test pauses the CSS animation at a known time (`Animation.currentTime`), takes a screenshot of the title and counts the pixels of each tricolour colour in the PNG.
+"Plain" means the same element with the class removed: a check compares the pixels of the sweep with the pixels of ordinary text.
+Most checks run at the real size and at 64px, where the glyphs have interiors of one colour. `tests/contract.html` has the two documented hosts: a `.g2-wordmark` link and a title heading, each in a `.g2-header`. A real page uses the class once.
+
+Static checks read `gov2.css`, the documents and the guide: the decided names (`.g2-ro-sweep`, `g2-ro-sweep`) and no token with "sweep" in its name; the transparent fill is written once, inside `@supports`; the band reads the three tricolour tokens and `currentColor`;
+the cycle is 9s or more and the sweep keyframes last 3s or less; the static position is the first keyframe; the rule for forced colours and print; the focus rules. Every "never text" in `gov2.css`, `COMPONENTS.md`, `GUIDELINES.md`, `CLAUDE.md` and `AGENTS.md` names the exception.
+`COMPONENTS.md` has the section, the markup, both deviations, the scope and the statement text; `GUIDELINES.md` has the checklist question. The guide has one live use, the markup, both deviations in Romanian, and contrast numbers that equal the ones that the tokens give. The changelog entry is found by its title ("Brief 06 (tricolour title sweep)"), not by the `## Unreleased` heading.
+
+Browser checks (acceptance 1 to 10 of brief 06):
+
+- **Acceptance 1.** At rest (the cycle at 6s) and with `animation: none !important` (the static frame), every solid glyph pixel has the host colour, and the picture equals ordinary text. This holds in the light scheme, the dark scheme and `auto` with the system in dark mode, for both hosts.
+  At the real size, 3 pixels of the wordmark differ: the box of the span clips the faint antialiased edge of the last glyph. At 64px none differ.
+- **Acceptance 2.** With `prefers-reduced-motion: reduce`, no sweep animation runs, the computed style has no background, and four screenshots over 1.8s show no band and equal ordinary text. The control (no preference) runs both animations.
+- **Acceptance 3.** The animation timing is read from `getComputedTiming()` (9000ms, linear, infinite) and from real time (it advanced 1000ms in 1000ms). Pixel sampling at 100ms steps over one cycle gives the time that the band is over the glyphs, and checks that it crosses once, with no gap.
+  The contrast of each band colour is measured from the painted pixels, on the header and on the page, in both schemes, and compared with ADR 0010.
+- **Acceptance 4.** Keyboard focus, and focus plus hover, on the host link: yellow background, ink text (14.55:1), the span paints its text with no band, also when the animation is in the middle of the band, and the picture equals ordinary text on the focus colour. The band returns after blur. An element that carries the class and has `tabindex` shows plain text on focus too.
+- **Acceptance 5.** Forced-colour emulation (light and dark) and print emulation: no animation, no background, and the picture equals ordinary text.
+- **Acceptance 6.** Two simulations of a browser without `background-clip: text`: the `@supports` block removed from `gov2.css`, and a false `@supports` condition. The text is plain in both. A control checks that the real stylesheet makes the fill transparent.
+- **Acceptance 7.** The accessibility tree of the link is the same with and without the class (`ariaSnapshot`); the role queries find the link and the heading by the title text; the element has no child element; `user-select` is `auto`; a text selection returns the title. The selected glyphs stay visible, with less contrast than plain text (see *Manual checks*).
+- **Acceptance 8.** The computed style of the link in rest, hover, focus and focus plus hover is equal with and without the class, and equal to the plain wordmark of the fixture.
+- **Acceptance 9 and 10.** The document checks above; the component rule sits in `gov2.components` and the focus rule in `gov2.states` (read from the CSSOM); the guide demonstration runs in both schemes, the guide keeps its text contrast, and the demonstration takes focus.
+  `tests/scheme.test.mjs` compares the guide and the fixture with the 0.11.0 stylesheet, and skips an element that has `.g2-ro-sweep` (the old stylesheet has no rule for it). Every other element, including the host link, must still match.
+  The existing archive checksum test is unchanged.
+
+With `GUIDE_ARTIFACT_DIR` set, the sweep checks also save screenshots of the fixture and of the guide demonstration, in the light and the dark scheme, at 1280 and 320px, at rest and in the middle of the band (`sweep-guide-dark-320-band.png`, and so on).
+
 ## Manual checks
 
 ### Dark colour scheme
@@ -112,6 +140,17 @@ Browser checks (acceptance 1 to 11 of brief 05):
 - Check a project's own colours (literals written for a light page) on a dark page before the project opts in.
 - Review forced colours on a real Windows system in both schemes. The suite uses Chrome's emulation.
 - Check how the browser paints the page before the stylesheet loads, for a reader with the dark system setting and `data-g2-scheme="auto"`. This is not measured.
+
+### Title sweep
+
+- Look at `.g2-ro-sweep` in Safari and Firefox: the band, the rest, the keyboard focus and the plain text in a browser without `background-clip: text`. The suite runs only in Chrome.
+- Select the title with the mouse in each browser. In Chrome the selected glyphs show through the selection colour, with less contrast than plain text: 3.18:1 against 4.74:1 on the default selection colours (64px, measured). Check the selection in a real project.
+- Open a page with the sweep in a screen reader: the link and the heading are read by their text, and nothing is read twice.
+- Check forced colours on a real Windows system, and a real print or PDF preview, with and without the print of background graphics.
+- Change the system setting for reduced motion while a page is open, and check that the band stops.
+- Look at a long title that wraps to two or three lines on a narrow screen. The wordmark host is one block, so the band crosses every line at once. The heading host is inline and paints one strip across its line fragments, so the band crosses line 1, then line 2.
+  This was looked at once, at 320px, and is not asserted.
+- A project that adopts the class lists both deviations in its accessibility statement. Check the wording with the owner of the statement.
 
 ### Fonts
 
@@ -154,6 +193,16 @@ Do not infer success from `getComputedStyle()` alone. Hover is independently tes
 The automated suite does not establish full WCAG conformance. Record actual coverage and remaining gaps in `ACTIVITY.md`.
 
 ## Last recorded run
+
+2026-10-27 (brief 06), Chrome 156.0.8078.48 (installed Chrome):
+212 run, 211 passed, 1 failed, 0 skipped, 0 TODO, 283.2 seconds, with `GUIDE_ARTIFACT_DIR` set (`guide.test.mjs` 60 checks, `foundation.test.mjs` 47, `fonts.test.mjs` 23, `scheme.test.mjs` 52, `sweep.test.mjs` 30).
+Without `GUIDE_ARTIFACT_DIR` the sweep file has 22 checks (57.4 seconds alone) and the suite has 204. The archive checksum is unchanged (`3cdbe56f…1952`). Before the change the suite had 182 checks.
+The failed check is `scheme: the scrollbar of a native scroll container follows the active scheme`: "this browser draws a classic scrollbar". It failed the same way on a clean copy of v0.12.0, so it is the machine: macOS draws overlay scrollbars when no mouse is attached. From 0.13.0 the check skips when the scrollbar has no gutter; check the scrollbar by hand on such a machine.
+Command: `GUIDE_ARTIFACT_DIR=<dir> PLAYWRIGHT_CHANNEL=chrome npm test`.
+Measured in this run (from pixels): the band is over the glyphs from 500ms to 2500ms of a 9000ms cycle (at most 2.1s), and the title is plain for the other 6.9s. Contrast of the band colours on the header: blue 1.54:1, red 3.48:1, yellow 13.31:1; yellow on white 1.47:1; rest 19.59:1 on the header (both schemes) and 17.52:1 on the dark page; focus 14.55:1.
+At the real size 3 pixels of the wordmark differ from ordinary text (the clipped antialiased edge of the last glyph); at 64px none differ. Selected text: 3.18:1 against 4.74:1 for plain text (Chrome default selection colours).
+Reviewed by eye: the guide demonstration and the fixture at 1280 and 320px in both schemes, at rest and in the middle of the band; a long title that wraps at 320px.
+Not performed: every item under *Title sweep* in the manual checks, and a second browser engine.
 
 2026-10-27 (brief 05), Chrome 156.0.8078.48 (installed Chrome):
 182 passed, 0 failed, 0 skipped, 0 TODO, 209.8 seconds (`guide.test.mjs` 60 checks, `foundation.test.mjs` 47, `fonts.test.mjs` 23, `scheme.test.mjs` 52; `scheme.test.mjs` alone 91.8 seconds).

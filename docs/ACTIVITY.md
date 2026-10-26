@@ -1,5 +1,62 @@
 # Activity
 
+## 2026-10-27 — Tricolour title sweep (brief 06, 0.13.0)
+
+**Done**
+- `gov2.css` (version header unchanged, 0.12.0): `.g2-ro-sweep` and `@keyframes g2-ro-sweep` in `gov2.components`, after `.g2-logo`; the focus rule in `gov2.states`, after `.g2-wordmark:focus-visible em`. No token. Four blocks:
+  `@supports((-webkit-background-clip:text) or (background-clip:text)){@media(prefers-reduced-motion:no-preference){.g2-ro-sweep{…}}}` (gradient, clip, transparent fill, `animation:g2-ro-sweep 9s linear infinite`);
+  the keyframes (`from` 100% 0, `33.33%` 0 0, `to` 0 0: a 3s sweep, then 6s at rest); `@media(forced-colors:active),print{.g2-ro-sweep{background:none;-webkit-text-fill-color:currentColor;animation:none}}`;
+  and `:focus-visible .g2-ro-sweep{background:none}` with `:focus-visible .g2-ro-sweep,.g2-ro-sweep:focus-visible{-webkit-text-fill-color:currentColor}`.
+- Documents: "never text" became "never text, except `.g2-ro-sweep` (ADR 0010)" in `gov2.css` (the token comment), `COMPONENTS.md` (token row, new section *Title sweep* with the markup, the scope, both deviations, the six plain cases and a suggested accessibility statement), `GUIDELINES.md` (colour rule, accessibility bullet, review question 8), `CLAUDE.md` and `AGENTS.md`.
+  Guide: section 11 has *Banda tricoloră pe titlu* (a live demonstration, the copyable markup for both hosts, and a callout with both deviations, the scope, who must not use it and a proposed accessibility statement, in Romanian); section 02 names the exception.
+  `CHANGELOG.md` (`## Unreleased`, Added and Changed, no Breaking), `docs/testing.md`, `docs/BACKLOG.md`.
+- Tests: `tests/sweep.test.mjs` (22 checks, plus 8 screenshot checks when `GUIDE_ARTIFACT_DIR` is set), both hosts in `tests/contract.html` (a wordmark link and a title heading, each in a `.g2-header`), and one line in `tests/scheme.test.mjs`: the fingerprint skips an element that has `.g2-ro-sweep`.
+- Not touched: `docs/decisions/`, `docs/briefs/`, `docs/compat-analysis.md`, `docs/connect-a-project.md`, `docs/migration-from-0.6.0.md`, consumers, the archive (SHA-256 `3cdbe56f…1952`, checked after the last change).
+
+**Hard**
+- Chrome 156.0.8078.48. Command: `GUIDE_ARTIFACT_DIR=<dir> PLAYWRIGHT_CHANNEL=chrome npm test`. Before: 182 checks. After: 212 run (182 + 22 sweep checks + 8 screenshot checks), 211 passed, 1 failed, 283.2s (`guide` 60, `foundation` 47, `fonts` 23, `scheme` 52, `sweep` 30). Without `GUIDE_ARTIFACT_DIR`: 204 checks. The sweep file alone: 22 checks in 57.4s, 30 with the screenshots in 65.5s. The one failure is not from this work (see below).
+- Timing, from pixels at 100ms steps over one 9000ms cycle, both hosts: the band is over the glyphs from 500ms to 2500ms (21 samples, so 2.0s to 2.1s), the title is plain for the other 6.9s. The animation is 9000ms, linear, infinite, delay 0 (`getComputedTiming()`), and it advanced 1000ms in 1000ms of real time. Keyframes: the sweep lasts 3000ms; the band is on the glyphs for about 2/3 of it.
+  The band is 12% of a 300% gradient (3 × 4%: blue, yellow, red, hard stops, 0.36 of the title width), so the time does not depend on the title width.
+- Contrast, measured from the painted pixels (the glyph pixel colours are exactly the token colours), light and dark scheme:
+
+| Surface | Rest (glyph colour) | Blue band | Yellow band | Red band | Worst moment |
+|---|---|---|---|---|---|
+| Header `#0b0c0c`, light scheme | `#ffffff` 19.59:1 | 1.54:1 | 13.31:1 | 3.48:1 | blue, 900ms, 1.54:1 |
+| Header `#0b0c0c`, dark scheme | `#ffffff` 19.59:1 | 1.54:1 | 13.31:1 | 3.48:1 | blue, 900ms, 1.54:1 |
+| Page `#ffffff` (not a documented host), light | `#0b0c0c` 19.59:1 | 12.71:1 | 1.47:1 | 5.63:1 | yellow, 700ms, 1.47:1 |
+| Page `#0b0c0c` (not a documented host), dark | `#f3f2f1` 17.52:1 | 1.54:1 | 13.31:1 | 3.48:1 | blue, 900ms, 1.54:1 |
+
+  The numbers equal the table of ADR 0010. The header is dark in both schemes, so the two header rows are equal. Focus: ink `#0b0c0c` on yellow `#ffdd00`, 14.55:1, in both schemes, with no band, also when the animation is in the middle of the band.
+- Rest equals ordinary text: at 64px, 0 pixels differ in the light, dark and `auto` (system dark) schemes, both hosts; at the real size the wordmark differs by 3 of about 7,400 pixels (`#sweep real`: 3; the heading: 0). The 3 pixels are the faint antialiased right edge of the last glyph (`11,12,12` against `30,31,31`, `28,29,29`, `12,13,13`): the background of the span stops at the box of the span. Solid host-colour pixels are equal in number.
+- Reduced motion, forced colours, print and no `background-clip: text` (two simulations) all give the picture of ordinary text and no tricolour pixel. Focus and focus plus hover too. Forced colours in Chrome: the glyphs get the system link colour; the computed `-webkit-text-fill-color` still reads `rgb(255, 255, 255)` there, but the painted pixels are the system colour (measured from pixels).
+- Selected text: Chrome, default selection colours, 64px: sweep glyph `rgb(179,215,254)` on `rgb(81,118,157)` = 3.18:1; ordinary text `rgb(255,255,255)` on the same selection = 4.74:1. The selection is painted over the transparent glyphs. Not in ADR 0010 (see the questions).
+  `::selection{-webkit-text-fill-color:…}` has no effect (3.18:1 with `currentColor`, `#fff`, `HighlightText` and an explicit colour). `::selection{color:HighlightText;background-color:Highlight;-webkit-text-fill-color:HighlightText}` gives 4.43:1 and a selection colour that differs from the rest of the page. I did not keep either (BACKLOG, *Verified limits*).
+- Wrapped title at 320px (looked at, not asserted): the wordmark host is one block, so the band crosses all lines at once; the heading host is inline and paints one strip across its three line fragments, so the band crosses line 1, then line 2.
+- Mutation checks, each on a scratch copy with one change to `gov2.css` (sweep file, 22 checks each): without both focus rules 7 checks fail (focus x3, layers, guide x2, static); without the forced-colours and print rule 3 fail; cycle 6s: 2 fail (static, timing); a 55% sweep keyframe (4.95s): 2 fail (static, timing); the transparent fill outside `@supports`: 3 fail (static, reduced motion, no support); static position 50%: 4 fail (static, rest x3);
+  without the focus text fill: 6 fail; without the `no-preference` wrapper (base rule stays): 3 fail, because check 12 also pins "no background under reduced motion" (the pixel check alone passes, since the base rule already shows the static frame); without the base rule only (wrapper stays): 0 fail, the wrapper alone is enough; without both: 3 fail (reduced motion, static, layers).
+- The suite has one failure that does not come from this work: `scheme: the scrollbar of a native scroll container follows the active scheme` fails with "this browser draws a classic scrollbar". It fails the same way on a clean `git archive` of v0.12.0 (HEAD c91ae2d), so it is the machine: macOS draws overlay scrollbars when no mouse is attached (`AppleShowScrollBars` is not set, so the setting is automatic). It passed in the brief 05 run.
+- Wrong turns, all in my own checks: the first rest check required identical pixels at the real size (3 pixels differ, see above); the first hover check expected a thicker underline on hover (the wordmark has `text-decoration:none` in the components layer, which wins over the base layer thickness: no hover treatment); the first focus check cropped before the Tab key scrolled the page; the `ariaSnapshot` of a link includes its URL, so it is compared and not matched to a fixed string; `timeout` is not a macOS command (a `perl alarm` wrapper); one full run of `sweep.test.mjs` stopped for 10 minutes at its first browser check, with Chrome idle (0.46s CPU), right after the session scratchpad was removed. I stopped it and ran the same file again: 30 of 30 passed. I do not know the cause; the run before and the runs after were normal.
+- Not done: Safari and Firefox, a screen reader, real forced colours on Windows, a real print or PDF, a real project header. `docs/testing.md` lists them.
+
+**Decided**
+- Maintainer review (Opus): accepted the CSS and both additions (reduced-motion wrapper, self-focus selector). Selected sweep text (3.18:1) is recorded in ADR 0010 under the 1.4.3 deviation, not as a third one. Updated the three tricolour rows of the migration document. The scrollbar check now skips when the machine draws overlay scrollbars (no gutter), instead of failing.
+- Band: hard stops (as `.g2-ro-bar`, not the soft blend of the org and civtech code), 90deg, 12% of a 300% gradient, blue then yellow then red. A soft blend would add colours that are not tokens and would be darker than blue on the header at its worst. A wider band would give more glyph pixels under a low-contrast colour.
+- The sweep lasts 3s (33.33% of 9s) from the first to the last position, so the band is over the glyphs for about 2s. The alternative, a 3s on-glyph window, needs a 4.4s sweep: closer to the limit and slower to notice a mistake. 9s is the minimum cycle in ADR 0010.
+- I wrapped the effect in `@media(prefers-reduced-motion:no-preference)`. The brief's default relies on the base rule and a static frame without a band. The wrapper makes reduced motion pure ordinary text, not a clipped gradient. Cost: one more nesting level, and a browser without the media feature shows plain text. Opus can remove it: the base rule still shows no band (mutation checks above).
+- A focusable element that carries the class gets plain text on focus (the second focus selector). The brief names the host link; the case costs one selector, and without it the text is transparent on yellow (`:focus-visible` sets the background in `gov2.states` and the fill stays transparent). The class belongs on a plain span, so this is a safeguard.
+- The keyframes and the forced-colours and print rule sit outside `@supports`, so that removing the `@supports` block (the simulation in the brief) leaves a valid file with plain text.
+- `tests/scheme.test.mjs` skips an element with `.g2-ro-sweep` in the 0.11.0 comparison. The alternative, a variant of the fixture, does not cover the guide. The host link and every other element are still compared, and the four comparison checks (fixture, directory, form, guide) pass.
+- The fixture has both documented hosts although a page uses the class once. The guide has one live use (a test checks it).
+- No `::selection` rule and no padding for the clipped edge pixels (BACKLOG, *Verified limits*).
+- `docs/migration-from-0.6.0.md` still says "Decorative only, never text." for the three `--c-ro-*` rows. It is outside the brief, so I did not change it.
+
+**Questions for the maintainer**
+1. Selected text in the sweep is 3.18:1 on the default selection (plain text 4.74:1). Accept it as documented in `COMPONENTS.md`, or add it to ADR 0010 as a third deviation (WCAG 1.4.3)?
+2. Keep the `no-preference` wrapper, or rely on the base rule only? Keep the self-focus selector?
+3. The three `--c-ro-*` rows of `docs/migration-from-0.6.0.md` say "never text". Update them, or leave them as the 0.6.0 record? Acceptance 9 says "everywhere it appears".
+4. Accept the band geometry (12% of 300%, about 2s over the glyphs)?
+5. `CLAUDE.md` and `AGENTS.md`: only the "never text" line changed. The project block (`docs/project-block.md`) does not mention the class; add a line when the release reaches the projects?
+
 ## 2026-10-27 — Opt-in dark colour scheme (brief 05, 0.12.0)
 
 **Done**

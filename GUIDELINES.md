@@ -84,6 +84,7 @@ The default blue suggests a link. Other uses can work when context makes their m
 Use the dark-surface text tokens on dark backgrounds as a starting point, then measure the rendered result.
 A status needs a textual or other accessible explanation; colour alone must not carry its meaning.
 The tricolour marks are decorative. They do not convey status.
+The tricolour colours are never text, except `.g2-ro-sweep` (ADR 0010): a band that crosses the site title. Use it for the title only, once for each page, and never to carry information.
 
 Text and background form a pair. A text token is not safe on every surface.
 For example, `--g2-color-text-faint` measures about 4.57:1 on white and 4.08:1 on `--g2-color-surface-sunken`.
@@ -105,6 +106,8 @@ Target WCAG 2.2 AA. Validate applicable criteria, not only a screenshot or a lis
 - Aim for 44×44px targets for important controls when practical. WCAG 2.2 AA has a 24×24px minimum with exceptions.
 - Check reflow, text enlargement and forced colours on representative pages.
 - When the page offers the dark scheme, repeat the contrast, focus and state checks in both schemes.
+- `.g2-ro-sweep` deviates from WCAG 2.2.2 (level A, no pause control) and 1.4.3 (level AA, contrast under the band). A project that must conform to WCAG AA does not use it.
+  A project that uses it lists both deviations in its accessibility statement. See `COMPONENTS.md`, *Title sweep*.
 
 See the [WCAG 2.2 standard](https://www.w3.org/TR/WCAG22/) for definitions and exceptions.
 
@@ -126,6 +129,7 @@ Icon-only controls need an accessible name; visible text often helps recognition
 5. Does the page remain usable at narrow widths and with enlarged text?
 6. Do disabled, selected, error and empty states communicate their meaning?
 7. Are departures from the defaults useful and consistent within the project?
+8. If the project uses `.g2-ro-sweep`, does its accessibility statement list both deviations (WCAG 2.2.2 and 1.4.3), and does the class sit only on the site title?
 
 ## Patterns from projects
 

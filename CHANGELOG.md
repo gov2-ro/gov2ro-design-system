@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.13.0 — 2026-10-27 (proposal, untested)
+
+Brief 06 (tricolour title sweep). ADR 0010 records the decision and its two deliberate WCAG deviations. Nothing here is a breaking change: no token or class is renamed or removed, and no existing element computes a different style.
+
+**Added**
+- `.g2-ro-sweep`: an opt-in class for a site title. A narrow blue, yellow and red band crosses the title, then the title rests. Markup: `<a class="g2-wordmark" href="/"><span class="g2-ro-sweep">Instituții publice</span></a>`. The documented hosts are `.g2-wordmark` and a title heading inside `.g2-header`. Use it once for each page.
+  It is the only tricolour text. The rule "tricolour is never text" now reads "never text, except `.g2-ro-sweep` (ADR 0010)" in `gov2.css`, `COMPONENTS.md`, `GUIDELINES.md`, `CLAUDE.md` and `AGENTS.md`.
+- The technique: a gradient background clipped to the text (`background-clip: text`), with a transparent text fill that exists only inside `@supports`. At rest the glyphs have the colour of the host (`currentColor`). The band reads `--g2-color-ro-blue`, `--g2-color-ro-yellow` and `--g2-color-ro-red`. No new token.
+  The animation `g2-ro-sweep` is 9s and linear, and it loops. The band sweeps for 3s and is over the glyphs for about 2s; the title rests for the other 6s.
+- The title is plain text, with no band, with `prefers-reduced-motion: reduce`, in forced colours, in print, in a browser without `background-clip: text`, with the animation removed and while the host link has keyboard focus (the focus rule is in `gov2.states`).
+- **Deliberate deviations (ADR 0010).** WCAG 2.2.2 Pause, Stop, Hide (level A): the sweep loops and has no pause control. WCAG 1.4.3 Contrast (Minimum) (level AA): a glyph under the band can fall below 4.5:1 (the blue segment is 1.54:1 and the red segment 3.48:1 on the header; the yellow segment is 1.47:1 on white).
+  A project that must conform to WCAG AA does not use the class. A project that uses it lists both deviations in its accessibility statement. `COMPONENTS.md` (*Title sweep*) has the scope and a suggested statement.
+- The live guide: a demonstration, the markup, and both deviations in Romanian, in section 11 (*Banda tricoloră pe titlu*).
+- The review checklist in `GUIDELINES.md` has a question about the accessibility statement of a project that uses the class.
+- `tests/sweep.test.mjs`: timing, rest, reduced motion, forced colours, print, no `background-clip: text`, focus, name and selection, and the documents. The band is measured from pixels. `tests/contract.html` has both hosts.
+
+**Changed**
+- `tests/scheme.test.mjs`: the comparison with the 0.11.0 stylesheet skips an element that has `.g2-ro-sweep`, because the old stylesheet has no rule for a class that did not exist. The host, the siblings and every other element are still compared.
+
 ## 0.12.0 — 2026-10-27 (proposal, untested)
 
 Brief 05 (opt-in dark colour scheme). ADR 0009 records the decision. Nothing here is a breaking change: no token or class is renamed or removed, and a page without the new attribute computes the same styles as in 0.11.0.
