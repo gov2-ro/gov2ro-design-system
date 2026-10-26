@@ -25,6 +25,8 @@ Items:
   - 46 problems: `.g2-` rules outside `[data-skin]`. posturi loads all skin files on each page, so an unscoped rule leaks into the other skins (`hartie`, `govuk`, `posturi`).
   - 23 problems: DS tokens that the posturi skin contract (39 tokens) does not know, for example `--c-primary`, `--c-brand` and `--c-ro-*`.
   - Possible DS change: scope the `.g2-` classes under `[data-skin="gov2"]`. Not decided. This is a breaking change.
+  - Measured: no posturi template uses a `.g2-` class, so the unscoped rules do not change pages now. The 23 unknown tokens are warnings only. `gov2.css` sets 32 of the 32 colour tokens in the contract.
+  - Google Fonts: posturi links all skin files on each page, so the `@import` in `gov2.css` loads Google Fonts for each visitor, with each skin. posturi serves its other fonts itself (`@font-face` with files in `/static/fonts/`). Possible DS change: `@font-face` with font files in the DS, or the fonts in a separate file.
 - [ ] **ins.gov2.ro** — repo not confirmed. Several repos mention the domain: `tempo-at`, `tempo-at-ui`, `tempo-at23`, `tempo-landing`, and the project has worktrees. The owner starts a session there with prompt 1 of `docs/connect-a-project.md`.
 - [ ] **civtech.gov2.ro** — repo `awesome-civetch` (confirmed by the owner).
 - [ ] **orgs.gov2.ro** — repo `institutii-publice` (confirmed by the owner).
@@ -55,7 +57,7 @@ Found while writing `COMPONENTS.md`. Each gap is also listed in `COMPONENTS.md` 
 ## Delivery
 
 - [ ] Set up file delivery from gov2.ro or ui.gov2.ro for quick projects.
-- [~] Update the copy in posturi.gov.ro (`webapp-php/static/skins/gov2.css`) to 0.3.0. The file is copied from the tag `v0.3.0`, but it is not tracked in git in posturi yet.
+- [~] Update the copy in posturi.gov.ro (`webapp-php/static/skins/gov2.css`). The owner copied 0.4.0, and the block says 0.4.0. Not committed in posturi yet.
 
 ## Style guide
 
