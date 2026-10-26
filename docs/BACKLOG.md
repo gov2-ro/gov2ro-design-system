@@ -39,9 +39,11 @@ Items:
 
 From the posturi test. `GUIDELINES.md` has the rules.
 
-- [ ] Wrap the base rules of `gov2.css` in `:where([data-skin="gov2"])`, so that a project class is stronger than a DS base rule. Check if any project depends on the current specificity. Probably a minor change, not breaking.
-- [ ] Add the link role classes: `.g2-link-title`, `.g2-link-quiet`, `.g2-link-inverse`.
-- [ ] Add `.g2-chip` (shortcut and filter links, with a count and a selected state).
+- [x] Wrap the base rules of `gov2.css` in `:where()`, so that a project class is stronger than a DS base rule (0.6.0). No project depended on the old specificity: only posturi uses the DS, and it needed the opposite.
+- [x] Add the link role classes: `.g2-link-title`, `.g2-link-quiet`, `.g2-link-inverse` (0.6.0).
+- [x] Add `.g2-chip` and `.g2-chip-count` (shortcut and filter links, with a count and a selected state) (0.6.0).
+- [ ] Check `:visited` and `:hover` of the link classes in a real browser. The headless test cannot show them.
+- [ ] Use the link classes in posturi (job title, institution, shortcuts, build stamp). This is posturi work.
 - [ ] Add `.g2-icon-btn` (icon button with a label and a 44px target).
 - [ ] Add a type scale (page title, section title, item title, body, metadata, label).
 - [ ] The owner reviews `GUIDELINES.md` (status: draft).

@@ -2,7 +2,7 @@
 
 Status: **draft**, for review by the owner.
 
-`COMPONENTS.md` tells what each component is. This file tells how components work together on a page: hierarchy, link roles, colour, contrast and type. Some classes in this file are **proposed**: they are not in `gov2.css` yet. The backlog tracks them.
+`COMPONENTS.md` tells what each component is. This file tells how components work together on a page: hierarchy, link roles, colour, contrast and type. A class marked **proposed** is not in `gov2.css` yet. The backlog tracks it.
 
 The examples come from the first test of the DS in posturi.gov2.ro (26.10.2026). In that test, the header links, the job titles, the institution links, the shortcut links and the build stamp all had the same treatment: blue and underlined. The reader could not see which link is the main one.
 
@@ -32,12 +32,14 @@ Each link role has one treatment. On one page, two roles must not share a treatm
 | Role | Example | Treatment | Class |
 |---|---|---|---|
 | In-text link | A link in a paragraph | `--c-gov`, underlined, visited colour | none (base style) |
-| Item title | Job title → job page | `--c-gov`, bold, 19px, underlined, visited colour | `.g2-link-title` (proposed) |
-| Quiet link | Institution or county in the metadata | `--c-ink`, underlined, no visited colour | `.g2-link-quiet` (proposed) |
-| Shortcut or filter | "Medic specialist 76", "Fără experiență 778" | A chip: `--c-sunken` background, ink text, no underline, the count in muted mono. A selected chip has a 2px ink border. | `.g2-chip` (proposed) |
-| Header navigation | "Salvate", "Despre" | White, no underline; underlined on hover; a blue bar for the current page | `.g2-nav a` (exists) |
-| Other link on the dark bar | The build stamp | `--c-on-bar-muted`, underlined on hover | `.g2-link-inverse` (proposed) |
+| Item title | Job title → job page | `--c-gov`, bold, 19px, underlined, visited colour | `.g2-link-title` |
+| Quiet link | Institution or county in the metadata | `--c-ink`, underlined, no visited colour | `.g2-link-quiet` |
+| Shortcut or filter | "Medic specialist 76", "Fără experiență 778" | A chip: `--c-sunken` background, ink text, no underline, the count in muted mono. A selected chip has a 2px ink border. | `.g2-chip`, `.g2-chip-count` |
+| Header navigation | "Salvate", "Despre" | White, no underline; underlined on hover; a blue bar for the current page | `.g2-nav a` |
+| Other link on the dark bar | The build stamp | `--c-on-bar` (white), underlined, no visited colour | `.g2-link-inverse` |
 | Action | Save, hide, edit | A button: `.g2-btn`, or an icon button with a label | `.g2-icon-btn` (proposed) |
+
+Since 0.6.0, all classes in this table are in `gov2.css`, except `.g2-icon-btn`. `COMPONENTS.md` has the markup.
 
 - An underline means a link. Do not underline other text. For an abbreviation, use `<abbr title="…">` with a dotted underline, or no underline.
 - Keep the visited colour only where the reader goes back to a list: item titles and in-text links.
@@ -61,7 +63,17 @@ Each link role has one treatment. On one page, two roles must not share a treatm
 | Intended header link, `#cccccc` on `#0b0c0c` | 12.2:1 | Passes |
 | Link, `#1d4fbf` on white | 7.18:1 | Passes |
 
-Cause: the base rule `[data-skin="gov2"] a` (specificity 0,1,1) is stronger than a utility class such as `.text-on-bar-muted` (0,1,0). The backlog has the DS fix.
+Cause: the base rule `[data-skin="gov2"] a` (specificity 0,1,1) was stronger than a utility class such as `.text-on-bar-muted` (0,1,0). Fixed in 0.6.0: the base rules now have the specificity 0,0,1, and the header link in the same test shows `#cccccc`.
+
+The link classes of 0.6.0, measured:
+
+| Pair | Ratio |
+|---|---|
+| `.g2-link-title`, `#1d4fbf` on white (visited `#4c2c92`) | 7.18:1 (10.08:1) |
+| `.g2-link-quiet`, ink on white | 19.59:1 |
+| `.g2-link-inverse`, white on `#0b0c0c` | 19.59:1 |
+| `.g2-chip`, ink on `--c-sunken` | 17.52:1 |
+| `.g2-chip-count`, `--c-ink-muted` on `--c-sunken` (on hover) | 6.33:1 (5.66:1) |
 
 ## Type
 

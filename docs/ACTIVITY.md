@@ -1,5 +1,25 @@
 # Activity
 
+## 2026-10-26 — Link specificity fix and link role classes (0.6.0)
+
+**Done**
+- Changed the base rules for `body` and links to `:where([data-skin="gov2"]) a` and so on: specificity 0,0,1. `:visited` and `:hover` are inside `:where()` too.
+- Added `.g2-link-title`, `.g2-link-quiet`, `.g2-link-inverse`, `.g2-chip` and `.g2-chip-count`. Their states use `:where()`, so that the focus rule (0,2,0) stays stronger.
+- Updated `COMPONENTS.md` (Links, Chips, specificity note), `GUIDELINES.md` (classes exist, measured contrast) and the known transition issues in `docs/connect-a-project.md`.
+- Committed the owner's changes on the owner's request: `docs/index.html` and a new `.gitignore`. The `.gitignore` excludes `*.code-workspace`, so `g2-ds.code-workspace` stays local.
+
+**Hard**
+- Measured in headless Chrome, with a test page that loads a Tailwind-like reset and the class `.text-on-bar-muted` before `gov2.css`. With 0.5.0, each link was `rgb(29,79,191)` and underlined, also the link with `.text-on-bar-muted`. With 0.6.0: the utility link is `rgb(204,204,204)`; the title is bold 19px blue; the quiet link is ink; the inverse link is white; the chip is ink on `rgb(243,242,241)`, without underline; the selected chip has an ink border; a focused chip is yellow with ink text.
+- Not measured: `:visited` and `:hover`. A headless browser does not show them. Assumed: `:visited` inside `:where()` works, as in the Selectors Level 4 specification.
+- posturi links that have no `no-underline` class stay underlined, because the DS rule is later than Tailwind preflight at the same specificity. This is intended: an underline means a link.
+- Contrast of the new classes: title 7.18:1 (visited 10.08:1), quiet and inverse 19.59:1, chip 17.52:1, chip count 6.33:1 (5.66:1 on hover).
+
+**Decided**
+- **Specificity 0,0,1, not 0,0,0.** With 0,0,0 (`:where([data-skin] a)`), Tailwind preflight (`a{color:inherit}`) wins, and plain links lose their colour. With 0,0,1, a project class wins, and the DS still wins over an element reset that loads before it. Cost of the alternative: no DS link style in each Tailwind project.
+- **Focus rules stay strong (0,2,0).** The yellow focus must show on each element, also on project classes. Cost of the alternative: a project class can hide the focus.
+- **`.g2-link-inverse` is white and underlined**, not muted with an underline on hover only. An underline marks a link on the dark bar too. Cost of the alternative: links on the dark bar that look like text.
+- **No `.g2-icon-btn` yet.** The owner asked for the link roles; an icon button is an action, not a link.
+
 ## 2026-10-26 — Guidelines for hierarchy and link roles, patterns (0.5.0)
 
 **Done**

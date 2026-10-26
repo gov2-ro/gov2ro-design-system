@@ -39,6 +39,41 @@ Under `[data-skin="gov2"]`, these styles apply without a class:
 - `input`, `textarea`, `select` on focus: yellow 3px outline and a 2px ink inset.
 - With `prefers-reduced-motion: reduce`, transitions and animations stop.
 
+The `body` and link rules have the specificity of one element (0,0,1). So each project class wins over them, for example a Tailwind utility. They still win over an element reset that loads before `gov2.css`, for example Tailwind preflight. The focus rules stay strong on purpose.
+
+## Links
+
+Each link role has one class. `GUIDELINES.md` tells when to use each role.
+
+```html
+<p>Citiți <a href="/despre">regulile</a> înainte să aplicați.</p>
+<a class="g2-link-title" href="/joburi/medic-specialist">Medic specialist</a>
+<a class="g2-link-quiet" href="/?institutie=123">Spitalul Județean de Urgență Bacău</a>
+<a class="g2-link-inverse" href="/despre/#versiunea-datelor">Bază generată: 17 oct</a>
+```
+
+| Class | Role | Look |
+|---|---|---|
+| (none) | In-text link | Blue, underlined, visited colour. |
+| `.g2-link-title` | Item title, to a detail page | Blue, bold, 19px, underlined, visited colour. |
+| `.g2-link-quiet` | Secondary link in metadata | Ink, underlined, no visited colour. |
+| `.g2-link-inverse` | Link on the dark bar | White, underlined, no visited colour. For the header navigation, use `.g2-nav`. |
+
+On hover, the underline of each link is 3px. On focus, each link is yellow with ink text.
+
+## Chips
+
+A chip is a shortcut or a filter link. It is not a tag: a tag shows a state, and a chip goes to a place.
+
+```html
+<a class="g2-chip" href="/?ocupatie=medic-specialist">Medic specialist <span class="g2-chip-count">76</span></a>
+<a class="g2-chip" href="/?stare=active" aria-current="true">Active</a>
+```
+
+- `.g2-chip`: grey background, ink text, no underline, at least 36px high. On hover, the background is darker.
+- `.g2-chip-count`: the count, in muted mono.
+- Mark the selected chip with `aria-current="true"` (a link) or `aria-pressed="true"` (a button). It gets a 2px ink border.
+
 ## Header
 
 A black bar with an 8px brand band below it.

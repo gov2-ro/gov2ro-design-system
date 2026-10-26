@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.6.0 — 2026-10-26 (proposal, untested)
+
+**Changed**
+- The base rules for `body` and links now have the specificity of one element (0,0,1), with `:where()`. Before, `[data-skin="gov2"] a` (0,1,1) won over project classes, for example Tailwind utilities. They still win over an element reset that loads before `gov2.css`. The focus rules did not change.
+
+**Added**
+- Link role classes: `.g2-link-title`, `.g2-link-quiet`, `.g2-link-inverse`.
+- `.g2-chip` and `.g2-chip-count`: shortcut and filter links. Select with `aria-current` or `aria-pressed="true"`.
+
 ## 0.5.0 — 2026-10-26 (proposal, untested)
 
 No change to the styles in `gov2.css`.

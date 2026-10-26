@@ -14,8 +14,8 @@ This page gives the prompts that connect an agent session in a project to the go
 The DS is 0.x. These issues are known and accepted during the transition. Do not work around them in the project. Do not report them as new findings, but say if one blocks the project.
 
 - **Google Fonts:** `gov2.css` loads Inter and Fragment Mono from Google Fonts with `@import`. Each page that loads `gov2.css` makes this external request. The DS will fix this later.
-- **Link styles override project classes:** the base rule `[data-skin="gov2"] a` is stronger than a single utility class (for example a Tailwind class). So all links become blue and underlined, also on the dark header. Do not add `!important` in the project. The DS will lower the specificity of its base rules.
-- **No link roles yet:** the DS has one link style. `GUIDELINES.md` proposes the roles. Until the DS has the classes, report the places where roles look the same.
+- **Before 0.6.0, link styles overrode project classes.** A project with a copy older than 0.6.0 shows all links blue and underlined, also on the dark header. Update the copy; do not add `!important` in the project. From 0.6.0, project classes win, and the DS has link role classes (`.g2-link-title`, `.g2-link-quiet`, `.g2-link-inverse`, `.g2-chip`).
+- **Links stay underlined.** From 0.6.0, the DS underline still wins over an element reset such as Tailwind preflight. To remove the underline on a project link, use a class (for example `no-underline`), and only where `GUIDELINES.md` permits it.
 
 ## Prompt 1: Compatibility report
 
