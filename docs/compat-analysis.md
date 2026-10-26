@@ -92,7 +92,7 @@ The stiri session relayed it at the operator's request. No GitHub issues were op
 | 5 | component | Summary list (`dl`): 14px muted label, one rule per row | Open. Listed in DS gaps. Needs owner approval |
 | 6 | pattern | Result list: item title, mono date and quiet links on a meta line, snippet | Brief 04's directory page shows a local version. Candidate for `patterns/` when a second project needs it |
 | 7 | component | Skip link that shows on focus | Open. Related defect: `:focus-visible` fills a focused `<main tabindex="-1">` with yellow |
-| 8 | fix | `.g2-notice-bar{display:flex}` overrides `hidden`; `> p` keeps its margin and does not grow | Accepted as a patch fix. Apply after brief 04 lands |
+| 8 | fix | `.g2-notice-bar{display:flex}` overrides `hidden`; `> p` keeps its margin and does not grow | Fixed in 0.9.1 |
 | 9 | component | `.g2-nav` layout: flex, wrap, 44px targets | Covered by brief 04 (header/nav composition), in progress |
 | 10 | variant | `.g2-input` on `<select>` | Brief 04 adds select only if an example page needs it. Otherwise open |
 | 11 | token | Highlight colour for `<mark>`; yellow focus must stay distinct | Open. New token, needs owner approval. stiri uses `--c-note-bg` (0.8.0: `--g2-color-warning-bg`) |

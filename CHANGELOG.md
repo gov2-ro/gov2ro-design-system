@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.9.1 — 2026-10-26 (proposal, untested)
+
+**Fixed**
+- `.g2-notice-bar` with the `hidden` attribute is hidden. Before, `display:flex` overrode the attribute (reported by stiri.gov2.ro).
+- A `<p>` in `.g2-notice-bar` has no outer margin and fills the row, so the close button sits at the right edge.
+
 ## 0.9.0 — 2026-10-26 (proposal, untested)
 
 Brief 04 (page foundations). Nothing here is a breaking change: no token or class is renamed or removed.

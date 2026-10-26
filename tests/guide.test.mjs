@@ -513,3 +513,19 @@ test('contract: guide controls under the app-layer guide styles keep the gov2 fo
   await assertFocusReadable(page, '.guide-toc a[href="#culoare"]');
   await assertFocusReadable(page, '#primary-button');
 }));
+
+test('notice bar: the hidden attribute hides it, and its text fills the row up to the close button', () => withSite({
+  '/index.html': `<!doctype html><html lang="ro"><head><meta charset="utf-8"><title>Anunț</title><link rel="stylesheet" href="/assets/gov2.css"></head><body>
+<div class="g2-notice-bar" id="shown" role="region" aria-label="Anunț"><p>Site în test.</p><button type="button" aria-label="Închide anunțul">×</button></div>
+<div class="g2-notice-bar" id="closed" role="region" aria-label="Anunț închis" hidden><p>Închis.</p><button type="button" aria-label="Închide">×</button></div>
+</body></html>`, '/assets/gov2.css': css }, async page => {
+  assert.equal(await page.locator('#closed').evaluate(el => getComputedStyle(el).display), 'none');
+  const geometry = await page.locator('#shown').evaluate(bar => {
+    const p = bar.querySelector('p'), b = bar.querySelector('button'), s = getComputedStyle(p);
+    return { margin: s.marginTop + ' ' + s.marginBottom, gap: b.getBoundingClientRect().left - p.getBoundingClientRect().right,
+      right: bar.getBoundingClientRect().right - b.getBoundingClientRect().right, padding: parseFloat(getComputedStyle(bar).paddingRight) };
+  });
+  assert.equal(geometry.margin, '0px 0px');
+  assert.equal(geometry.gap, 10, 'the text grows up to the flex gap before the button');
+  assert.equal(geometry.right, geometry.padding, 'the close button sits at the right edge');
+}));

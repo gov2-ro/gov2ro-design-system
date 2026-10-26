@@ -224,7 +224,8 @@ A grey bar above the header for a short message. The user can close it.
 </div>
 ```
 
-- `.g2-notice-bar`: a flex row on the sunken surface, with text at `--g2-font-size-meta` and a 1px rule below. A direct `<button>` child is the close control, 44×36px.
+- `.g2-notice-bar`: a flex row on the sunken surface, with text at `--g2-font-size-meta` and a 1px rule below. A direct `<p>` child fills the row with no outer margin. A direct `<button>` child is the close control, 44×36px, at the right edge.
+- The `hidden` attribute hides the bar. Closing the bar can set `hidden` on it directly.
 - The project stores the choice to close it, for example in `localStorage`.
 
 ## Footer

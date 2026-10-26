@@ -1,4 +1,4 @@
-/* gov2 — stilul comun pentru proiectele gov2.ro · v0.9.0 · 26.10.2026
+/* gov2 — stilul comun pentru proiectele gov2.ro · v0.9.1 · 26.10.2026
 
    Shared stylesheet for gov2.ro projects.
    Inspired by igov.ro's GOV.UK-derived theme (brand.css, 2026-10): Inter + Fragment Mono,
@@ -178,6 +178,8 @@ a:where(:hover){text-decoration-thickness:3px}
 .g2-ro-dots::after{background:rgb(var(--g2-color-ro-red))}
 /* Notice bar: above the header, dismissible (store the choice, e.g. localStorage). */
 .g2-notice-bar{display:flex;align-items:center;gap:10px;padding:6px 8px 6px 24px;background:rgb(var(--g2-color-surface-sunken));border-bottom:1px solid rgb(var(--g2-color-line));font-size:var(--g2-font-size-meta)}
+.g2-notice-bar[hidden]{display:none}
+.g2-notice-bar>p{flex:1;min-width:0;margin:0}
 .g2-notice-bar>button{flex:none;width:44px;height:36px;border:0;background:transparent;color:rgb(var(--g2-color-text));font-size:22px;cursor:pointer}
 .g2-wordmark{display:inline-flex;align-items:center;gap:10px;color:rgb(var(--g2-color-on-header));font-size:19px;font-weight:700;letter-spacing:-.03em;text-decoration:none}
 .g2-wordmark em{font-style:normal;font-weight:500;color:rgb(var(--g2-color-on-header-muted))}

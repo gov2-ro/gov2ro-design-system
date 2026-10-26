@@ -1,5 +1,19 @@
 # Activity
 
+## 2026-10-26 — Notice bar fix from the stiri report (0.9.1)
+
+**Done**
+- `.g2-notice-bar[hidden]` now hides the bar, and a `<p>` child fills the row with no outer margin. `COMPONENTS.md` documents both.
+- Added one browser check. 107 passed and 0 failed in Chrome 155.0.8059.85.
+
+**Hard**
+- The live guide did not show the defect: its demo hides a wrapper `div`, not the bar. The stiri session found it in a real page.
+- Mutation check: without the two rules, the new test fails (`display` is `flex`, expected `none`).
+
+**Decided**
+- A patch release, because it corrects a shipped class without new API. The selector `.g2-notice-bar>p` is the documented markup; other child elements keep browser defaults.
+- Recorded the stiri (0.6.0) and org (0.8.0) reports in `compat-analysis.md`. The new component and token proposals wait for the owner.
+
 ## 2026-10-26 — Page foundations implemented (brief 04, 0.9.0)
 
 **Done**

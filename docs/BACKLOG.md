@@ -60,7 +60,7 @@ Items:
 - [ ] **ins.gov2.ro** — repo not confirmed. Several repos mention the domain: `tempo-at`, `tempo-at-ui`, `tempo-at23`, `tempo-landing`, and the project has worktrees. The owner starts a session there with prompt 1 of `docs/connect-a-project.md`.
 - [ ] **civtech.gov2.ro** — repo `awesome-civetch` (confirmed by the owner).
 - [x] **stiri.gov2.ro** — repo `gov2-ro/stiri`. Report received 2026-10-26 and recorded in `compat-analysis.md`. Adopted v0.6.0 unedited; no conflicts; 12 proposals.
-  - [ ] Fix `.g2-notice-bar`: `display:flex` overrides the `hidden` attribute, and its `> p` keeps its margin and does not grow (stiri proposal 8). Patch fix.
+  - [x] Fix `.g2-notice-bar`: `display:flex` overrides the `hidden` attribute, and its `> p` keeps its margin and does not grow (stiri proposal 8). Fixed in 0.9.1.
   - [ ] Ask the owner whether to file stiri proposals 2, 3, 4, 5, 7 and 11 as `ds-proposal` issues (breadcrumbs, pagination, table, summary list, skip link, highlight token).
 - [x] **org.gov2.ro** — repo `gov2-ro/institutii-publice` (the domain is `org.gov2.ro`, not `orgs`). Report received 2026-10-26 against 0.8.0 and recorded in `compat-analysis.md`.
   - Conflicts are now with `--g2-*` and the layers: all project CSS is unlayered, and a local `:focus-visible` replaces the DS focus. The project moves its CSS into `@layer app`.
