@@ -177,7 +177,8 @@ Brief 06 follow-ups (measured in `ACTIVITY.md`):
 ## Later: explorations requested by the owner
 
 - [ ] **Skins.** Explore different styles and colours with the same structure: the same `.g2-*` classes and markup, with other token values (palette, type, density). Decide how a skin is delivered (a token file loaded after `gov2.css`, or an attribute like `data-g2-scheme`) and how it combines with the light and dark schemes. Needs an ADR. Owner request, 2026-10-27.
-- [ ] **Rotating title text for civtech.** A component that changes the title text with transitions, like the civtech `.brand-name` (several effects, `data-fx`). It needs a script, so it is outside core CSS today. Check WCAG 2.2.2 (moving content), screen-reader announcements and reduced motion. Owner request, 2026-10-27.
+- [ ] **Rotating title text for civtech.** A component that changes the title text with transitions, like the civtech `.brand-name` (several effects, `data-fx`). First try CSS only: stack the variants in one grid cell (`grid-area:1/1`, so the box takes the widest), and give each the same keyframes with a staggered `animation-delay` (`calc(var(--i) * …)`). Known limits of CSS only: the number of items and the timing are fixed in the markup or the CSS; there is no random effect choice; screen readers find every variant (give the variants `aria-hidden` and keep one real title); reduced motion shows the first variant only. Check WCAG 2.2.2 (moving content). Owner request, 2026-10-27.
+- [ ] **Assets library for optional scripts.** JavaScript is not part of the core system. When a component needs a script (for example the civtech effect choice), build an optional assets library: start it in this repository, in its own folder, separate from `gov2.css`, with its own version notes. Move it to its own repository only if it grows. Owner direction, 2026-10-27.
 
 ## Verified limits
 
