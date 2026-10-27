@@ -174,6 +174,11 @@ Brief 06 follow-ups (measured in `ACTIVITY.md`):
 - [ ] Manual checks not done for brief 06: Safari and Firefox (the technique, the `@supports` fallback, selection), a screen reader on the title link, real forced colours on Windows, a real print or PDF, and a real project header. See `testing.md`.
 - [ ] `docs/migration-from-0.6.0.md` (token table rows for `--c-ro-blue`, `--c-ro-yellow`, `--c-ro-red`) still says "Decorative only, never text." The file is outside the scope of brief 06. Update the three rows to name the exception, or leave them: they describe the 0.6.0 tokens.
 
+## Later: explorations requested by the owner
+
+- [ ] **Skins.** Explore different styles and colours with the same structure: the same `.g2-*` classes and markup, with other token values (palette, type, density). Decide how a skin is delivered (a token file loaded after `gov2.css`, or an attribute like `data-g2-scheme`) and how it combines with the light and dark schemes. Needs an ADR. Owner request, 2026-10-27.
+- [ ] **Rotating title text for civtech.** A component that changes the title text with transitions, like the civtech `.brand-name` (several effects, `data-fx`). It needs a script, so it is outside core CSS today. Check WCAG 2.2.2 (moving content), screen-reader announcements and reduced motion. Owner request, 2026-10-27.
+
 ## Verified limits
 
 - [-] Ship Fragment Mono with the cedilla t (Ţ ţ, U+0162 and U+0163). Dead end: the Fragment Mono 1.011 files do not contain them (read from the `cmap` of both shipped files); the comma-below forms Ț ț are there. The required Romanian letters are all covered. Text that uses Ţ ţ in monospace falls back for those two letters. Inter has all four cedilla and comma-below forms.
