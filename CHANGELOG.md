@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.16.0 — 2026-10-27 (proposal, untested)
+
+The civtech sweep.
+
+**Changed**
+- `.g2-ro-sweep` now has the look and the timing of civtech.gov2.ro (ADR 0010, section "Amendment (2026-10-27): the civtech sweep"). The class and the keyframes keep their names, and no token changes, so this is not breaking.
+- Look: the band blends the colours (`linear-gradient(100deg, currentColor 0 34%, blue 42%, yellow 50%, red 58%, currentColor 66% 100%)`, 300% wide) instead of hard stops, and it is wide and tilted.
+- Timing: a continuous 7s linear loop with two keyframes (`100% 0` to `0 0`) and no rest. It was a 9s cycle with a 3s sweep and a 6s rest. The mitigations "crossing at most 3s" and "cycle at least 9s" are removed. Measured from pixels, the band is over the glyphs for about 6.7s of each cycle.
+- Unchanged: plain text in the static frame, with reduced motion, in forced colours, in print, on keyboard focus and without `background-clip: text`; both WCAG deviations (the contrast deviation now applies for most of each cycle).
+- Documents and tests follow: `COMPONENTS.md`, the guide, `docs/testing.md`, `docs/migration-from-0.6.0.md` and `tests/sweep.test.mjs`.
+
 ## 0.15.0 — 2026-10-27 (proposal, untested)
 
 Brief 08 (select control). Issue #10, approved by the owner. Nothing here is a breaking change: no token or class is renamed or removed, and no existing element computes a different style.

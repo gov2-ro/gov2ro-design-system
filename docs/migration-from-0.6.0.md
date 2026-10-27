@@ -516,6 +516,15 @@ This change is **not breaking**. It adds no class and no token. There is no migr
 - A `multiple` select, or a `size` greater than 1, keeps the native list with no arrow.
 - No existing element computes a different style. Only `<select class="g2-input">` is new.
 
+## Changes after 0.15.0: the civtech sweep
+
+This change is **not breaking**. The class `.g2-ro-sweep` and the keyframes `g2-ro-sweep` keep their names. There is no migration step. ADR 0010 has the amendment.
+
+- New look: the band blends the colours (no hard stops), is wide and is tilted at 100 degrees. It is the band of civtech.gov2.ro.
+- New timing: a continuous 7s linear loop with no rest. It was a 9s cycle with a 3s sweep and a 6s rest. The static frame and the first frame show no band.
+- The accessibility statement of a project that uses the class changes: the band now moves across the title for most of each cycle (about 6.7s of 7s), so the contrast deviation (WCAG 1.4.3) applies for most of the time. The two deviations stay the same.
+- Plain text stays in the same six cases: reduced motion, forced colours, print, no `background-clip: text`, the removed animation and keyboard focus.
+
 ## Checklist
 
 1. `grep -rn 'data-skin' <project>` finds nothing outside archived files.

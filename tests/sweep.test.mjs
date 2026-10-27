@@ -15,7 +15,8 @@ const code = css.replace(/\/\*[\s\S]*?\*\//g, '');
 const blocks = tokenBlocks();
 const light = blocks.light, dark = { ...blocks.light, ...blocks.dark };
 const HOSTS = ['#sweep', '#sweep-title']; // the wordmark host and the title heading host of the fixture
-const CYCLE = 9000, STEP = 100;
+const CYCLE = 7000, STEP = 100;
+const MID = 3500; // the middle of the crossing, measured by the timing test (the band is over the glyphs from 200ms to 6800ms)
 
 // ---- Colour arithmetic ----
 const channels = value => value.trim().split(/\s+/).map(Number);
@@ -61,15 +62,14 @@ test('sweep: gov2.css uses the decided names, adds no token, and keeps the trans
   assert.match(code, /:focus-visible \.g2-ro-sweep,\.g2-ro-sweep:focus-visible\{-webkit-text-fill-color:currentColor\}/);
 });
 
-test('sweep: the cycle is 9s or more, the sweep lasts 3s or less, and the static frame is the first frame (acceptance 3)', () => {
+test('sweep: the civtech loop is 7s linear and infinite with two keyframes, and the static frame is the first frame (acceptance 3, ADR 0010 amendment)', () => {
   const [, cycle] = code.match(/animation:g2-ro-sweep ([\d.]+)s linear infinite/);
-  assert.ok(Number(cycle) >= 9, `the cycle is ${cycle}s`);
+  assert.equal(Number(cycle), 7, `the cycle is ${cycle}s`);
   const frames = [...braced(code, code.indexOf('@keyframes g2-ro-sweep')).matchAll(/(from|to|[\d.]+%)\{background-position:([^}]+)\}/g)].map(m => [m[1] === 'from' ? 0 : m[1] === 'to' ? 100 : parseFloat(m[1]), m[2]]);
-  assert.deepEqual(frames.map(f => f[0]), [0, 33.33, 100]);
-  assert.equal(frames[1][1], frames[2][1], 'the sweep ends at the last position; the rest of the cycle holds it');
-  const sweepEnd = frames[1][0] / 100 * Number(cycle);
-  assert.ok(sweepEnd <= 3, `the sweep keyframes last ${sweepEnd.toFixed(2)}s`);
-  assert.ok(code.match(/\.g2-ro-sweep\{background:linear-gradient[^}]*\}/)[0].includes(`) ${frames[0][1]}/300% 100%`), 'the static background position is the first keyframe');
+  assert.deepEqual(frames, [[0, '100% 0'], [100, '0 0']], 'two keyframes, with no rest in the cycle');
+  const rule = code.match(/\.g2-ro-sweep\{background:linear-gradient[^}]*\}/)[0];
+  assert.ok(rule.includes(`) ${frames[0][1]}/300% 100%`), 'the static background position is the first keyframe');
+  assert.ok(rule.includes('linear-gradient(100deg,currentColor 0 34%,rgb(var(--g2-color-ro-blue)) 42%,rgb(var(--g2-color-ro-yellow)) 50%,rgb(var(--g2-color-ro-red)) 58%,currentColor 66% 100%)'), 'the civtech gradient');
 });
 
 // ---- Static: documents ----
@@ -90,7 +90,7 @@ test('sweep: COMPONENTS.md and GUIDELINES.md document the class, both deviations
   assert.match(reference, /^### Title sweep$/m);
   assert.ok(reference.includes('<a class="g2-wordmark" href="/"><span class="g2-ro-sweep">Instituții publice</span></a>'), 'the decided markup');
   for (const needle of ['ADR 0010', 'It is opt-in', 'WCAG 2.2.2 Pause, Stop, Hide (level A)', 'WCAG 1.4.3 Contrast (Minimum) (level AA)', 'accessibility statement', 'prefers-reduced-motion: reduce',
-    'title heading inside `.g2-header`', 'once for each page', 'forced colours', 'print', 'background-clip: text', 'keyboard focus', 'g2-ro-sweep 9s linear infinite', 'does not use `.g2-ro-sweep`', 'adds no token']) {
+    'title heading inside `.g2-header`', 'once for each page', 'forced colours', 'print', 'background-clip: text', 'keyboard focus', 'g2-ro-sweep 7s linear infinite', 'does not use `.g2-ro-sweep`', 'adds no token']) {
     assert.ok(reference.includes(needle), `COMPONENTS.md does not say "${needle}"`);
   }
   assert.match(guidelines, /^8\. If the project uses `\.g2-ro-sweep`, does its accessibility statement list both deviations \(WCAG 2\.2\.2 and 1\.4\.3\)/m, 'the review checklist asks the question');
@@ -101,7 +101,7 @@ test('sweep: the guide demonstrates the class once, states both deviations in Ro
   assert.equal([...guideHtml.matchAll(/<span class="g2-ro-sweep"/g)].length, 1, 'one live use on the page (the rule is one use for each page)');
   const section = guideHtml.slice(guideHtml.indexOf('<h3 id="titlu-banda">'), guideHtml.indexOf('id="notice-example"'));
   for (const needle of ['WCAG 2.2.2 Pauză, oprire, ascundere (nivel A)', 'WCAG 1.4.3 Contrast minim (nivel AA)', 'prefers-reduced-motion: reduce', 'Domeniul excepției', 'Declarația de accesibilitate',
-    'Text propus', 'nu folosește <code>.g2-ro-sweep</code>', 'ADR 0010', 'id="code-sweep"', 'data-copy="code-sweep"', '9 secunde', '3 secunde', 'o singură dată']) {
+    'Text propus', 'nu folosește <code>.g2-ro-sweep</code>', 'ADR 0010', 'id="code-sweep"', 'data-copy="code-sweep"', '7 secunde', 'o singură dată']) {
     assert.ok(section.includes(needle), `the guide does not say "${needle}"`);
   }
   assert.ok(section.includes('&lt;span class=&quot;g2-ro-sweep&quot;&gt;Instituții publice&lt;/span&gt;'), 'the guide gives the copyable markup');
@@ -146,15 +146,24 @@ const freeze = (page, ms) => page.evaluate(async ms => {
   for (const a of document.getAnimations().filter(a => a.animationName === 'g2-ro-sweep')) { a.pause(); a.currentTime = ms; }
   await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 }, ms);
-// The number of pixels of each colour in a PNG, read in the page with a canvas.
-const decode = (page, png) => page.evaluate(async data => {
-  const img = new Image(); img.src = 'data:image/png;base64,' + data; await img.decode();
-  const canvas = document.createElement('canvas'); canvas.width = img.width; canvas.height = img.height;
-  const g = canvas.getContext('2d', { willReadFrequently: true }); g.drawImage(img, 0, 0);
-  const pixels = g.getImageData(0, 0, img.width, img.height).data, count = {};
-  for (let i = 0; i < pixels.length; i += 4) { const key = `${pixels[i]},${pixels[i + 1]},${pixels[i + 2]}`; count[key] = (count[key] || 0) + 1; }
-  return count;
-}, png.toString('base64'));
+// The number of pixels of each colour in a PNG, read in the page with a canvas. The result has a hidden property `solid`: the same count for the solid pixels only
+// (all four neighbours within 6 per channel, so the interior of the glyphs and not the antialiased edge, which has coloured fringes at 64px).
+const decode = async (page, png) => {
+  const [count, solid] = await page.evaluate(async data => {
+    const img = new Image(); img.src = 'data:image/png;base64,' + data; await img.decode();
+    const canvas = document.createElement('canvas'); canvas.width = img.width; canvas.height = img.height;
+    const g = canvas.getContext('2d', { willReadFrequently: true }); g.drawImage(img, 0, 0);
+    const px = g.getImageData(0, 0, img.width, img.height).data, w = img.width, h = img.height, all = {}, solid = {};
+    const at = (x, y) => (y * w + x) * 4;
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      const i = at(x, y), key = `${px[i]},${px[i + 1]},${px[i + 2]}`;
+      all[key] = (all[key] || 0) + 1;
+      if (x > 0 && y > 0 && x < w - 1 && y < h - 1 && ![at(x - 1, y), at(x + 1, y), at(x, y - 1), at(x, y + 1)].some(j => Math.max(Math.abs(px[j] - px[i]), Math.abs(px[j + 1] - px[i + 1]), Math.abs(px[j + 2] - px[i + 2])) > 6)) solid[key] = (solid[key] || 0) + 1;
+    }
+    return [all, solid];
+  }, png.toString('base64'));
+  return Object.defineProperty(count, 'solid', { value: solid, enumerable: false });
+};
 // The area of an element with some room, after scrolling it to the middle. The clip is in viewport coordinates, so scroll only here.
 const clipOf = (page, selector, pad = 10) => page.locator(selector).evaluate((el, pad) => {
   el.scrollIntoView({ block: 'center' });
@@ -165,51 +174,66 @@ const look = async (page, clip) => decode(page, await page.screenshot({ clip }))
 const same = (a, b) => JSON.stringify(Object.entries(a).sort()) === JSON.stringify(Object.entries(b).sort());
 // The number of pixels that differ between two pictures of the same area (half of the sum of the differences of the colour counts).
 const distance = (a, b) => [...new Set([...Object.keys(a), ...Object.keys(b)])].reduce((sum, key) => sum + Math.abs((a[key] || 0) - (b[key] || 0)), 0) / 2;
-const near = (key, target) => rgbOf(key).every((v, i) => Math.abs(v - target[i]) <= 2);
-const bandPixels = hist => Object.fromEntries(Object.entries(TRICOLOUR).map(([name, rgb]) => [name, Object.entries(hist).filter(([key]) => near(key, rgb)).reduce((sum, [, n]) => sum + n, 0)]));
-const bandTotal = hist => Object.values(bandPixels(hist)).reduce((a, b) => a + b, 0);
-// The most common colour near a tricolour colour: the colour that the glyphs really have.
-const painted = (hist, colour) => rgbOf(Object.entries(hist).filter(([key]) => near(key, TRICOLOUR[colour])).sort((a, b) => b[1] - a[1])[0][0]);
+// The band is blended into the host colour, so a band pixel is not an exact token colour. A pixel is "tinted" when its colour is far from every mix of two plain colours
+// (the antialiased edge of plain text lies on such a line; the count reads only the solid pixels, because the edge can have coloured fringes). The plain colours are the neutral colours of the header and the page in both schemes, and any colours that the test adds.
+const TINT = 12;
+const distToLine = (p, a, b) => {
+  const d = b.map((v, i) => v - a[i]), len2 = d.reduce((s, v) => s + v * v, 0);
+  const u = len2 ? Math.max(0, Math.min(1, p.reduce((s, v, i) => s + (v - a[i]) * d[i], 0) / len2)) : 0;
+  return Math.hypot(...p.map((v, i) => v - (a[i] + u * d[i])));
+};
+const NEUTRAL = [...new Set([light, dark].flatMap(t => ['--g2-color-header-bg', '--g2-color-on-header', '--g2-color-page', '--g2-color-text'].map(k => channels(t[k]).join(','))))].map(rgbOf);
+// `ref` is the picture of ordinary text in the same area (the colours of its solid pixels are plain, for example the link colour of a neighbour), or a list of plain colours.
+const tintedPixels = (solid, ref = []) => {
+  const points = Array.isArray(ref) ? ref : Object.keys(ref.solid ?? ref).map(rgbOf);
+  const lines = NEUTRAL.flatMap((a, i) => NEUTRAL.slice(i + 1).map(b => [a, b]));
+  return Object.entries(solid).filter(([key]) => lines.every(([a, b]) => distToLine(rgbOf(key), a, b) > TINT) && points.every(point => Math.hypot(...rgbOf(key).map((v, i) => v - point[i])) > TINT));
+};
+const bandTotal = (hist, ref) => tintedPixels(hist.solid, ref).reduce((sum, [, n]) => sum + n, 0);
+// The picture of ordinary text in an area: the same element with the class removed.
+const plainOf = async (page, selector, clip) => { await withoutClass(page, selector); const plain = await look(page, clip); await withClass(page, selector); return plain; };
 const surfaceOf = hist => rgbOf(Object.entries(hist).sort((a, b) => b[1] - a[1])[0][0]);
 const withoutClass = (page, selector) => page.locator(selector).evaluate(el => el.classList.remove('g2-ro-sweep'));
 const withClass = (page, selector) => page.locator(selector).evaluate(el => el.classList.add('g2-ro-sweep'));
 const top3 = hist => Object.entries(hist).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([k, n]) => `${k}:${n}`).join(' ');
 
 // ---- Acceptance 3: timing ----
-test('sweep: the animation is a 9s linear loop, and the band is over the glyphs for 3s or less (acceptance 3)', () => run('/tests/contract.html', {}, async page => {
+test('sweep: the animation is a 7s linear loop with no rest, and the first and last frames show no band (acceptance 3, ADR 0010 amendment)', () => run('/tests/contract.html', {}, async page => {
   await page.addStyleTag({ content: LARGE });
-  const timing = await page.evaluate(() => document.getAnimations().filter(a => a.animationName === 'g2-ro-sweep').map(a => { const t = a.effect.getComputedTiming(); return { id: a.effect.target.id, duration: t.duration, iterations: t.iterations, easing: t.easing, delay: t.delay }; }));
+  const timing = await page.evaluate(() => document.getAnimations().filter(a => a.animationName === 'g2-ro-sweep').map(a => { const t = a.effect.getComputedTiming(); return { id: a.effect.target.id, duration: t.duration, iterations: t.iterations, easing: t.easing, delay: t.delay, keyframes: a.effect.getKeyframes().map(k => k.backgroundPosition) }; }));
   assert.deepEqual(timing.map(t => t.id).sort(), ['sweep', 'sweep-title']);
-  for (const t of timing) assert.deepEqual([t.duration, t.iterations, t.easing, t.delay], [CYCLE, Infinity, 'linear', 0], `${t.id}: ${CYCLE}ms, linear, infinite, no delay`);
+  for (const t of timing) {
+    assert.deepEqual([t.duration, t.iterations, t.easing, t.delay], [CYCLE, Infinity, 'linear', 0], `${t.id}: ${CYCLE}ms, linear, infinite, no delay`);
+    assert.equal(t.keyframes.length, 2, `${t.id}: two keyframes`);
+  }
   // Real time: the animation runs and is not paused.
   const time = () => page.evaluate(() => document.getAnimations().find(a => a.animationName === 'g2-ro-sweep').currentTime);
   const before = await time();
   await page.waitForTimeout(1000);
   const advanced = (await time()) - before;
   assert.ok(advanced > 900 && advanced < 1400, `the animation advanced ${advanced.toFixed(0)}ms in 1000ms of real time`);
-  // Pixel sampling over one cycle for each host. The band is "over the glyphs" while tricolour pixels are on screen.
+  // Pixel sampling over one cycle for each host. The band is "over the glyphs" while tinted pixels are on screen.
   const results = {};
   for (const selector of HOSTS) {
     const clip = await clipOf(page, selector);
-    const rows = [];
-    for (let t = 0; t <= CYCLE; t += STEP) { await freeze(page, t); const hist = await look(page, clip); rows.push({ t, ...bandPixels(hist), total: bandTotal(hist) }); }
+    const plain = await plainOf(page, selector, clip), rows = [];
+    for (let t = 0; t <= CYCLE; t += STEP) { await freeze(page, t); const hist = await look(page, clip); rows.push({ t, total: bandTotal(hist, plain) }); }
     const on = rows.filter(r => r.total >= 5).map(r => r.t);
     assert.ok(on.length > 5, `${selector}: the band is visible in ${on.length} samples`);
     const crossing = on[on.length - 1] - on[0] + STEP;
-    assert.ok(crossing <= 3000, `${selector}: the band is over the glyphs from ${on[0]}ms to ${on[on.length - 1]}ms (${crossing}ms)`);
-    assert.ok(CYCLE - crossing >= 6000, `${selector}: the title rests for ${CYCLE - crossing}ms`);
+    assert.ok(crossing < CYCLE, `${selector}: the band is over the glyphs from ${on[0]}ms to ${on[on.length - 1]}ms (${crossing}ms)`);
     assert.deepEqual(on, Array.from({ length: on.length }, (_, i) => on[0] + i * STEP), `${selector}: the band crosses once, with no gap`);
     assert.equal(rows.at(0).total, 0, 'no band at the start of the cycle');
-    assert.equal(rows.at(-1).total, 0, 'no band at the end of the cycle: the next cycle starts at rest');
-    assert.ok(rows.some(r => r.blue > 20 && r.yellow > 20 && r.red > 20), `${selector}: the three colours show together`);
-    results[selector] = { firstMs: on[0], lastMs: on[on.length - 1], crossingMs: crossing, restMs: CYCLE - crossing };
+    assert.equal(rows.at(-1).total, 0, 'no band at the end of the cycle: the next cycle starts as it ends');
+    const mid = (on[0] + on[on.length - 1]) / 2, peak = rows.reduce((a, r) => r.total > a.total ? r : a);
+    results[selector] = { firstMs: on[0], lastMs: on[on.length - 1], crossingMs: crossing, middleMs: mid, peakMs: peak.t, peakTintedPixels: peak.total, plainMs: CYCLE - crossing };
   }
-  console.log(`Sweep timing, from pixels at ${STEP}ms steps over one ${CYCLE}ms cycle (band over the glyphs, then rest):`, JSON.stringify(results));
+  console.log(`Sweep timing, from pixels at ${STEP}ms steps over one ${CYCLE}ms cycle (tinted pixels over the glyphs):`, JSON.stringify(results));
 }));
 
 // ---- Acceptance 1: rest and the static frame ----
 for (const [name, path, options] of [['light', '/tests/contract.html', {}], ['dark', '/tests/contract.html?scheme=dark', {}], ['auto, with the system in dark mode', '/tests/contract.html?scheme=auto', { colorScheme: 'dark' }]]) {
-  test(`sweep: ${name} scheme: at rest and with the animation removed, every glyph has the colour of the host, at the real size and at 64px (acceptance 1)`, () => run(path, options, async page => {
+  test(`sweep: ${name} scheme: at rest and with the animation removed, every glyph has the colour of the host in the first frame (t=0), at the real size and at 64px (acceptance 1)`, () => run(path, options, async page => {
     const hostColour = channels(light['--g2-color-on-header']); // the header is dark, with white text, in both schemes
     const differences = {};
     for (const size of ['real', '64px']) {
@@ -219,8 +243,8 @@ for (const [name, path, options] of [['light', '/tests/contract.html', {}], ['da
         const computed = await page.locator(selector).evaluate(el => { const s = getComputedStyle(el), r = el.getBoundingClientRect(); return { color: s.color, clip: s.backgroundClip, name: s.animationName, box: [r.width, r.height] }; });
         assert.equal(computed.name, 'g2-ro-sweep');
         assert.equal(computed.clip, 'text', 'the browser uses the technique');
-        // Rest: the cycle is at 6s, long after the band left.
-        await freeze(page, 6000);
+        // The first frame of the cycle: the gradient is at 100% 0 and the band is outside the glyphs. There is no rest in the middle of the cycle.
+        await freeze(page, 0);
         const rest = await look(page, clip);
         await withoutClass(page, selector);
         const plain = await look(page, clip);
@@ -230,7 +254,7 @@ for (const [name, path, options] of [['light', '/tests/contract.html', {}], ['da
         const differing = distance(rest, plain);
         assert.ok(differing <= (size === 'real' ? 8 : 0), `${selector} ${size}: at rest ${differing} pixels differ from ordinary text (sweep ${top3(rest)}; plain ${top3(plain)})`);
         differences[`${selector} ${size}`] = differing;
-        assert.equal(bandTotal(rest), 0, `${selector} ${size}: no band at rest`);
+        assert.equal(bandTotal(rest, plain), 0, `${selector} ${size}: no band in the first frame`);
         assert.ok(plain[hostColour.join(',')] > 50, `${selector} ${size}: glyph pixels have the host colour ${hostColour.join(',')}`);
         assert.equal(computed.color, `rgb(${hostColour.join(', ')})`);
         assert.ok(ratio(hostColour, HEADER) >= 4.5, `${selector}: the rest colour has ${ratio(hostColour, HEADER).toFixed(2)}:1 on the header`);
@@ -239,9 +263,9 @@ for (const [name, path, options] of [['light', '/tests/contract.html', {}], ['da
         const removed = await page.addStyleTag({ content: '.g2-ro-sweep{animation:none!important}' });
         assert.equal(await sweepAnimations(page), 0);
         const frame = await look(page, clip);
-        assert.deepEqual(frame, rest, `${selector} ${size}: the static frame is the picture at rest`);
+        assert.deepEqual(frame, rest, `${selector} ${size}: the static frame is the picture at t=0`);
         assert.ok(distance(frame, plain) <= (size === 'real' ? 8 : 0), `${selector} ${size}: with the animation removed the pixels equal ordinary text`);
-        assert.equal(bandTotal(frame), 0, `${selector} ${size}: no band in the static frame`);
+        assert.equal(bandTotal(frame, plain), 0, `${selector} ${size}: no band in the static frame`);
         assert.equal(await page.locator(selector).evaluate(el => getComputedStyle(el).backgroundClip), 'text', 'the static frame is the clipped gradient, not a fallback');
         await removed.evaluate(el => el.remove());
       }
@@ -252,8 +276,7 @@ for (const [name, path, options] of [['light', '/tests/contract.html', {}], ['da
 }
 
 // ---- Acceptance 3: the worst moment of the band ----
-test('sweep: the contrast of each band colour, measured from pixels over the sweep, in both schemes, on the header and on the page (acceptance 3, ADR 0010)', async () => {
-  const documented = { blue: 1.54, yellow: 13.31, red: 3.48 }; // ADR 0010, on the header
+test('sweep: the contrast of the glyphs under the blended band, measured from pixels over a whole cycle, in both schemes, on the header and on the page (acceptance 3, ADR 0010)', async () => {
   const report = {};
   for (const [scheme, path, tokens] of [['light', '/tests/contract.html', light], ['dark', '/tests/contract.html?scheme=dark', dark]]) {
     await run(path, {}, async page => {
@@ -266,34 +289,34 @@ test('sweep: the contrast of each band colour, measured from pixels over the swe
       });
       for (const [surfaceName, selector, restColour, surface] of [['header', '#sweep', channels(tokens['--g2-color-on-header']), HEADER], ['page', '#surface-sweep', channels(tokens['--g2-color-text']), channels(tokens['--g2-color-page'])]]) {
         const clip = await clipOf(page, selector, 12);
-        const lowest = {};
-        let worst = { ratio: Infinity };
-        let seen = null;
-        for (let t = 0; t <= 3000; t += 100) {
+        const plainPoints = Object.keys((await plainOf(page, selector, clip)).solid).map(rgbOf);
+        let lowest = { ratio: Infinity }, tintedSamples = 0;
+        const below = new Set();
+        for (let t = 0; t <= CYCLE; t += 50) {
           await freeze(page, t);
-          const hist = await look(page, clip);
-          seen = surfaceOf(hist);
-          for (const [colour, n] of Object.entries(bandPixels(hist))) {
-            if (n < 20) continue;
-            const r = ratio(painted(hist, colour), seen);
-            lowest[colour] = Math.min(lowest[colour] ?? Infinity, r);
-            if (r < worst.ratio) worst = { ratio: r, t, colour };
+          const hist = (await look(page, clip)).solid;
+          assert.deepEqual(surfaceOf(hist), surface, `${scheme} ${surfaceName}: the surface behind the glyphs`);
+          const tinted = tintedPixels(hist, [surface, restColour, ...plainPoints]).filter(([, n]) => n >= 3); // a colour that many solid pixels share, so a single odd pixel does not count
+          if (tinted.length) tintedSamples++;
+          for (const [key] of tinted) {
+            const r = ratio(rgbOf(key), surface);
+            if (r < 4.5) below.add(t);
+            if (r < lowest.ratio) lowest = { ratio: r, t, colour: key };
           }
         }
-        assert.deepEqual(seen, surface, `${scheme} ${surfaceName}: the surface behind the glyphs`);
-        assert.deepEqual(Object.keys(lowest).sort(), ['blue', 'red', 'yellow'], `${scheme} ${surfaceName}: all three colours were measured`);
         const rest = ratio(restColour, surface);
         assert.ok(rest >= 4.5, `${scheme} ${surfaceName}: rest ${rest.toFixed(2)}:1`);
-        report[`${scheme} ${surfaceName}`] = { rest: rounded(rest), blue: rounded(lowest.blue), yellow: rounded(lowest.yellow), red: rounded(lowest.red), worst: `${worst.colour} at ${worst.t}ms, ${rounded(worst.ratio)}:1` };
-        for (const colour of Object.keys(TRICOLOUR)) assert.equal(rounded(lowest[colour]), rounded(ratio(TRICOLOUR[colour], surface)), `${scheme} ${surfaceName}: the painted ${colour} is the token colour`);
-        if (surfaceName === 'header') for (const colour of Object.keys(documented)) assert.equal(rounded(lowest[colour]), documented[colour], `ADR 0010: ${colour} on the header`);
-        if (scheme === 'light' && surfaceName === 'page') assert.equal(rounded(lowest.yellow), 1.47, 'ADR 0010: yellow on white');
+        assert.ok(tintedSamples > 20, `${scheme} ${surfaceName}: band-tinted glyph pixels in ${tintedSamples} samples`);
+        // The lowest token colour on this surface is the floor that the blend should not go below by much.
+        const floor = Math.min(...Object.values(TRICOLOUR).map(c => ratio(c, surface)));
+        report[`${scheme} ${surfaceName}`] = { rest: rounded(rest), lowest: rounded(lowest.ratio), at: `${lowest.t}ms rgb(${lowest.colour})`, lowestTokenColour: rounded(floor), samplesBelow45: below.size };
+        assert.ok(lowest.ratio < 4.5, `${scheme} ${surfaceName}: a band-tinted glyph pixel falls below 4.5:1 (lowest ${rounded(lowest.ratio)}:1)`);
+        assert.ok(lowest.ratio >= floor - 0.15, `${scheme} ${surfaceName}: the blend (${rounded(lowest.ratio)}:1) is not much lower than the lowest token colour (${rounded(floor)}:1)`);
       }
     });
   }
-  // The two deliberate deviations, measured: a band colour falls below 4.5:1 on every surface that the ADR names.
-  assert.ok(report['light header'].blue < 4.5 && report['light page'].yellow < 4.5 && report['dark header'].blue < 4.5 && report['dark page'].blue < 4.5);
-  console.log('Sweep contrast from pixels (rest = glyph colour at rest; then the contrast of each band colour; worst = the lowest, with the time):', JSON.stringify(report));
+  // The two deliberate deviations, measured: a glyph pixel falls below 4.5:1 on every surface that the ADR names.
+  console.log('Sweep contrast from solid glyph pixels over one cycle at 50ms steps (rest = host colour; lowest = lowest contrast of a band-tinted pixel against the surface):', JSON.stringify(report));
 });
 
 // ---- Acceptance 2: reduced motion ----
@@ -312,7 +335,7 @@ test('sweep: with prefers-reduced-motion: reduce no band appears at any time, an
         await withoutClass(page, selector);
         const plain = await look(page, clip);
         await withClass(page, selector);
-        shots.forEach((hist, i) => { assert.equal(bandTotal(hist), 0, `${selector}: no band at ${i * 600}ms`); assert.ok(same(hist, plain), `${selector}: the pixels equal ordinary text at ${i * 600}ms`); });
+        shots.forEach((hist, i) => { assert.equal(bandTotal(hist, plain), 0, `${selector}: no band at ${i * 600}ms`); assert.ok(same(hist, plain), `${selector}: the pixels equal ordinary text at ${i * 600}ms`); });
       }
     });
   }
@@ -336,7 +359,7 @@ test('sweep: forced colours and print show plain text (acceptance 5)', async () 
         const plain = await look(page, clip);
         await withClass(page, selector);
         assert.ok(same(shown, plain), `${label} ${selector}: the pixels equal ordinary text (${top3(shown)} against ${top3(plain)})`);
-        assert.equal(bandTotal(shown), 0, `${label} ${selector}: no band`);
+        assert.equal(bandTotal(shown, plain), 0, `${label} ${selector}: no band`);
         assert.ok(Object.values(shown).sort((a, b) => b - a)[1] > 100, `${label} ${selector}: the glyphs are painted`);
       }
     });
@@ -375,8 +398,9 @@ for (const [name, path] of [['light', '/tests/contract.html'], ['dark', '/tests/
   test(`sweep: ${name} scheme: keyboard focus on the host link shows the focus colours and every glyph, also in the middle of the band (acceptance 4)`, () => run(path, {}, async page => {
     await page.addStyleTag({ content: LARGE });
     const clip = await clipOf(page, '#sweep-link');
-    await freeze(page, 1500);
-    assert.ok(bandTotal(await look(page, clip)) > 200, 'the band is over the glyphs at 1500ms, before the focus');
+    const reference = await plainOf(page, '#sweep', clip);
+    await freeze(page, MID);
+    assert.ok(bandTotal(await look(page, clip), reference) > 200, 'the band is over the glyphs in the middle of the crossing, before the focus');
     for (const hover of [false, true]) {
       await page.mouse.move(0, 0);
       await keyboardFocus(page, '#sweep-link');
@@ -388,21 +412,21 @@ for (const [name, path] of [['light', '/tests/contract.html'], ['dark', '/tests/
       assert.ok(contrast(link.color, link.background) >= 4.5, `focus text ${contrast(link.color, link.background).toFixed(2)}:1`);
       const span = await page.locator('#sweep').evaluate(el => { const s = getComputedStyle(el); return { fill: s.webkitTextFillColor, image: s.backgroundImage, color: s.color }; });
       assert.deepEqual(span, { fill: 'rgb(11, 12, 12)', image: 'none', color: 'rgb(11, 12, 12)' }, 'the span paints the text and has no band');
-      await freeze(page, 1500);
+      await freeze(page, MID);
       const focused = await look(page, area);
       await withoutClass(page, '#sweep');
       const plain = await look(page, area);
       await withClass(page, '#sweep');
       assert.ok(same(focused, plain), `focus${hover ? ' and hover' : ''}: the pixels equal ordinary text on the focus colour (${top3(focused)} against ${top3(plain)})`);
-      assert.equal(bandTotal(focused), 0, 'no band while focused');
+      assert.equal(bandTotal(focused, plain), 0, 'no band while focused');
       assert.ok(focused['11,12,12'] > 500, `every glyph is ink on yellow (${focused['11,12,12']} ink pixels)`);
       if (!hover) console.log(`Sweep focus, ${name}: ${top3(focused)}; text ${contrast(link.color, link.background).toFixed(2)}:1 (ink on yellow)`);
     }
     // The band returns when the focus leaves, because the focus rule changes nothing else.
     await page.mouse.move(0, 0);
     await page.evaluate(() => document.activeElement.blur());
-    await freeze(page, 1500);
-    assert.ok(bandTotal(await look(page, await clipOf(page, '#sweep-link'))) > 200, 'the band is back after blur');
+    await freeze(page, MID);
+    assert.ok(bandTotal(await look(page, await clipOf(page, '#sweep-link')), reference) > 200, 'the band is back after blur');
   }));
 }
 
@@ -411,11 +435,11 @@ test('sweep: a focusable element that carries the class also shows plain text on
   await page.locator('#sweep-title').evaluate(el => el.setAttribute('tabindex', '0'));
   await keyboardFocus(page, '#sweep-title');
   const clip = await clipOf(page, '#sweep-title', 14);
-  await freeze(page, 1500);
+  await freeze(page, MID);
   const s = await page.locator('#sweep-title').evaluate(el => { const c = getComputedStyle(el); return { fill: c.webkitTextFillColor, bg: c.backgroundColor, image: c.backgroundImage }; });
   assert.deepEqual(s, { fill: 'rgb(11, 12, 12)', bg: 'rgb(255, 221, 0)', image: 'none' }, 'the standard focus colours, with no band');
   const hist = await look(page, clip);
-  assert.equal(bandTotal(hist), 0);
+  assert.equal(bandTotal(hist, [[255, 221, 0]]), 0);
   assert.ok(hist['11,12,12'] > 500, 'ink glyphs on yellow');
 }));
 
@@ -436,7 +460,7 @@ test('sweep: the accessible name of the host link is unchanged and the text can 
   await page.addStyleTag({ content: LARGE });
   await page.locator('#sweep-title').selectText();
   assert.equal(await page.evaluate(() => getSelection().toString()), 'Titlul paginii');
-  await freeze(page, 6000);
+  await freeze(page, 0);
   const clip = await clipOf(page, '#sweep-title', 0);
   const pair = hist => Object.entries(hist).sort((a, b) => b[1] - a[1]).slice(0, 2).map(([k]) => rgbOf(k)); // the selection fill, then the glyph colour
   const [bg, glyph] = pair(await look(page, clip));
@@ -522,7 +546,7 @@ if (artifacts) {
         test(`sweep: ${name} in the ${scheme} scheme at ${width}px is saved at rest and in the middle of the band, with the title inside the viewport`, () => run(path, { viewport: { width, height: 700 }, colorScheme: scheme }, async page => {
           if (name === 'fixture') await page.evaluate(scheme => document.documentElement.setAttribute('data-g2-scheme', scheme), scheme);
           await mkdir(artifacts, { recursive: true });
-          for (const [moment, ms] of [['rest', 6000], ['band', 1500]]) {
+          for (const [moment, ms] of [['rest', 0], ['band', MID]]) {
             await freeze(page, ms);
             if (name === 'guide') await page.evaluate(() => document.querySelector('#titlu-banda').scrollIntoView({ block: 'start' }));
             else await page.locator(selector).evaluate(el => el.scrollIntoView({ block: 'center' }));

@@ -105,21 +105,21 @@ Browser checks (acceptance 1 to 11 of brief 05):
 
 ### Title sweep (`tests/sweep.test.mjs`)
 
-The band is measured from pixels. A test pauses the CSS animation at a known time (`Animation.currentTime`), takes a screenshot of the title and counts the pixels of each tricolour colour in the PNG.
+The band is measured from pixels. A test pauses the CSS animation at a known time (`Animation.currentTime`), takes a screenshot of the title and finds the tinted pixels in the PNG. The band is blended into the host colour (ADR 0010 amendment), so a pixel is tinted when it is far from every mix of plain colours (the header, the page, the text) and from the colours of the same area with the class removed. The count reads only solid pixels (all four neighbours within 6 per channel), because the antialiased edge of 64px text has coloured fringes.
 "Plain" means the same element with the class removed: a check compares the pixels of the sweep with the pixels of ordinary text.
 Most checks run at the real size and at 64px, where the glyphs have interiors of one colour. `tests/contract.html` has the two documented hosts: a `.g2-wordmark` link and a title heading, each in a `.g2-header`. A real page uses the class once.
 
 Static checks read `gov2.css`, the documents and the guide: the decided names (`.g2-ro-sweep`, `g2-ro-sweep`) and no token with "sweep" in its name; the transparent fill is written once, inside `@supports`; the band reads the three tricolour tokens and `currentColor`;
-the cycle is 9s or more and the sweep keyframes last 3s or less; the static position is the first keyframe; the rule for forced colours and print; the focus rules. Every "never text" in `gov2.css`, `COMPONENTS.md`, `GUIDELINES.md`, `CLAUDE.md` and `AGENTS.md` names the exception.
+the loop is 7s linear infinite with two keyframes (`100% 0` to `0 0`) and the civtech gradient; the static position is the first keyframe; the rule for forced colours and print; the focus rules. Every "never text" in `gov2.css`, `COMPONENTS.md`, `GUIDELINES.md`, `CLAUDE.md` and `AGENTS.md` names the exception.
 `COMPONENTS.md` has the section, the markup, both deviations, the scope and the statement text; `GUIDELINES.md` has the checklist question. The guide has one live use, the markup, both deviations in Romanian, and contrast numbers that equal the ones that the tokens give. The changelog entry is found by its title ("Brief 06 (tricolour title sweep)"), not by the `## Unreleased` heading.
 
 Browser checks (acceptance 1 to 10 of brief 06):
 
-- **Acceptance 1.** At rest (the cycle at 6s) and with `animation: none !important` (the static frame), every solid glyph pixel has the host colour, and the picture equals ordinary text. This holds in the light scheme, the dark scheme and `auto` with the system in dark mode, for both hosts.
+- **Acceptance 1.** In the first frame (the cycle at t=0; there is no rest in the middle of the cycle) and with `animation: none !important` (the static frame), every solid glyph pixel has the host colour, and the picture equals ordinary text. This holds in the light scheme, the dark scheme and `auto` with the system in dark mode, for both hosts.
   At the real size, 3 pixels of the wordmark differ: the box of the span clips the faint antialiased edge of the last glyph. At 64px none differ.
 - **Acceptance 2.** With `prefers-reduced-motion: reduce`, no sweep animation runs, the computed style has no background, and four screenshots over 1.8s show no band and equal ordinary text. The control (no preference) runs both animations.
-- **Acceptance 3.** The animation timing is read from `getComputedTiming()` (9000ms, linear, infinite) and from real time (it advanced 1000ms in 1000ms). Pixel sampling at 100ms steps over one cycle gives the time that the band is over the glyphs, and checks that it crosses once, with no gap.
-  The contrast of each band colour is measured from the painted pixels, on the header and on the page, in both schemes, and compared with ADR 0010.
+- **Acceptance 3.** The animation timing is read from `getComputedTiming()` (7000ms, linear, infinite, two keyframes) and from real time (it advanced 1000ms in 1000ms). Pixel sampling at 100ms steps over one cycle gives the time that the band is over the glyphs (measured: from 200ms to 6800ms), checks that it crosses once with no gap, and checks that the first and the last frame show no band. The "middle of the band" in the other checks is 3500ms.
+  The contrast of the band-tinted solid glyph pixels is measured over a whole cycle at 50ms steps, on the header and on the page, in both schemes. The lowest value must be below 4.5:1 (the deviation exists) and not much below the lowest token colour (measured: equal to it, 1.54:1 or 1.47:1).
 - **Acceptance 4.** Keyboard focus, and focus plus hover, on the host link: yellow background, ink text (14.55:1), the span paints its text with no band, also when the animation is in the middle of the band, and the picture equals ordinary text on the focus colour. The band returns after blur. An element that carries the class and has `tabindex` shows plain text on focus too.
 - **Acceptance 5.** Forced-colour emulation (light and dark) and print emulation: no animation, no background, and the picture equals ordinary text.
 - **Acceptance 6.** Two simulations of a browser without `background-clip: text`: the `@supports` block removed from `gov2.css`, and a false `@supports` condition. The text is plain in both. A control checks that the real stylesheet makes the fill transparent.
@@ -177,7 +177,7 @@ Brief 08 (issue #10). The raw fixture `tests/contract.html` has a drop-down, an 
 
 ### Title sweep
 
-- Look at `.g2-ro-sweep` in Safari and Firefox: the band, the rest, the keyboard focus and the plain text in a browser without `background-clip: text`. The suite runs only in Chrome.
+- Look at `.g2-ro-sweep` in Safari and Firefox: the band, the first and last frame, the keyboard focus and the plain text in a browser without `background-clip: text`. The suite runs only in Chrome.
 - Select the title with the mouse in each browser. In Chrome the selected glyphs show through the selection colour, with less contrast than plain text: 3.18:1 against 4.74:1 on the default selection colours (64px, measured). Check the selection in a real project.
 - Open a page with the sweep in a screen reader: the link and the heading are read by their text, and nothing is read twice.
 - Check forced colours on a real Windows system, and a real print or PDF preview, with and without the print of background graphics.

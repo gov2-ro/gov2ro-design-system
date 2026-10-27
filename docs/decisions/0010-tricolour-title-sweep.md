@@ -59,3 +59,17 @@ These limit the deviations. They are requirements, not preferences:
 CLAUDE.md, AGENTS.md, GUIDELINES.md and COMPONENTS.md change "never text" to "never text, except `.g2-ro-sweep` (ADR 0010)".
 The review checklist asks whether a project that uses `.g2-ro-sweep` lists the deviations.
 This is a new component: a minor version without **Breaking**. Brief 06 implements it.
+
+## Amendment (2026-10-27): the civtech sweep
+
+The owner compared the 0.13.0 sweep with civtech.gov2.ro and chose the civtech effect exactly.
+The 0.13.0 band had hard edges, was narrow and crossed in 3 s, then rested for 6 s. civtech blends the colours, uses a wide tilted band and moves continuously.
+
+Changes to the decision:
+
+- The gradient is the civtech gradient: `linear-gradient(100deg, currentColor 0 34%, blue 42%, yellow 50%, red 58%, currentColor 66% 100%)`, 300% wide, with the DS tricolour tokens.
+- The animation is a continuous 7 s linear loop from `background-position: 100% 0` to `0 0`, with no rest.
+- The mitigations "the band crosses in at most 3 s" and "the full cycle is at least 9 s" are removed. The band is on part of the title for most of each cycle.
+
+Unchanged: the scope (one site title), both deviations, plain text in the static frame, under reduced motion, in forced colours, in print, on focus and without `background-clip: text`.
+The 1.4.3 deviation now applies for most of each cycle, not for 3 s in 9 s. Projects that use the class repeat this in their accessibility statement.

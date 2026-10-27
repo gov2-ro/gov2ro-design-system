@@ -918,7 +918,7 @@
 </details>
 <p class="guide-help">Antetul se rearanjează pe rânduri când lățimea nu ajunge. Navigarea rămâne vizibilă, fără JavaScript și fără buton de meniu. Fiecare link are o țintă de cel puțin 44px înălțime, iar etichetele lungi se rup pe mai multe rânduri. Pe o pagină reală, puneți <code>g2-header-in</code> și <code>g2-container</code> pe același element.</p>
 <h3 id="titlu-banda">Banda tricoloră pe titlu</h3>
-<p>Clasa <code>.g2-ro-sweep</code> este singurul text tricolor din sistem (ADR 0010). O bandă îngustă, albastră, galbenă și roșie, trece peste titlul site-ului, apoi titlul se oprește. Textul rămâne text: numele accesibil nu se schimbă, iar cititorul îl poate selecta.</p>
+<p>Clasa <code>.g2-ro-sweep</code> este singurul text tricolor din sistem (ADR 0010). O bandă lată, albastră, galbenă și roșie, trece mereu peste titlul site-ului, fără pauză. Textul rămâne text: numele accesibil nu se schimbă, iar cititorul îl poate selecta.</p>
 <div class="guide-demo">
 <header class="g2-header">
   <div class="g2-header-in g2-container">
@@ -936,16 +936,16 @@
 </pre>
 <button class="guide-copy" type="button" data-copy="code-sweep" hidden>Copiază codul</button>
 </details>
-<p class="guide-help">Ciclul durează 9 secunde. Banda traversează titlul în cel mult 3 secunde și stă circa 2 secunde peste litere. În restul ciclului, titlul are culoarea antetului. Titlul este text simplu, fără bandă, cu preferința de mișcare redusă, în culori forțate, la tipărire, într-un browser fără <code>background-clip: text</code> și cât timp linkul gazdă are focus de la tastatură. Pe pagină, folosiți clasa o singură dată.</p>
+<p class="guide-help">Efectul este cel de pe civtech.gov2.ro: o bandă lată și înclinată, cu culorile amestecate lin. Ciclul durează 7 secunde și se repetă fără pauză. Banda stă peste litere circa 6,7 secunde din cele 7; în primul și în ultimul cadru, titlul are culoarea antetului. Titlul este text simplu, fără bandă, cu preferința de mișcare redusă, în culori forțate, la tipărire, într-un browser fără <code>background-clip: text</code> și cât timp linkul gazdă are focus de la tastatură. Pe pagină, folosiți clasa o singură dată.</p>
 <div class="guide-callout" id="sweep-deviations">
 <p>
 <strong>Două abateri deliberate de la WCAG</strong>
 </p>
 <p><strong>1. WCAG 2.2.2 Pauză, oprire, ascundere (nivel A).</strong> Animația pornește singură, se repetă și nu are control de pauză. Singura oprire este preferința <code>prefers-reduced-motion: reduce</code>. Proprietarul a acceptat abaterea, pentru că animația este lentă și mică.</p>
-<p><strong>2. WCAG 1.4.3 Contrast minim (nivel AA).</strong> Cât timp banda trece peste o literă, litera poate avea sub 4,5:1. Pe antetul închis (<code>#0b0c0c</code>), segmentul albastru are 1,54:1, cel roșu 3,48:1 și cel galben 13,31:1. Pe fundal alb, segmentul galben are 1,47:1.</p>
+<p><strong>2. WCAG 1.4.3 Contrast minim (nivel AA).</strong> Cât timp banda trece peste o literă, litera poate avea sub 4,5:1, aproape tot timpul ciclului. Culorile pure ale benzii, pe antetul închis (<code>#0b0c0c</code>): albastru 1,54:1, roșu 3,48:1 și galben 13,31:1. Pe fundal alb, galbenul are 1,47:1. Amestecurile dintre ele nu coboară sub cea mai slabă culoare pură.</p>
 <p><strong>Domeniul excepției.</strong> Un singur element inline, care conține numai titlul, în <code>.g2-wordmark</code> sau într-un titlu din <code>.g2-header</code>. O singură dată pe pagină. Nu pe text de corp, nu pe linkuri din conținut și nu pe o stare. Banda nu poartă informație.</p>
 <p><strong>Cine nu o folosește.</strong> Un proiect care trebuie să respecte WCAG 2.1 sau 2.2 nivel AA nu folosește <code>.g2-ro-sweep</code>.</p>
-<p><strong>Declarația de accesibilitate.</strong> Un proiect care folosește clasa notează ambele abateri. Text propus: „Titlul site-ului arată o bandă tricoloră care trece peste text la fiecare 9 secunde. Utilizatorul nu poate opri banda; o oprește setarea sistemului pentru mișcare redusă. Cât timp banda trece peste o literă, contrastul literei poate fi sub 4,5:1. Aceasta este o abatere de la criteriile WCAG 2.2.2 (nivel A) și 1.4.3 (nivel AA).”</p>
+<p><strong>Declarația de accesibilitate.</strong> Un proiect care folosește clasa notează ambele abateri. Text propus: „Titlul site-ului arată o bandă tricoloră care se mișcă continuu peste text, într-un ciclu de 7 secunde. Utilizatorul nu poate opri banda; o oprește setarea sistemului pentru mișcare redusă. Cât timp banda trece peste o literă, contrastul literei poate fi sub 4,5:1. Aceasta este o abatere de la criteriile WCAG 2.2.2 (nivel A) și 1.4.3 (nivel AA).”</p>
 </div>
 <div class="guide-demo">
 <div id="notice-example">

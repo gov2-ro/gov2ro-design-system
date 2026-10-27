@@ -1,5 +1,28 @@
 # Activity
 
+## 2026-10-27 — The civtech sweep (tests and documents; ADR 0010 amendment, 0.16.0)
+
+**Done**
+- The maintainer (Opus) changed `gov2.css` (`.g2-ro-sweep`, keyframes `g2-ro-sweep`) to the civtech effect. I did not change the CSS values. I adapted tests and documents.
+- `tests/sweep.test.mjs`: the static timing check now asserts a 7s linear infinite loop, exactly two keyframes (`100% 0` to `0 0`), the civtech gradient, and a static position equal to the first keyframe. The "crossing at most 3s" and "rest at least 6s" assertions are gone. The timing check keeps pixel sampling over one cycle, asserts no band in the first and the last frame, and logs the band time. "At rest" checks use t=0 and the static frame, with strict pixel equality kept. The contrast check samples a whole cycle at 50ms steps and measures the lowest contrast of band-tinted solid glyph pixels. Focus checks and screenshots use the measured middle of the crossing (3500ms) instead of 1500ms, and the rest screenshot uses t=0.
+- New band detector. The band is blended, so exact-token pixel counts no longer work. A pixel is "tinted" when it is solid (all four neighbours within 6 per channel) and far (more than 12) from every mix of the neutral header, page and text colours and from the colours of the same area with the class removed.
+- Documents: `COMPONENTS.md` (*Title sweep*), the guide (`docs/index.html`, the Romanian text and the accessibility statement), `docs/testing.md`, `docs/migration-from-0.6.0.md` (*Changes after 0.15.0: the civtech sweep*), `CHANGELOG.md` (`## Unreleased`), `docs/BACKLOG.md` (review item). `GUIDELINES.md` states no timing, so it did not change.
+- Not touched: `gov2.css`, `docs/decisions/`, `docs/briefs/`, `CLAUDE.md`, `AGENTS.md`, `docs/compat-analysis.md`, consumers, the archive (SHA-256 `3cdbe56f…1952`, checked). No commit, no tag, no version change.
+
+**Hard**
+- Chrome (channel `chrome`), command `PLAYWRIGHT_CHANNEL=chrome npm test`.
+- Measured, 100ms steps, 64px text: the band (at least 5 tinted solid pixels) is over the glyphs from 200ms to 6800ms in both hosts, so 6.7s of each 7s cycle, with no gap. Frames at 0ms and 7000ms show no band. The middle is 3500ms; the peak is at 3600ms (6,202 tinted pixels in the wordmark, 4,788 in the heading).
+- Measured, t=0 and the static frame (animation removed), light, dark and `auto`+dark: pixels that differ from ordinary text are 3 at the real size in the wordmark (the clipped antialiased edge of the last glyph, as before), 0 in the heading, 0 at 64px. The 100deg slant tints no pixel in the first frame.
+- Measured, lowest contrast of band-tinted solid glyph pixels against the surface, over a whole cycle (50ms steps): light header 1.54:1 (rgb 0,43,126 at 2650ms); light page 1.47:1 (rgb 252,209,23 at 1800ms); dark header 1.54:1; dark page 1.54:1 (rgb 0,43,127 at 2650ms). Rest: 19.59:1 on the header, 17.52:1 on the dark page. The lowest value equals the lowest pure token colour, so the blends are never worse than blue or yellow. Samples with a pixel below 4.5:1: 112 of 141 on the header (5.6s of 7s), 91 on the light page (4.55s), 113 on the dark page. The deviation therefore applies for most of each cycle.
+- Wrong turn 1: I counted tricolour pixels by exact colour, as the old test did. The blend makes that useless. Wrong turn 2: I defined a tinted pixel as "off the line between surface and host colour". It counted 6,204 pixels in plain text, because the 64px glyph edge has coloured fringes, and because the fixture has a blue neighbour (`11,61,145`). Fix: read only solid pixels and exclude the colours of the plain picture.
+- Assumed, not measured: Safari and Firefox. The ADR amendment claims plain text in six cases; the suite checks all six in Chrome only.
+
+**Decided**
+- Maintainer review (Opus): looked at the dark guide screenshot mid-band; it matches civtech. Released as 0.16.0, a minor version, because the ADR 0010 amendment changes the spec. No class or token changed, so nothing is breaking.
+- The band time threshold is 5 tinted solid pixels in the whole title. A lower threshold would read the soft edge of the band as band time; a higher one would shorten the figure. The number is a measurement of this detector, not a perceptual claim.
+- The contrast check asserts that the lowest value is below 4.5:1 (the deviation exists) and not more than 0.15 below the lowest token colour. The alternative, exact equality with the tokens, would fail if a blend were ever lower, and it would hide that. The tolerance catches a regression and the report shows the number.
+- Docs say "about 6.7s of each 7s cycle". The measured figure has 100ms resolution.
+
 ## 2026-10-27 — Select control (brief 08, 0.15.0)
 
 **Done**
