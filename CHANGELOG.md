@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.17.1 — 2026-10-27 (proposal, untested)
+
+**Fixed**
+- `README.md`, *Dev mode*: when jsDelivr does not know a new tag yet, use the full commit SHA of the tag.
+
 ## 0.17.0 — 2026-10-27 (proposal, untested)
 
 **Added**

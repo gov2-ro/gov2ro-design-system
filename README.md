@@ -75,7 +75,8 @@ While a project is in development, it can load the DS from jsDelivr instead of a
 - Use an exact tag. Do not use `@main`: jsDelivr caches a branch for up to 12 hours, and a branch changes under the page.
 - The fonts load from the same tag, because `fonts.css` finds `fonts/` with relative URLs. jsDelivr sends `Access-Control-Allow-Origin: *`, so the fonts load from another origin.
 - A jsDelivr link is a third-party request. For production, copy the files from a tag (above). Do not ship a jsDelivr link in production.
-- Request a tag only after it is pushed. jsDelivr caches a failed request, and the URL can stay 404 for hours.
+- Request a tag only after it is pushed. jsDelivr caches a failed request and its list of tags, so a new tag can return 404 ("Failed to fetch version info") for hours.
+  Until it works, use the full commit SHA of the tag instead of the tag name: `git rev-parse vX.Y.Z^{commit}`. A commit SHA never changes, like a tag.
 
 Loading the stylesheet applies the base styles to the whole page. No activation attribute or wrapper is needed.
 The page is light by default. To opt in to the dark scheme, set `data-g2-scheme="auto"` (follows the reader's setting) or `data-g2-scheme="dark"` on `<html>`.

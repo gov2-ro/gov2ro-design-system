@@ -8,6 +8,8 @@
 **Hard**
 - jsDelivr cached the 404 of `@v0.16.0`, requested while the repository was still private. A purge did not clear it: `@v0.16.0/gov2.css` stayed 404, while `@v0.15.0`, the full commit SHA and `@main` returned 200 `text/css`. A font file returned 200 `font/woff2` with `Access-Control-Allow-Origin: *`. Measured 2026-10-27.
 
+- After the push, `@v0.17.0/gov2.css` returned 200 `text/css`, but `@v0.17.0/fonts.css` and the font files returned 404 "Failed to fetch version info", also after a purge. The data API said "Couldn't find version 0.17.0": jsDelivr still held its tag list from before the push. The full commit SHA returned 200 for `fonts.css`. Documented the SHA fallback in 0.17.1.
+
 **Decided**
 - Dev mode only, with exact tags. A jsDelivr link is a third-party request, and org and stiri ship no third-party requests. Production keeps the copy from a tag.
 
