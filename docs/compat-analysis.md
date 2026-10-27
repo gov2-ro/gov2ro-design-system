@@ -58,6 +58,20 @@ The session read the project only and changed no files. The report targets the 0
 | Tricolour title treatment | M | Issue #2 (`ds-proposal`), opened 2026-10-26. Conflicts with "tricolour is never text" |
 | Patterns: choropleth and legend, multi-select filter, responsive filter bar, tree, breadcrumbs, tabs, data table, source badges, detail dialog | L | Contributed candidates for `patterns/`. Breadcrumbs and tables now have two projects (stiri, org) |
 
+### Adoption of 0.13.0 (2026-10-27)
+
+Relayed by the g2-org session. Commit `36c089f`, tag `v0.16.0` in `institutii-publice`. Not published; the owner reviews first.
+
+- **Install:** `git archive v0.13.0 gov2.css fonts.css fonts` into `explorer/assets/gov2/`, unedited (equal to the tag). Measured.
+- **Uses:** `data-g2-scheme="auto"`, `.g2-header`, `.g2-ro-corner`, `.g2-wordmark` with `.g2-ro-sweep`, `.g2-nav`, `.g2-btn`, `.g2-secondary`, `.g2-input`, `.g2-tag`, `.g2-footer`, `.g2-container`. The accessibility statement lists both ADR 0010 deviations.
+- **Checklist:** headless Chromium, 5 views, light and dark, 1280 and 375px. No text below 4.5:1 in the first screen, no overflow, no third-party request, Inter renders, focus visible on 14 tab stops in both schemes. Measured. Not checked: forced colours, 200% zoom, screen reader.
+- **Findings for the DS:**
+  1. A reset in `app` (`button, select, input { font: inherit; color: inherit }`) beats `.g2-btn` and `gov2.states`. In dark, a focused `.g2-btn.g2-secondary` showed light text on yellow. org fixed it with `:where(button, select, input):not(.g2-btn, .g2-input)`. Measured. DS action: name this case in the migration document, next to "a project rule in app that sets colour on a focusable control".
+  2. No DS style for `<select>`; org copies `.g2-input`. stiri asked for the same (proposal 10). Two projects: issue opened.
+  3. The wrapping `.g2-nav` makes the header about 190px tall at 375px (wordmark, nav, utilities). org makes only its filter bar sticky. DS action: a note on sticky headers in `COMPONENTS.md`.
+  4. DS sizes raise list rows from 53 to 73px (1280) and from 75 to 125px (375). The owner's choice; recorded.
+- org commented on #3, #5 and #6: it has local breadcrumbs, a data table and a summary list.
+
 ### Owner decisions for org (2026-10-26)
 
 Relayed by the g2-org session after the report.
