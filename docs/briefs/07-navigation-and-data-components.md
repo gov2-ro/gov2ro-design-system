@@ -1,6 +1,6 @@
 # Brief 07: Navigation and data components
 
-Status: Ready for implementation after brief 06 lands. The owner approved issues #3–#8 on 2026-10-27.
+Status: Implemented in 0.14.0. The owner approved issues #3–#8 on 2026-10-27.
 Briefs 05 and 06 also edit `gov2.css` and the suite. Start from the commit that releases brief 06.
 
 ## Problem and outcome

@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.14.0 — 2026-10-27 (proposal, untested)
+
+Brief 07 (navigation and data components). Issues #3 to #8, approved by the owner. Nothing here is a breaking change: no token or class is renamed or removed, and no existing element computes a different style (the one exception is the deliberate fix under **Fixed**).
+
+**Added**
+- `.g2-breadcrumbs` on a `<nav>` with an `<ol>`: a `/` separator in the faint text colour with an empty text alternative (not announced), a bold current item (`aria-current="page"`, not a link) that wraps and is never truncated, and links with a target of about 39px.
+- `.g2-pagination` on a `<nav>`: a position line and a list of links with a 44px by 44px target. The current numbered link (`aria-current="page"`) has a border and bold text, and the system selection colours in forced colours. An absent previous or next link is left out.
+- `.g2-table` on a `<table>`, with `.g2-table-wrap` (a scroll container: document `tabindex="0"`, `role="region"` and an accessible name), `.g2-table-stacked` (one row as a block below 45em, with `data-label` shown above each value; the header row stays in the accessibility tree) and `.g2-cell-num` (right-aligned, tabular figures). A `<caption>` or an accessible name, and `scope` on every header cell, are required.
+- `.g2-summary-list` on a `<dl>` with one `<div>` for each row: a 14px muted label, one rule between rows, and rows that stack when the list is narrower than about 27rem. A long value wraps.
+- `.g2-skip-link`: invisible until it has focus, then the standard focus treatment. The target needs `id` and `tabindex="-1"`.
+- `--g2-color-highlight-bg` (light `#fff7bf`, dark `#5c4d00`) and a base rule for `mark` (text colour `--g2-color-text`; 18.01:1 light and 7.46:1 dark; system `Mark` colours in forced colours).
+- The live guide: section 13, *Navigare, tabele și liste de date*, with a demonstration and copyable markup for each piece, and a 360px frame that shows the stacked table. A row for the highlight in the dark contrast table.
+- `tests/navigation.test.mjs`, and the new pieces in `tests/contract.html`.
+
+**Changed**
+- Both example pages use `.g2-skip-link`, breadcrumbs and `tabindex="-1"` on `main`. The directory page has pagination and highlights the search word with `mark`. The form page uses `.g2-summary-list`. `ex-skip` and `ex-facts` are removed from `examples.css`; the guide uses `.g2-skip-link` and `guide-skip` is removed.
+- `COMPONENTS.md` and `GUIDELINES.md` document the pieces. The *Not in the DS yet* list keeps tabs.
+- `tests/scheme.test.mjs`: the comparison with the 0.11.0 stylesheet removes the new pieces and `mark` from both documents first, because the old stylesheet has no rule for them (and their height changes the style of their parents). Every other element must still match.
+
+**Fixed**
+- A focused element with `tabindex="-1"` that is not a control (for example `<main tabindex="-1">` after a skip link) no longer gets the yellow focus fill. A link, a button, a field and an element with a widget role keep the standard focus treatment. The scrollable `.g2-table-wrap` shows an outline and an inner ring, not a fill.
+
 ## 0.13.0 — 2026-10-27 (proposal, untested)
 
 Brief 06 (tricolour title sweep). ADR 0010 records the decision and its two deliberate WCAG deviations. Nothing here is a breaking change: no token or class is renamed or removed, and no existing element computes a different style.

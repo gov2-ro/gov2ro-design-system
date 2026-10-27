@@ -43,6 +43,10 @@ The container, with its gutter, must fit a 320px viewport.
 - Let the header and navigation wrap. Wrapping keeps every link visible and needs no script. A disclosure menu adds an interaction that a page may not need.
 - Make navigation targets large enough to use. 44px high is a good aim. Do not clip a long label.
 - Show the current page in the navigation with `aria-current="page"`. Do not rely on one visual cue: forced colours can remove a shadow.
+- Put a skip link (`.g2-skip-link`) first on every page, and give `main` an `id` and `tabindex="-1"`. Put breadcrumbs (`.g2-breadcrumbs`) after the header on a page below the home page.
+- Use pagination (`.g2-pagination`) for long lists. Leave out a previous or next link that does not exist; do not show it disabled.
+- Use `.g2-table` for tabular data and `.g2-summary-list` for label and value pairs. Prefer the summary list for one record, and the table for many records with the same columns. Give a table a caption.
+- Highlight a matched search word with `<mark>`, not with a focus-like yellow. Keep the highlight to the matched words.
 - Put the source and the date of verification next to a figure. Label demonstration data as demonstration data.
 
 ## Fields and errors
@@ -130,6 +134,7 @@ Icon-only controls need an accessible name; visible text often helps recognition
 6. Do disabled, selected, error and empty states communicate their meaning?
 7. Are departures from the defaults useful and consistent within the project?
 8. If the project uses `.g2-ro-sweep`, does its accessibility statement list both deviations (WCAG 2.2.2 and 1.4.3), and does the class sit only on the site title?
+9. Is the skip link the first focusable element, and does it move focus to `main`? Does each data table have a caption, and does a wide table sit in a named, focusable `.g2-table-wrap`?
 
 ## Patterns from projects
 

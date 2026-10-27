@@ -18,7 +18,7 @@ test('archive is linked and labels the preserved guide as historical', () => wit
   const hash = createHash('sha256').update(await snapshot.body()).digest('hex');
   assert.equal(hash, '3cdbe56f9a4bec755eb6b03e7c44344b38d5e0009a48dc2e89b3116607451952');
   await page.getByRole('link', { name: 'Înapoi la ghidul viu' }).click();
-  assert.equal(await page.locator('main section').count(), 16);
+  assert.equal(await page.locator('main section').count(), 17);
 }));
 
 test('archived original still renders its bundled reference content', () => withPage(async page => {
@@ -65,7 +65,7 @@ test('no duplicate IDs, broken fragment links, missing local links or missing la
 }));
 
 test('guide reads without JavaScript and code remains available in native details', () => withPage(async page => {
-  assert.equal(await page.locator('main section').count(), 16);
+  assert.equal(await page.locator('main section').count(), 17);
   const details = page.locator('details').first();
   await details.locator('summary').click();
   assert.ok(await details.locator('pre').isVisible());
@@ -238,7 +238,7 @@ const statuses = ['neutral', 'info', 'progress', 'warning', 'success', 'danger']
 // Tokens added after 0.8.0: the type scale, the spacing scale and the gutter (brief 04), and four colour tokens for the dark scheme (brief 05).
 const foundationTokens = ['--g2-font-size-heading-page', '--g2-font-size-heading-section', '--g2-font-size-heading-item', '--g2-font-size-body', '--g2-font-size-meta', '--g2-font-size-label',
   '--g2-line-height-heading', '--g2-line-height-body', '--g2-gutter', '--g2-space-1', '--g2-space-2', '--g2-space-3', '--g2-space-4', '--g2-space-5', '--g2-space-6', '--g2-space-7',
-  '--g2-color-on-solid', '--g2-color-action-secondary-hover', '--g2-color-control-bg', '--g2-color-ro-blue-ring'];
+  '--g2-color-on-solid', '--g2-color-action-secondary-hover', '--g2-color-control-bg', '--g2-color-ro-blue-ring', '--g2-color-highlight-bg'];
 // Files that describe the current API. History (changelog, activity, ADRs, briefs, migration) may name old identifiers.
 const currentFiles = ['gov2.css', 'COMPONENTS.md', 'GUIDELINES.md', 'README.md', 'AGENTS.md', 'CLAUDE.md', 'patterns/README.md', 'docs/index.html', 'docs/guide.css', 'docs/guide.js',
   'docs/archive/index.html', 'docs/project-block.md', 'docs/connect-a-project.md', 'docs/testing.md', 'tests/contract.html',

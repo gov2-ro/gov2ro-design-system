@@ -32,6 +32,11 @@ See `decisions/0001-shared-system-boundary.md` and `briefs/README.md` for the se
 - [ ] Tell the projects that `docs/project-block.md` changed again (one line on `data-g2-scheme`). org replaces its local dark overrides with `data-g2-scheme="auto"` when the release reaches it. Publishing is separate.
 - [x] Implement brief 06: the tricolour title sweep (`## Unreleased` in `CHANGELOG.md`). `.g2-ro-sweep` and the keyframes `g2-ro-sweep` in `gov2.components`, its focus rule in `gov2.states`, no new token, `tests/sweep.test.mjs`, both hosts in `tests/contract.html`, a guide demonstration with both deviations in Romanian, and "never text, except `.g2-ro-sweep` (ADR 0010)" in `CLAUDE.md`, `AGENTS.md`, `GUIDELINES.md`, `COMPONENTS.md` and `gov2.css`. All 10 acceptance checks have executable assertions except the manual ones in `testing.md`. Opus reviews it, then bumps the version and tags.
 - [x] Review brief 06 (Opus): kept the reduced-motion wrapper and the self-focus selector, accepted the band geometry and the 3-pixel antialias clip, recorded selected-text contrast (3.18:1) under the ADR 0010 contrast deviation, updated the tricolour rows of the migration document, and made the scrollbar check skip on overlay scrollbars. Released as 0.13.0.
+- [x] Implement brief 07: navigation and data components (`## Unreleased` in `CHANGELOG.md`). `.g2-breadcrumbs`, `.g2-pagination`, `.g2-table` with `.g2-table-wrap`, `.g2-table-stacked` and `.g2-cell-num`, `.g2-summary-list`, `.g2-skip-link`, `--g2-color-highlight-bg` with a `mark` rule, and the `tabindex="-1"` focus-fill fix. `tests/navigation.test.mjs`, the new pieces in `tests/contract.html`, a guide section, both example pages updated. All 7 acceptance checks have executable assertions except the manual ones in `testing.md`. Opus reviews it, then bumps the version and tags.
+- [x] Issues #3 (breadcrumbs), #4 (pagination), #5 (data table), #6 (summary list), #7 (skip link and focus fill), #8 (highlight token): implemented in brief 07. Close each issue when the release is published. Publishing is separate. Released in 0.14.0.
+- [x] Review brief 07 (Opus): accepted the names, the dark highlight `#5c4d00` (7.46:1 with text), no focus indicator on a non-control `tabindex="-1"` target (as GOV.UK does for `main`), the 45em stack width with explicit roles in the documented markup, and pagination as a position `<p>` plus a `<ul>` of links. Released as 0.14.0.
+- [ ] Tell the projects (stiri, org) that the pieces exist, so that they replace `.st-crumbs`, `.st-pager`, `.st-table`, `.st-dl`, `.st-skip` and `.crumbs` and the local `mark` colour. Publishing is separate.
+- [ ] Manual checks not done for brief 07: a screen reader on the stacked table (Safari and Firefox drop table semantics under `display: block` without explicit roles; only Chrome was measured), the skip link and the table wrapper in Safari and Firefox, real forced colours on Windows. See `testing.md`.
 - [ ] Tell the projects (org, civtech) that `.g2-ro-sweep` exists, with the two deviations to list in their accessibility statements. They adopt it after the release. Publishing is separate.
 - [ ] Manual dark-scheme checks not done for brief 05: Safari, Firefox, a real phone with the system dark mode, native controls of a real project, real forced colours on Windows, the paint before the stylesheet loads. See `testing.md`, *Dark colour scheme*.
 - [ ] Manual font checks not done for brief 03: Safari and Firefox rendering of the variable Inter file, a machine without Inter, a real host below a subpath with its real Content-Security-Policy header. See `testing.md`, *Fonts*.
@@ -76,6 +81,7 @@ Items:
   - Conflicts are now with `--g2-*` and the layers: all project CSS is unlayered, and a local `:focus-visible` replaces the DS focus. The project moves its CSS into `@layer app`.
   - [-] Shared compact density. Not needed: the owner chose the DS sizes for org (2026-10-26).
   - [ ] Owner decisions relayed 2026-10-26: DS fonts (brief 03 is implemented; org waits for the release), DS sizes, local dark mode until issue #1, no tricolour text. The org adoption brief waits for a release.
+  - [x] Adopted 0.13.0 on 2026-10-27 (`compat-analysis.md`). Findings: reset-in-`app` focus case documented in the migration document; sticky-header note in `COMPONENTS.md`; select control is issue #10 (needs owner approval).
 - [x] Issue #1, dark colour scheme for the `--g2-color-*` tokens (org; civtech assumed). Approved by the owner (ADR 0009), implemented in brief 05 (`## Unreleased`). org adopts it with `data-g2-scheme="auto"` after the release.
 - [x] Issue #2, tricolour title treatment (org, civtech). The owner chose the sweep on the text (option 2) and accepted two deviations (ADR 0010). Implemented in brief 06 (`## Unreleased`). Open until Opus reviews it and the release reaches org and civtech. Released in 0.13.0.
 - [x] Cross-project questions: Do the projects need dark mode? Yes: org has one, civtech is assumed to have one. The DS ships it (brief 05). (The Google Fonts question is closed: brief 03 removes the import and the DS ships local fonts.)
@@ -121,13 +127,14 @@ Found while writing `COMPONENTS.md`. Each gap is also listed in `COMPONENTS.md` 
 - [x] Layout for `.g2-nav` and `.g2-footer`: wrapping header, wrapping navigation, `.g2-footer-in` (Unreleased, brief 04).
 - [ ] Classes for `textarea`, `select`, checkboxes and radios. Outside brief 04: neither example page needs them. Decide with the next concrete task.
 - [ ] A core error summary. The form example has a local composition (`ex-summary`); promote it when a second project needs it.
-- [ ] A core skip link. The example pages have a local one (`ex-skip`).
+- [~] A core skip link: `.g2-skip-link` (Unreleased, brief 07, issue #7). Done when Opus accepts and releases it.
 - [ ] Icon buttons, complex filters and charts (deferred by ADR 0007).
 - [ ] A hover state for `.g2-btn.g2-danger`.
 - [x] Dark mode: opt-in with `data-g2-scheme` (Unreleased, brief 05).
 - [ ] A sequential colour ramp for maps, with dark values (org has its own; a separate proposal, ADR 0009).
 - [ ] The tricolour blue (`#002b7f`) is 1.54:1 against the dark page, so the blue third of `.g2-ro-bar` and `.g2-dash` is hard to see on a dark page. Not changed (ADR 0009). A change needs a separate decision.
-- [ ] Tables, pagination, breadcrumbs, tabs and summary lists. The directory example shows five results with no pagination and a single detail page. Breadcrumbs and tables now have two projects (stiri, org); see `compat-analysis.md`. Each one needs owner approval.
+- [x] Tables, pagination, breadcrumbs and summary lists: implemented in brief 07 (issues #3 to #6, 0.14.0). Done when Opus accepts and releases them.
+- [ ] Tabs. Still not in the DS.
 
 Follow-ups from brief 04 (measured or decided in `ACTIVITY.md`):
 
@@ -142,7 +149,7 @@ Follow-ups from brief 04 (measured or decided in `ACTIVITY.md`):
 Defects found during brief 01. They existed in 0.7.0. The migration did not change them, by design: a rendering correction is separate work.
 
 - [ ] A disabled `.g2-btn` still changes its background on hover (measured: primary `#00703c` to `#005a30`, secondary `#f3f2f1` to `#dbdad9`, at 50% opacity). Guard the hover rules with `:not(:disabled)`.
-- [ ] The general `:focus-visible` rule gives any focused element the yellow background. Measured: `<main tabindex="-1">` after a skip-link activation turns fully yellow. Whole-site activation makes this more likely. Decide how to limit it (for example, exclude `[tabindex="-1"]`).
+- [x] The general `:focus-visible` rule gave any focused element the yellow background (`<main tabindex="-1">` after a skip link). Fixed in brief 07 (Unreleased): a `tabindex="-1"` container that is not a control gets no fill. A control, a link and a widget role keep it.
 - [x] Some components used colour literals where a token role exists: `#fff`, `#dbdad9` and `#3a5aa0`. They are tokens now (`--g2-color-on-solid`, `--g2-color-action-secondary-hover`, `--g2-color-control-bg`, `--g2-color-ro-blue-ring`) and `.g2-nav a` reads `--g2-color-on-header` (Unreleased, brief 05). A static test fails on a colour literal in any component rule.
 - [x] The class `.g2-btn.g2-warning` is red (destructive), but the status `warning` is yellow. The owner approved a new name: `.g2-btn.g2-danger`, with no alias (issue #9, 0.11.0).
 

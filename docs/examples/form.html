@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="examples.css">
 </head>
 <body>
-  <a class="ex-skip" href="#continut">Sari la conținut</a>
+  <a class="g2-skip-link" href="#continut">Sari la conținut</a>
   <header class="g2-header">
     <span class="g2-ro-corner" aria-hidden="true"></span>
     <div class="g2-header-in g2-container">
@@ -24,7 +24,14 @@
     </div>
   </header>
 
-  <main class="g2-container ex-main ex-stack" id="continut">
+  <main class="g2-container ex-main ex-stack" id="continut" tabindex="-1">
+    <nav class="g2-breadcrumbs" aria-label="Navigare">
+      <ol>
+        <li><a class="g2-link-quiet" href="../index.html#inceput">Acasă</a></li>
+        <li><a class="g2-link-quiet" href="directory.html">Căutare instituții</a></li>
+        <li aria-current="page">Casa Județeană de Pensii Bacău</li>
+      </ol>
+    </nav>
     <h1 class="g2-heading-page">Propune o corecție pentru Casa Județeană de Pensii Bacău</h1>
 
     <div class="g2-notice" role="region" aria-labelledby="demo-titlu">
@@ -36,15 +43,15 @@
 
     <section class="ex-stack" id="sursa-datelor" aria-labelledby="inregistrare-titlu">
       <h2 class="g2-heading-section" id="inregistrare-titlu">Înregistrarea din set</h2>
-      <dl class="ex-facts">
-        <div><dt class="g2-text-meta">Cod înregistrare</dt><dd class="g2-mono">DEMO-BC-0156</dd></div>
-        <div><dt class="g2-text-meta">Tip</dt><dd>Casă de pensii</dd></div>
-        <div><dt class="g2-text-meta">Județ</dt><dd>Bacău</dd></div>
-        <div><dt class="g2-text-meta">Posturi vacante</dt><dd>3</dd></div>
-        <div><dt class="g2-text-meta">Contact</dt><dd><a class="g2-link-quiet" href="mailto:secretariat.cjp.bacau@casa-de-pensii-demo.example">secretariat.cjp.bacau@casa-de-pensii-demo.example</a></dd></div>
-        <div><dt class="g2-text-meta">Stare</dt><dd><strong class="g2-tag" data-tone="warning">Date incomplete</strong></dd></div>
-        <div><dt class="g2-text-meta">Sursă</dt><dd>Set demonstrativ gov2, fără date reale</dd></div>
-        <div><dt class="g2-text-meta">Verificat la</dt><dd><time datetime="2026-10-17">17 octombrie 2026</time></dd></div>
+      <dl class="g2-summary-list">
+        <div><dt>Cod înregistrare</dt><dd class="g2-mono">DEMO-BC-0156</dd></div>
+        <div><dt>Tip</dt><dd>Casă de pensii</dd></div>
+        <div><dt>Județ</dt><dd>Bacău</dd></div>
+        <div><dt>Posturi vacante</dt><dd>3</dd></div>
+        <div><dt>Contact</dt><dd><a class="g2-link-quiet" href="mailto:secretariat.cjp.bacau@casa-de-pensii-demo.example">secretariat.cjp.bacau@casa-de-pensii-demo.example</a></dd></div>
+        <div><dt>Stare</dt><dd><strong class="g2-tag" data-tone="warning">Date incomplete</strong></dd></div>
+        <div><dt>Sursă</dt><dd>Set demonstrativ gov2, fără date reale</dd></div>
+        <div><dt>Verificat la</dt><dd><time datetime="2026-10-17">17 octombrie 2026</time></dd></div>
       </dl>
       <p class="g2-text-meta">Pe o pagină reală, sursa are numele ei și un link, iar data verificării stă lângă cifra pe care o susține. <a class="g2-link-quiet" href="directory.html#sursa-datelor">Vedeți modelul de atribuire.</a></p>
     </section>

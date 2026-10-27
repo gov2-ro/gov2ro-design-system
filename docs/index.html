@@ -12,7 +12,7 @@
 </script>
 </head>
 <body id="inceput">
-  <a class="guide-skip" href="#continut">Sari la conținut</a>
+  <a class="g2-skip-link" href="#continut">Sari la conținut</a>
   <header class="guide-topbar">
     <div class="guide-shell guide-topbar-in">
 <div>
@@ -89,16 +89,19 @@
 <a href="#pagina">12 · Pagină și exemple</a>
 </li>
 <li>
-<a href="#identitate">13 · Identitate</a>
+<a href="#navigare">13 · Navigare și date</a>
 </li>
 <li>
-<a href="#utilizare">14 · Utilizare</a>
+<a href="#identitate">14 · Identitate</a>
 </li>
 <li>
-<a href="#verificare">15 · Verificare</a>
+<a href="#utilizare">15 · Utilizare</a>
 </li>
 <li>
-<a href="#propuneri">16 · În lucru</a>
+<a href="#verificare">16 · Verificare</a>
+</li>
+<li>
+<a href="#propuneri">17 · În lucru</a>
 </li>
 </ol>
 <small>Exemple HTML reale.<br>Fără pas de generare.</small>
@@ -408,6 +411,7 @@
 <tr data-fg="--g2-color-danger-solid" data-bg="--g2-color-surface" data-min="4.5"><td><code>danger-solid</code> / <code>surface</code></td><td>5,82:1</td><td>Textul unei erori într-un panou</td></tr>
 <tr data-fg="--g2-color-text" data-bg="--g2-color-action-secondary-hover" data-min="4.5"><td><code>text</code> / <code>action-secondary-hover</code></td><td>10,96:1</td><td>Butonul secundar la hover</td></tr>
 <tr data-fg="--g2-color-text" data-bg="--g2-color-neutral-bg" data-min="4.5"><td><code>text</code> / <code>neutral-bg</code></td><td>11,94:1</td><td>Chip la hover</td></tr>
+<tr data-fg="--g2-color-text" data-bg="--g2-color-highlight-bg" data-min="4.5"><td><code>text</code> / <code>highlight-bg</code></td><td>7,46:1</td><td>Cuvânt evidențiat cu <code>&lt;mark&gt;</code></td></tr>
 <tr data-fg="--g2-color-on-link" data-bg="--g2-color-link" data-min="4.5"><td><code>on-link</code> / <code>link</code></td><td>9,70:1</td><td>Text pe un fundal în culoarea linkului</td></tr>
 </tbody>
 </table>
@@ -992,19 +996,230 @@
 <h3>Compoziția locală a exemplelor</h3>
 <p>Aranjarea paginilor este în <a href="examples/examples.css">examples.css</a>, în stratul <code>app</code>, cu prefixul <code>ex-</code>. Regulile așază componentele; nu le schimbă aspectul și nu ascund depășirile. Un proiect copiază ce îi trebuie și își schimbă prefixul.</p>
 <ul>
-<li><code>ex-skip</code>: linkul „Sari la conținut”, ascuns până primește focus.</li>
 <li><code>ex-main</code>, <code>ex-stack</code>, <code>ex-tight</code>: ritmul vertical al paginii.</li>
 <li><code>ex-state</code>: cadrul unui exemplu de stare, cu etichetă deasupra.</li>
 <li><code>ex-search</code>, <code>ex-grow</code>: câmpul de căutare ia lățimea liberă, butonul trece pe rândul următor când nu încape.</li>
 <li><code>ex-chips</code>, <code>ex-results</code>, <code>ex-result</code>, <code>ex-meta</code>: filtre, lista de rezultate și metadatele lor.</li>
-<li><code>ex-facts</code>: înregistrarea de detaliu, într-o grilă care încape în lățimea disponibilă.</li>
 <li><code>ex-summary</code>: rezumatul de erori. Este o compoziție locală, nu o componentă core.</li>
 <li><code>ex-form</code>, <code>ex-fields</code>, <code>ex-actions</code>: lățimea de citire, spațiul dintre câmpuri și rândul de acțiuni.</li>
 <li><code>ex-links</code>: linkurile din subsol, pe rânduri care se rup.</li>
 </ul>
 </section>
-<section class="guide-section" id="identitate" aria-labelledby="title-identitate">
+<section class="guide-section" id="navigare" aria-labelledby="title-navigare">
 <span class="guide-number">13</span>
+<h2 id="title-navigare">Navigare, tabele și liste de date</h2>
+<p>Șase piese opționale pentru pagini de detaliu și de rezultate. Fiecare folosește tokenii existenți și nu cere JavaScript.</p>
+
+<h3 id="skip-link">Link de salt la conținut</h3>
+<p><code>.g2-skip-link</code> este primul element focusabil al paginii. Rămâne invizibil până primește focus, apoi arată tratamentul standard de focus. Activarea lui mută focusul pe conținutul principal. Ghidul acesta îl folosește: apăsați Tab o dată, de la începutul paginii.</p>
+<div class="guide-demo">
+<p class="guide-demo-label">Linkul de salt al acestei pagini este primul stop de Tab. Aici nu îl repetăm, ca să nu existe două.</p>
+<p class="guide-caption">Ținta (<code>main</code>) are <code>id</code> și <code>tabindex="-1"</code>. Când primește focus, nu se umple cu galben: nu este un control.</p>
+</div>
+<details class="guide-code">
+<summary>Markup HTML</summary>
+<pre>
+<code id="code-skip">&lt;a class=&quot;g2-skip-link&quot; href=&quot;#continut&quot;&gt;Sari la conținut&lt;/a&gt;
+&lt;header class=&quot;g2-header&quot;&gt;…&lt;/header&gt;
+&lt;main id=&quot;continut&quot; tabindex=&quot;-1&quot;&gt;…&lt;/main&gt;</code>
+</pre>
+<button class="guide-copy" type="button" data-copy="code-skip" hidden>Copiază codul</button>
+</details>
+
+<h3 id="breadcrumbs">Breadcrumbs</h3>
+<p><code>.g2-breadcrumbs</code> stă pe un <code>&lt;nav&gt;</code> cu un <code>&lt;ol&gt;</code>. Pagina curentă are <code>aria-current="page"</code> și nu este link. Un titlu curent lung trece pe mai multe rânduri; nu este tăiat. Separatorul <code>/</code> este conținut generat, cu text alternativ gol: cititorul de ecran nu îl rostește.</p>
+<div class="guide-demo">
+<nav class="g2-breadcrumbs" id="crumbs-demo" aria-label="Navigare, exemplu">
+  <ol>
+    <li><a class="g2-link-quiet" href="#inceput">Acasă</a></li>
+    <li><a class="g2-link-quiet" href="#navigare">Surse</a></li>
+    <li aria-current="page">Comunicate de presă ale Înaltei Curți de Casație și Justiție privind hotărârile pronunțate în ședința de la sfârșitul lunii octombrie</li>
+  </ol>
+</nav>
+</div>
+<details class="guide-code">
+<summary>Markup HTML</summary>
+<pre>
+<code id="code-crumbs">&lt;nav class=&quot;g2-breadcrumbs&quot; aria-label=&quot;Navigare&quot;&gt;
+  &lt;ol&gt;
+    &lt;li&gt;&lt;a class=&quot;g2-link-quiet&quot; href=&quot;/&quot;&gt;Acasă&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a class=&quot;g2-link-quiet&quot; href=&quot;/surse/&quot;&gt;Surse&lt;/a&gt;&lt;/li&gt;
+    &lt;li aria-current=&quot;page&quot;&gt;Comunicate de presă ale instanței supreme&lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/nav&gt;</code>
+</pre>
+<button class="guide-copy" type="button" data-copy="code-crumbs" hidden>Copiază codul</button>
+</details>
+
+<h3 id="pagination">Paginare</h3>
+<p><code>.g2-pagination</code> stă pe un <code>&lt;nav&gt;</code>. Linkurile sunt linkuri obișnuite, cu o țintă de cel puțin 44px, nu butoane. Pagina curentă dintre linkurile numerotate are <code>aria-current="page"</code>. Un link „Înapoi” sau „Înainte” care nu există se omite; nu se arată ca link dezactivat.</p>
+<div class="guide-demo">
+<nav class="g2-pagination" id="pagination-demo" aria-label="Paginare, exemplu">
+  <p>Pagina <span class="g2-mono">2</span> din <span class="g2-mono">12</span></p>
+  <ul>
+    <li><a rel="prev" href="#pagination">Înapoi</a></li>
+    <li><a href="#pagination" aria-label="Pagina 1">1</a></li>
+    <li><a href="#pagination" aria-current="page" aria-label="Pagina 2">2</a></li>
+    <li><a href="#pagination" aria-label="Pagina 3">3</a></li>
+    <li><a rel="next" href="#pagination">Înainte</a></li>
+  </ul>
+</nav>
+</div>
+<details class="guide-code">
+<summary>Markup HTML</summary>
+<pre>
+<code id="code-pagination">&lt;nav class=&quot;g2-pagination&quot; aria-label=&quot;Paginare rezultate&quot;&gt;
+  &lt;p&gt;Pagina &lt;span class=&quot;g2-mono&quot;&gt;2&lt;/span&gt; din &lt;span class=&quot;g2-mono&quot;&gt;12&lt;/span&gt;&lt;/p&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;a rel=&quot;prev&quot; href=&quot;?pagina=1&quot;&gt;Înapoi&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;?pagina=1&quot; aria-label=&quot;Pagina 1&quot;&gt;1&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;?pagina=2&quot; aria-current=&quot;page&quot; aria-label=&quot;Pagina 2&quot;&gt;2&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;?pagina=3&quot; aria-label=&quot;Pagina 3&quot;&gt;3&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a rel=&quot;next&quot; href=&quot;?pagina=3&quot;&gt;Înainte&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/nav&gt;</code>
+</pre>
+<button class="guide-copy" type="button" data-copy="code-pagination" hidden>Copiază codul</button>
+</details>
+
+<h3 id="summary-list">Listă de rezumat</h3>
+<p><code>.g2-summary-list</code> stă pe un <code>&lt;dl&gt;</code>, cu un <code>&lt;div&gt;</code> pentru fiecare rând. Eticheta (<code>dt</code>) și valoarea (<code>dd</code>) rămân asociate. Când lista este îngustă, rândul se așază pe două linii. O valoare lungă trece pe rândul următor.</p>
+<div class="guide-demo">
+<dl class="g2-summary-list" id="summary-demo">
+  <div><dt>Cod înregistrare</dt><dd class="g2-mono">DEMO-BC-0156</dd></div>
+  <div><dt>Verificat la</dt><dd><time datetime="2026-10-17">17 octombrie 2026</time></dd></div>
+  <div><dt>Contact</dt><dd>secretariat.cjp.bacau@casa-de-pensii-demo.example</dd></div>
+</dl>
+</div>
+<details class="guide-code">
+<summary>Markup HTML</summary>
+<pre>
+<code id="code-summary">&lt;dl class=&quot;g2-summary-list&quot;&gt;
+  &lt;div&gt;&lt;dt&gt;Cod înregistrare&lt;/dt&gt;&lt;dd class=&quot;g2-mono&quot;&gt;DEMO-BC-0156&lt;/dd&gt;&lt;/div&gt;
+  &lt;div&gt;&lt;dt&gt;Verificat la&lt;/dt&gt;&lt;dd&gt;&lt;time datetime=&quot;2026-10-17&quot;&gt;17 octombrie 2026&lt;/time&gt;&lt;/dd&gt;&lt;/div&gt;
+  &lt;div&gt;&lt;dt&gt;Contact&lt;/dt&gt;&lt;dd&gt;secretariat.cjp.bacau@casa-de-pensii-demo.example&lt;/dd&gt;&lt;/div&gt;
+&lt;/dl&gt;</code>
+</pre>
+<button class="guide-copy" type="button" data-copy="code-summary" hidden>Copiază codul</button>
+</details>
+
+<h3 id="table">Tabel de date</h3>
+<p><code>.g2-table</code> stă pe un <code>&lt;table&gt;</code>. Un tabel are un <code>&lt;caption&gt;</code> sau un nume accesibil. Fiecare celulă de antet are <code>scope</code>. Celula numerică are <code>.g2-cell-num</code>: cifre tabulare, aliniate la dreapta. <code>.g2-table-wrap</code> derulează un tabel lat în interiorul paginii. Ca regiune derulabilă, are nevoie de <code>tabindex="0"</code>, <code>role="region"</code> și un nume accesibil, ca să se poată derula de la tastatură.</p>
+<div class="guide-demo">
+<div class="g2-table-wrap" id="table-wrap-demo" role="region" aria-label="Instituții și posturi vacante" tabindex="0">
+  <table class="g2-table" id="table-demo">
+    <caption>Instituții și posturi vacante (date demonstrative)</caption>
+    <thead>
+      <tr><th scope="col">Instituție</th><th scope="col">Tip</th><th scope="col" class="g2-cell-num">Posturi vacante</th><th scope="col">Verificat la</th></tr>
+    </thead>
+    <tbody>
+      <tr><th scope="row">Casa Județeană de Pensii Bacău</th><td data-label="Tip">Casă de pensii</td><td class="g2-cell-num" data-label="Posturi vacante">3</td><td data-label="Verificat la">17.10.2026</td></tr>
+      <tr><th scope="row">Inspectoratul Școlar Județean Bacău</th><td data-label="Tip">Inspectorat școlar</td><td class="g2-cell-num" data-label="Posturi vacante">9</td><td data-label="Verificat la">19.10.2026</td></tr>
+      <tr><th scope="row">Direcția Generală de Asistență Socială și Protecția Copilului Bacău</th><td data-label="Tip">Direcție generală</td><td class="g2-cell-num" data-label="Posturi vacante">21</td><td data-label="Verificat la">12.10.2026</td></tr>
+    </tbody>
+  </table>
+</div>
+</div>
+<details class="guide-code">
+<summary>Markup HTML</summary>
+<pre>
+<code id="code-table">&lt;div class=&quot;g2-table-wrap&quot; role=&quot;region&quot; aria-label=&quot;Instituții și posturi vacante&quot; tabindex=&quot;0&quot;&gt;
+  &lt;table class=&quot;g2-table&quot;&gt;
+    &lt;caption&gt;Instituții și posturi vacante (date demonstrative)&lt;/caption&gt;
+    &lt;thead&gt;
+      &lt;tr&gt;&lt;th scope=&quot;col&quot;&gt;Instituție&lt;/th&gt;&lt;th scope=&quot;col&quot;&gt;Tip&lt;/th&gt;&lt;th scope=&quot;col&quot; class=&quot;g2-cell-num&quot;&gt;Posturi vacante&lt;/th&gt;&lt;th scope=&quot;col&quot;&gt;Verificat la&lt;/th&gt;&lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+      &lt;tr&gt;&lt;th scope=&quot;row&quot;&gt;Casa Județeană de Pensii Bacău&lt;/th&gt;&lt;td data-label=&quot;Tip&quot;&gt;Casă de pensii&lt;/td&gt;&lt;td class=&quot;g2-cell-num&quot; data-label=&quot;Posturi vacante&quot;&gt;3&lt;/td&gt;&lt;td data-label=&quot;Verificat la&quot;&gt;17.10.2026&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;th scope=&quot;row&quot;&gt;Inspectoratul Școlar Județean Bacău&lt;/th&gt;&lt;td data-label=&quot;Tip&quot;&gt;Inspectorat școlar&lt;/td&gt;&lt;td class=&quot;g2-cell-num&quot; data-label=&quot;Posturi vacante&quot;&gt;9&lt;/td&gt;&lt;td data-label=&quot;Verificat la&quot;&gt;19.10.2026&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;th scope=&quot;row&quot;&gt;Direcția Generală de Asistență Socială și Protecția Copilului Bacău&lt;/th&gt;&lt;td data-label=&quot;Tip&quot;&gt;Direcție generală&lt;/td&gt;&lt;td class=&quot;g2-cell-num&quot; data-label=&quot;Posturi vacante&quot;&gt;21&lt;/td&gt;&lt;td data-label=&quot;Verificat la&quot;&gt;12.10.2026&lt;/td&gt;&lt;/tr&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/div&gt;</code>
+</pre>
+<button class="guide-copy" type="button" data-copy="code-table" hidden>Copiază codul</button>
+</details>
+
+<h3 id="table-stacked">Tabel stivuit pe ecran îngust</h3>
+<p><code>.g2-table-stacked</code> arată fiecare rând ca un bloc sub 45em (720px la o rădăcină de 16px). Antetul de coloană rămâne în arborele de accesibilitate, ascuns vizual, iar fiecare celulă își arată eticheta din <code>data-label</code>. Chrome păstrează semantica de tabel când elementele devin <code>display: block</code>; alte motoare o pot pierde. De aceea markupul de mai jos are roluri explicite, care nu strică nimic în Chrome. Previzualizarea are 360px lățime, sub pragul de 45em.</p>
+<div class="guide-demo">
+<div class="g2-table-wrap" id="stacked-wrap-demo" role="region" aria-label="Instituții și posturi, tabel stivuit" tabindex="0">
+<table class="g2-table g2-table-stacked" id="stacked-demo" role="table">
+  <caption>Instituții și posturi vacante, tabel stivuit (date demonstrative)</caption>
+  <thead role="rowgroup">
+    <tr role="row"><th scope="col" role="columnheader">Instituție</th><th scope="col" role="columnheader" class="g2-cell-num">Posturi vacante</th></tr>
+  </thead>
+  <tbody role="rowgroup">
+    <tr role="row"><th scope="row" role="rowheader">Casa Județeană de Pensii Bacău</th><td class="g2-cell-num" data-label="Posturi vacante" role="cell">3</td></tr>
+    <tr role="row"><th scope="row" role="rowheader">Inspectoratul Școlar Județean Bacău</th><td class="g2-cell-num" data-label="Posturi vacante" role="cell">9</td></tr>
+  </tbody>
+</table>
+</div>
+<p class="guide-caption">Tabelul de mai sus are modificatorul. La această lățime este un tabel obișnuit; pe un ecran sub 45em se stivuiește. Previzualizarea de mai jos arată lățimea de 360px.</p>
+</div>
+<div class="guide-demo">
+<iframe class="guide-preview guide-preview-narrow" id="preview-stacked" title="Previzualizare a unui tabel stivuit, 360px lățime" srcdoc="&lt;!doctype html&gt;
+&lt;html lang=&quot;ro&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;title&gt;Tabel stivuit&lt;/title&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;../gov2.css&quot;&gt;
+&lt;style&gt;@layer app{body{padding:var(--g2-space-4)}}&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class=&quot;g2-table-wrap&quot; role=&quot;region&quot; aria-label=&quot;Instituții și posturi vacante&quot; tabindex=&quot;0&quot;&gt;
+  &lt;table class=&quot;g2-table g2-table-stacked&quot; role=&quot;table&quot;&gt;
+    &lt;caption&gt;Instituții și posturi vacante (date demonstrative)&lt;/caption&gt;
+    &lt;thead role=&quot;rowgroup&quot;&gt;
+      &lt;tr role=&quot;row&quot;&gt;&lt;th scope=&quot;col&quot; role=&quot;columnheader&quot;&gt;Instituție&lt;/th&gt;&lt;th scope=&quot;col&quot; role=&quot;columnheader&quot;&gt;Tip&lt;/th&gt;&lt;th scope=&quot;col&quot; class=&quot;g2-cell-num&quot; role=&quot;columnheader&quot;&gt;Posturi vacante&lt;/th&gt;&lt;th scope=&quot;col&quot; role=&quot;columnheader&quot;&gt;Verificat la&lt;/th&gt;&lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody role=&quot;rowgroup&quot;&gt;
+      &lt;tr role=&quot;row&quot;&gt;&lt;th scope=&quot;row&quot; role=&quot;rowheader&quot;&gt;Casa Județeană de Pensii Bacău&lt;/th&gt;&lt;td data-label=&quot;Tip&quot; role=&quot;cell&quot;&gt;Casă de pensii&lt;/td&gt;&lt;td class=&quot;g2-cell-num&quot; data-label=&quot;Posturi vacante&quot; role=&quot;cell&quot;&gt;3&lt;/td&gt;&lt;td data-label=&quot;Verificat la&quot; role=&quot;cell&quot;&gt;17.10.2026&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr role=&quot;row&quot;&gt;&lt;th scope=&quot;row&quot; role=&quot;rowheader&quot;&gt;Inspectoratul Școlar Județean Bacău&lt;/th&gt;&lt;td data-label=&quot;Tip&quot; role=&quot;cell&quot;&gt;Inspectorat școlar&lt;/td&gt;&lt;td class=&quot;g2-cell-num&quot; data-label=&quot;Posturi vacante&quot; role=&quot;cell&quot;&gt;9&lt;/td&gt;&lt;td data-label=&quot;Verificat la&quot; role=&quot;cell&quot;&gt;19.10.2026&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr role=&quot;row&quot;&gt;&lt;th scope=&quot;row&quot; role=&quot;rowheader&quot;&gt;Direcția Generală de Asistență Socială și Protecția Copilului Bacău&lt;/th&gt;&lt;td data-label=&quot;Tip&quot; role=&quot;cell&quot;&gt;Direcție generală&lt;/td&gt;&lt;td class=&quot;g2-cell-num&quot; data-label=&quot;Posturi vacante&quot; role=&quot;cell&quot;&gt;21&lt;/td&gt;&lt;td data-label=&quot;Verificat la&quot; role=&quot;cell&quot;&gt;12.10.2026&lt;/td&gt;&lt;/tr&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;"></iframe>
+</div>
+<details class="guide-code">
+<summary>Markup HTML</summary>
+<pre>
+<code id="code-table-stacked">&lt;div class=&quot;g2-table-wrap&quot; role=&quot;region&quot; aria-label=&quot;Instituții și posturi vacante&quot; tabindex=&quot;0&quot;&gt;
+  &lt;table class=&quot;g2-table g2-table-stacked&quot; role=&quot;table&quot;&gt;
+    &lt;caption&gt;Instituții și posturi vacante (date demonstrative)&lt;/caption&gt;
+    &lt;thead role=&quot;rowgroup&quot;&gt;
+      &lt;tr role=&quot;row&quot;&gt;&lt;th scope=&quot;col&quot; role=&quot;columnheader&quot;&gt;Instituție&lt;/th&gt;&lt;th scope=&quot;col&quot; role=&quot;columnheader&quot;&gt;Tip&lt;/th&gt;&lt;th scope=&quot;col&quot; class=&quot;g2-cell-num&quot; role=&quot;columnheader&quot;&gt;Posturi vacante&lt;/th&gt;&lt;th scope=&quot;col&quot; role=&quot;columnheader&quot;&gt;Verificat la&lt;/th&gt;&lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody role=&quot;rowgroup&quot;&gt;
+      &lt;tr role=&quot;row&quot;&gt;&lt;th scope=&quot;row&quot; role=&quot;rowheader&quot;&gt;Casa Județeană de Pensii Bacău&lt;/th&gt;&lt;td data-label=&quot;Tip&quot; role=&quot;cell&quot;&gt;Casă de pensii&lt;/td&gt;&lt;td class=&quot;g2-cell-num&quot; data-label=&quot;Posturi vacante&quot; role=&quot;cell&quot;&gt;3&lt;/td&gt;&lt;td data-label=&quot;Verificat la&quot; role=&quot;cell&quot;&gt;17.10.2026&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr role=&quot;row&quot;&gt;&lt;th scope=&quot;row&quot; role=&quot;rowheader&quot;&gt;Inspectoratul Școlar Județean Bacău&lt;/th&gt;&lt;td data-label=&quot;Tip&quot; role=&quot;cell&quot;&gt;Inspectorat școlar&lt;/td&gt;&lt;td class=&quot;g2-cell-num&quot; data-label=&quot;Posturi vacante&quot; role=&quot;cell&quot;&gt;9&lt;/td&gt;&lt;td data-label=&quot;Verificat la&quot; role=&quot;cell&quot;&gt;19.10.2026&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr role=&quot;row&quot;&gt;&lt;th scope=&quot;row&quot; role=&quot;rowheader&quot;&gt;Direcția Generală de Asistență Socială și Protecția Copilului Bacău&lt;/th&gt;&lt;td data-label=&quot;Tip&quot; role=&quot;cell&quot;&gt;Direcție generală&lt;/td&gt;&lt;td class=&quot;g2-cell-num&quot; data-label=&quot;Posturi vacante&quot; role=&quot;cell&quot;&gt;21&lt;/td&gt;&lt;td data-label=&quot;Verificat la&quot; role=&quot;cell&quot;&gt;12.10.2026&lt;/td&gt;&lt;/tr&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/div&gt;</code>
+</pre>
+<button class="guide-copy" type="button" data-copy="code-table-stacked" hidden>Copiază codul</button>
+</details>
+
+<h3 id="highlight">Evidențierea unui cuvânt</h3>
+<p>Elementul <code>&lt;mark&gt;</code> primește fără clasă tokenul <code>--g2-color-highlight-bg</code>: <code>#fff7bf</code> în schema deschisă, <code>#5c4d00</code> în cea întunecată. Textul păstrează culoarea textului (peste 4,5:1 în ambele scheme). Galbenul de focus rămâne rezervat tastaturii: evidențierea are altă nuanță.</p>
+<div class="guide-demo">
+<p id="mark-demo">Casa Județeană de Pensii <mark>Bacău</mark> publică datele lunar.</p>
+</div>
+<details class="guide-code">
+<summary>Markup HTML</summary>
+<pre>
+<code id="code-mark">&lt;p&gt;Casa Județeană de Pensii &lt;mark&gt;Bacău&lt;/mark&gt; publică datele lunar.&lt;/p&gt;</code>
+</pre>
+<button class="guide-copy" type="button" data-copy="code-mark" hidden>Copiază codul</button>
+</details>
+
+</section>
+<section class="guide-section" id="identitate" aria-labelledby="title-identitate">
+<span class="guide-number">14</span>
 <h2 id="title-identitate">Identitate opțională</h2>
 <p>Tricolorul și logoul sunt opționale. Mărcile sunt decorative: nu explică o stare și nu înlocuiesc numele proiectului.</p>
 <div class="guide-demo">
@@ -1082,7 +1297,7 @@
 <p class="guide-help">Simbolul geometric este doar demonstrativ. Un SVG cu <code>currentColor</code> preia culoarea textului; <code>.g2-logo</code> îl afișează la 28px înălțime.</p>
 </section>
 <section class="guide-section" id="utilizare" aria-labelledby="title-utilizare">
-<span class="guide-number">14</span>
+<span class="guide-number">15</span>
 <h2 id="title-utilizare">Folosiți fișierul distribuit</h2>
 <p>Copiați din același tag exact <code>gov2.css</code>, <code>fonts.css</code> și folderul <code>fonts/</code>, și păstrați-le nemodificate. Puneți compoziția și variațiile locale într-un fișier al proiectului.</p>
 <div class="guide-install">
@@ -1162,7 +1377,7 @@ git -C &quot;$DS&quot; archive &quot;$TAG&quot; gov2.css fonts.css fonts | tar -
 <p class="guide-help">Variațiile locale pot adapta spațiul, densitatea și amplasarea. Verificați contrastul, focusul și hover împreună cu focus după modificare: o regulă de proiect poate suprascrie culorile de focus.</p>
 </section>
 <section class="guide-section" id="verificare" aria-labelledby="title-verificare">
-<span class="guide-number">15</span>
+<span class="guide-number">16</span>
 <h2 id="title-verificare">Verificați comportamentul, nu doar aspectul</h2>
 <ol class="guide-checklist">
 <li>Parcurgeți pagina cu Tab și Shift+Tab. Focusul trebuie să rămână vizibil, inclusiv pe nume și în navigare.</li>
@@ -1175,11 +1390,11 @@ git -C &quot;$DS&quot; archive &quot;$TAG&quot; gov2.css fonts.css fonts | tar -
 <p class="guide-help">Testele automate nu înlocuiesc cititorul de ecran sau verificarea manuală a istoricului linkurilor. <a href="testing.md">Procedura și limitele verificării</a> sunt documentate separat.</p>
 </section>
 <section class="guide-section" id="propuneri" aria-labelledby="title-propuneri">
-<span class="guide-number">16</span>
+<span class="guide-number">17</span>
 <h2 id="title-propuneri">În lucru, separat de componentele disponibile</h2>
 <div class="guide-proposals">
 <h3>Propuneri, nu API disponibil</h3>
-<p>Textarea, select, checkbox și radio cu contract vizual, tabele, paginare, breadcrumbs, taburi, grafice, filtre complexe, butoane cu icoană și o rampă secvențială pentru hărți.</p>
+<p>Textarea, select, checkbox și radio cu contract vizual, taburi, grafice, filtre complexe, butoane cu icoană și o rampă secvențială pentru hărți.</p>
 <p>Prima etapă aprobată este implementată: containerul, spațierea, scara tipografică, compoziția antetului și subsolului și câmpurile complete. Ea este verificată pe <a href="examples/directory.html">o pagină de rezultate</a> și <a href="examples/form.html">una de formular/detaliu</a>. Fiecare nevoie nouă se înregistrează în <code>BACKLOG.md</code> înainte să devină componentă.</p>
 </div>
 <p>Biblioteca de <a href="../patterns/README.md">patterns</a> este definită, dar încă goală. Un tipar poate porni într-un proiect și deveni comun când nevoia se repetă.</p>

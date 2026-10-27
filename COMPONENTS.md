@@ -59,6 +59,7 @@ Length and font tokens are plain values, not RGB channels. Override a token in y
 | Actions | `--g2-color-action`, `--g2-color-action-hover`, `--g2-color-action-shadow`, `--g2-color-action-secondary-shadow`, `--g2-color-action-secondary-hover`, `--g2-color-danger-solid`, `--g2-color-danger-shadow`, `--g2-color-on-solid` | Buttons. `--g2-color-action-secondary-hover` is the hover background of the secondary button. `--g2-color-danger-solid` is also the colour of error text and the error bar. `--g2-color-on-solid` is the text colour on a saturated fill: the primary and danger buttons and the title band of a notice. |
 | Focus | `--g2-color-focus`, `--g2-color-on-focus` | Focus state only. |
 | Status | `--g2-color-success-solid` and the 18 tone tokens in the table under *Tags* | Tags and status panels. `--g2-color-success-solid` is a solid success fill; no component reads it. |
+| Highlight | `--g2-color-highlight-bg` | The background of a matched word in `mark`. `#fff7bf` in the light scheme, `#5c4d00` in the dark scheme. It is not the focus yellow: yellow means keyboard focus. See *Highlight*. |
 | Tricolour | `--g2-color-ro-blue`, `--g2-color-ro-yellow`, `--g2-color-ro-red`, `--g2-color-ro-blue-ring` | Decorative marks only: never text, except `.g2-ro-sweep` (ADR 0010). `--g2-color-ro-blue-ring` is the ring around the blue dot of `.g2-ro-dots`. |
 | Charts | `--g2-color-chart-1`, `--g2-color-chart-2`, `--g2-color-chart-3`, `--g2-color-chart-4`, `--g2-color-chart-selected` | Blue series, then greys. `--g2-color-chart-selected` marks the selection. |
 | Type | `--g2-font-sans`, `--g2-font-mono` | Text family. Family for codes and aligned numbers. Each names Inter or Fragment Mono first, then system fonts. See *Fonts*. |
@@ -246,6 +247,7 @@ A black bar with an 8px brand band below it.
 
 - `.g2-header-in`: a flex row that wraps, at least 52px high, with `--g2-space-5` between columns and `--g2-space-2` between rows. It has `--g2-space-1` padding above and below.
   It sets no width and no side padding: add `.g2-container` to the same element, `class="g2-header-in g2-container"`.
+- A wrapping header is tall on a narrow screen: about 190px at 375px with a wordmark, navigation and one more row (measured by org.gov2.ro). Do not make the whole header sticky on data pages. Make only a short toolbar sticky, such as a filter bar.
   The row wraps at narrow widths. The navigation stays visible: there is no menu button and no script.
 - `.g2-wordmark`: the project name, white, 19px bold. Put the domain part in `<em>` to show it muted. On keyboard focus, both parts use ink on yellow.
 - `.g2-logo`: an SVG from `logo/`, 28px high. It is decorative: use `alt=""`.
@@ -443,6 +445,108 @@ A boxed message with a blue title band. The panel must have exactly two children
 
 `.g2-tile`: a box with a 1px border and a 5px brand rule on top. Use it for a figure, a link group or a summary.
 
+## Skip link
+
+```html
+<a class="g2-skip-link" href="#continut">Sari la conținut</a>
+<header class="g2-header">…</header>
+<main id="continut" tabindex="-1">…</main>
+```
+
+`.g2-skip-link`: a link that jumps past the header to the main content. Put it first in `body`, so that it is the first focusable element.
+
+- It is invisible until it has keyboard focus. Then it shows the standard focus treatment: yellow fill, ink text and a black bar.
+- The target needs an `id` and `tabindex="-1"`. Activating the link moves focus to the target.
+- A target with `tabindex="-1"` does not get the yellow fill when it receives focus. See *Focus* below.
+- The hidden state uses `clip-path` and a 1px box. It adds no page overflow.
+
+### Focus on a `tabindex="-1"` target
+
+The general `:focus-visible` rule fills a focused element with yellow. A container that receives focus from a skip link or a script is not a control, so the rule in `gov2.states` removes the fill, the bar and the outline for `[tabindex="-1"]`.
+A link, a button, a field, `summary` and a `contenteditable` element keep the standard treatment. So does an element with a widget role (`button`, `link`, `tab`, `menuitem`, `option`, `treeitem`, `gridcell`, `checkbox`, `radio`, `switch`): a roving-focus widget needs its indicator.
+
+## Breadcrumbs
+
+```html
+<nav class="g2-breadcrumbs" aria-label="Navigare">
+  <ol>
+    <li><a class="g2-link-quiet" href="/">Acasă</a></li>
+    <li><a class="g2-link-quiet" href="/surse/">Surse</a></li>
+    <li aria-current="page">ICCJ — Comunicate de presă</li>
+  </ol>
+</nav>
+```
+
+`.g2-breadcrumbs` goes on a `<nav>` that contains an `<ol>`. Give the `<nav>` an accessible name.
+
+- The current item has `aria-current="page"` and is not a link. It is bold. A long current item wraps; the component never truncates it.
+- The separator is `/` in `--g2-color-text-faint`. It is generated content with an empty text alternative (`content: "/" / ""`), so a screen reader does not announce it. A browser without the alternative syntax shows the same `/` and may announce it.
+- A link has about 39px of height (padding in `--g2-space-2`), above the 24px minimum of WCAG 2.2 (2.5.8).
+
+## Pagination
+
+```html
+<nav class="g2-pagination" aria-label="Paginare">
+  <p>Pagina <span class="g2-mono">2</span> din <span class="g2-mono">12</span></p>
+  <ul>
+    <li><a rel="prev" href="?pagina=1">Înapoi</a></li>
+    <li><a href="?pagina=1" aria-label="Pagina 1">1</a></li>
+    <li><a href="?pagina=2" aria-current="page" aria-label="Pagina 2">2</a></li>
+    <li><a rel="next" href="?pagina=3">Înainte</a></li>
+  </ul>
+</nav>
+```
+
+`.g2-pagination` goes on a `<nav>`. It has a 2px rule on top, a position line and a row of links.
+
+- The links are plain links, not buttons. Each has a target of at least 44px by 44px.
+- The current numbered link has `aria-current="page"`. It shows a border and bold text. In forced colours it shows the system selection colours. `aria-current="false"` and an empty value do not select a link.
+- Leave out an absent previous or next link. Do not show a disabled link.
+- The position line is optional. A page with only previous and next links can use `<p><a rel="prev">…</a> <a rel="next">…</a></p>`; the links keep the 44px target.
+
+## Data table
+
+```html
+<div class="g2-table-wrap" role="region" aria-label="Instituții și posturi" tabindex="0">
+  <table class="g2-table">
+    <caption>Instituții și posturi vacante</caption>
+    <thead><tr><th scope="col">Instituție</th><th scope="col" class="g2-cell-num">Posturi</th></tr></thead>
+    <tbody><tr><th scope="row">Casa de Pensii Bacău</th><td class="g2-cell-num" data-label="Posturi">3</td></tr></tbody>
+  </table>
+</div>
+```
+
+- `.g2-table` is on a `<table>`. It needs a `<caption>` or an accessible name (`aria-label`, `aria-labelledby`). Every header cell has `scope="col"` or `scope="row"`.
+- The header row has the sunken surface and the label size (`--g2-font-size-label`). Each cell has a 1px rule in `--g2-color-line` below it.
+- `.g2-cell-num` is on a numeric cell, and on its header cell. The text is aligned to the right and the figures are tabular (`font-variant-numeric: tabular-nums`).
+- `.g2-table-wrap` scrolls a wide table inside the page; the page itself does not scroll sideways. A scrollable region needs a keyboard way to scroll: document `tabindex="0"`, `role="region"` and an accessible name. When the wrapper has focus, it shows a yellow outline and an inner ink ring, and no fill.
+- `.g2-table-stacked` is a modifier of `.g2-table`. Below 45em (720px at a 16px root) every row becomes a block. The header row is hidden visually and stays in the accessibility tree. Each cell with `data-label` shows the label above its value. A `.g2-cell-num` cell aligns to the left.
+  Chrome 156 keeps the table semantics (table, rowgroup, row, columnheader, rowheader, cell) when the elements are `display: block`; the test reads them in the accessibility tree. Other engines can drop them, so write the explicit roles on the stacked table: `role="table"` on `<table>`, `role="rowgroup"` on `<thead>` and `<tbody>`, `role="row"` on `<tr>`, `role="columnheader"`, `role="rowheader"` and `role="cell"` on the cells. The roles change nothing in Chrome.
+  The cell name includes the label (for example "Posturi 12"). A screen reader can read the label twice.
+
+## Summary list
+
+```html
+<dl class="g2-summary-list">
+  <div><dt>Cod înregistrare</dt><dd class="g2-mono">DEMO-BC-0156</dd></div>
+  <div><dt>Verificat la</dt><dd>17 octombrie 2026</dd></div>
+</dl>
+```
+
+`.g2-summary-list` goes on a `<dl>`, with one `<div>` for each row. The `dt` and the `dd` stay associated.
+
+- The label is at the label size, bold and muted. A 1px rule in `--g2-color-line` separates the rows; there is none above the first row.
+- A row has two columns (a 14rem label and a value) when the list is wide enough. It stacks, label above value, when the list is narrower than about 27rem. It follows the width of the list, not the viewport.
+- A long value wraps (`overflow-wrap: anywhere`).
+
+## Highlight
+
+```html
+<p>Casa Județeană de Pensii <mark>Bacău</mark> publică datele lunar.</p>
+```
+
+The base rule for `mark` needs no class: background `--g2-color-highlight-bg`, text `--g2-color-text`. The text has at least 4.5:1 in both schemes (18.01:1 light, 7.46:1 dark). The highlight is not the focus yellow. In forced colours the rule uses the system `Mark` and `MarkText` colours.
+
 ## Codes and numbers
 
 `.g2-mono` sets Fragment Mono with tabular figures. Use it for codes (CAEN, CUI, IDs) and for numbers in columns.
@@ -453,9 +557,8 @@ These parts are missing. Build a local version with the project prefix, and open
 
 - A grid inside the container (columns, sidebars).
 - Classes for `textarea`, `select`, checkboxes and radios. They are outside the page-foundation slice.
-- Tables, pagination, breadcrumbs, tabs and summary lists.
+- Tabs.
 - A core error summary. The example form has a local composition.
-- A skip link. The example pages have a local one.
 - Icon buttons, complex filters and charts.
 - A hover state for `.g2-btn.g2-danger`.
 - A sequential colour ramp for maps, in either scheme.

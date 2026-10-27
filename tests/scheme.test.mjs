@@ -35,7 +35,7 @@ const lab = value => {
 };
 const deltaE = (a, b) => Math.hypot(...lab(a).map((v, i) => v - lab(b)[i]));
 const t = name => `--g2-color-${name}`;
-const textPairs = [['text', 'page'], ['text', 'surface'], ['text', 'surface-sunken'], ['text', 'control-bg'], ['text', 'selected-bg'], ['text', 'neutral-bg'], ['text', 'action-secondary-hover'],
+const textPairs = [['text', 'page'], ['text', 'surface'], ['text', 'surface-sunken'], ['text', 'control-bg'], ['text', 'selected-bg'], ['text', 'neutral-bg'], ['text', 'action-secondary-hover'], ['text', 'highlight-bg'],
   ['text-muted', 'page'], ['text-muted', 'surface'], ['text-muted', 'surface-sunken'], ['text-muted', 'neutral-bg'], ['text-faint', 'page'], ['text-faint', 'surface'],
   ['link', 'page'], ['link', 'surface'], ['link', 'surface-sunken'], ['link', 'selected-bg'], ['link-visited', 'page'], ['link-visited', 'surface'], ['link-visited', 'surface-sunken'], ['link-visited', 'selected-bg'],
   ['on-link', 'link'], ['on-solid', 'action'], ['on-solid', 'action-hover'], ['on-solid', 'danger-solid'], ['on-solid', 'info-line'], ['danger-solid', 'page'], ['danger-solid', 'surface'], ['danger-solid', 'surface-sunken'],
@@ -269,7 +269,11 @@ const markRepresentatives = page => page.evaluate(() => {
 });
 const fixtureStates = ['#wordmark', '#current', '#nav', '#plain', '#title', '#quiet', '#primary', '#link-button', '#secondary', '#danger', '#disabled', '#chip', '#chip-button', '#chip-current', '#chip-false', '#chip-empty',
   '#input', '#invalid', '#field-input', '#field-bad', '#field-disabled', '#inverse', '#notice-link', '#notice-bar button', '#footer-link'];
+// Brief 07: the 0.11.0 stylesheet has no rule for the six new pieces or for <mark>, so they render differently by design (and change the height of their parents).
+// Both documents lose them before the comparison; every other element, and the page around them, must still match.
+const newPieces = '.g2-skip-link, .g2-breadcrumbs, .g2-pagination, .g2-table-wrap, .g2-table, .g2-summary-list, mark';
 async function collect(page, path) {
+  await page.evaluate(selector => document.querySelectorAll(selector).forEach(el => el.remove()), newPieces);
   // The code blocks of the guide are closed by default: open them, so that their copy buttons are visible and checked.
   if (path === '/docs/') await page.evaluate(() => document.querySelectorAll('details').forEach(d => { d.open = true; }));
   const selectors = path === '/tests/contract.html' ? fixtureStates : await markRepresentatives(page);

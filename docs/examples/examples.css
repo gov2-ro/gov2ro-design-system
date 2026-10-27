@@ -4,10 +4,6 @@
    Every rule is in the app layer, as in a project stylesheet. Load ../../gov2.css first.
    A project that wants the same arrangement copies the rule it needs and renames the class. */
 @layer app{
-/* Skip link: off screen until it has keyboard focus. The gov2 focus rule colours it. */
-.ex-skip{position:absolute;top:-10rem;left:var(--g2-space-4);z-index:1;padding:var(--g2-space-3)}
-.ex-skip:focus{top:var(--g2-space-2)}
-
 /* Page rhythm: the main element is also the container; children stack with one gap. */
 .ex-main{padding-block:var(--g2-space-6) var(--g2-space-7);overflow-wrap:break-word}
 .ex-stack{display:grid;gap:var(--g2-space-5);min-width:0}
@@ -34,11 +30,6 @@
 .ex-meta>div{display:flex;flex-wrap:wrap;gap:0 var(--g2-space-2);min-width:0;max-width:100%}
 .ex-meta dt::after{content:":"}
 .ex-meta dd{margin:0;overflow-wrap:anywhere}
-
-/* Record facts: a grid that never needs more than the available width. */
-.ex-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,14rem),1fr));gap:var(--g2-space-4) var(--g2-space-5);margin:0}
-.ex-facts>*{min-width:0}
-.ex-facts dd{margin:0}
 
 /* Error summary: a local composition, not a core component. The links reach the invalid fields. */
 .ex-summary{padding:var(--g2-space-4);border:5px solid rgb(var(--g2-color-danger-solid))}

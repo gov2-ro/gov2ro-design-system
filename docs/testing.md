@@ -18,7 +18,7 @@ Open `http://127.0.0.1:4173/docs/`.
 If Chrome is already installed, use `PLAYWRIGHT_CHANNEL=chrome npm test` instead of downloading Chromium.
 Generate review screenshots with `GUIDE_ARTIFACT_DIR=/tmp/gov2-guide PLAYWRIGHT_CHANNEL=chrome npm test`.
 The tests start their own server on a free local port and close it when finished.
-`npm test` runs every `tests/*.test.mjs` file: `guide.test.mjs` (guide, contract, layers, migration), `foundation.test.mjs` (page foundations and the example pages), `fonts.test.mjs` (local fonts and file delivery), `scheme.test.mjs` (the dark colour scheme) and `sweep.test.mjs` (the title sweep).
+`npm test` runs every `tests/*.test.mjs` file: `guide.test.mjs` (guide, contract, layers, migration), `foundation.test.mjs` (page foundations and the example pages), `fonts.test.mjs` (local fonts and file delivery), `scheme.test.mjs` (the dark colour scheme) and `sweep.test.mjs` (the title sweep) and `navigation.test.mjs` (navigation and data components).
 `tests/helpers.mjs` holds the shared set-up: server, browser, page openers, the contrast and focus helpers, `tokenBlocks` (the light and the dark token values read from `gov2.css`), `setScheme` and `contrastReport`. `tests/woff2.mjs` reads the `cmap`, `fvar` and `name` tables of a WOFF2 file with Node's built-in Brotli. Neither is a test file.
 With `GUIDE_ARTIFACT_DIR` set, the example-page reflow checks also save full-page screenshots at 1280, 390 and 320px (`example-directory-1280.png`, and so on).
 The scheme checks also save the guide and both example pages in the light and the dark scheme at 1280 and 320px, in chunks of 3000px (`scheme-guide-dark-320-01.png`, and so on). Each chunk is checked against its expected size: a single full-page capture of a very tall page can repeat content.
@@ -131,6 +131,27 @@ Browser checks (acceptance 1 to 10 of brief 06):
 
 With `GUIDE_ARTIFACT_DIR` set, the sweep checks also save screenshots of the fixture and of the guide demonstration, in the light and the dark scheme, at 1280 and 320px, at rest and in the middle of the band (`sweep-guide-dark-320-band.png`, and so on).
 
+### Navigation and data components (`tests/navigation.test.mjs`)
+
+Brief 07 (issues #3 to #8). The raw fixture `tests/contract.html` has each piece, so the checks run without documentation CSS, in the light and the dark scheme (`?scheme=`). The changelog entry is found by its first line ("Brief 07 (navigation and data components)."), not by the `## Unreleased` heading or a version number.
+
+Static checks: the decided class names and the token in `gov2.css`, `COMPONENTS.md`, the guide and the fixture; the light value `#fff7bf` and the dark value `#5c4d00`, equal in both dark blocks; the rules sit in `gov2.components`, `gov2.base` (the `mark` rule) and `gov2.states` (every focus rule); `examples.css` has no `ex-skip` or `ex-facts`, the guide has no `guide-skip`; both example pages use the skip link, breadcrumbs and `tabindex="-1"` on `main`; every `.g2-table` in the documents has a caption or a name and `scope` on each header cell; the archive SHA-256.
+
+Browser checks:
+
+- **Highlight.** Text on the highlight is 18.01:1 (light) and 7.46:1 (dark); the highlight is at least 40 CIE76 units from the focus yellow in both schemes (60.8 and 72.5); the rendered `mark` uses the token and the text colour; forced colours still mark the word.
+- **Breadcrumbs.** A long current item wraps (3 or more lines at 320px), is not clipped (`text-overflow: clip`, no `nowrap`, `scrollWidth <= clientWidth`) and the page does not overflow. The accessibility tree of the `<nav>` (`ariaSnapshot`) has no `/`. The current item has `aria-current="page"` and no link. The separator has the faint text colour. A link is at least 24px high. Focus and hover plus focus on a link.
+- **Pagination.** Every link is at least 44px by 44px at 1280 and 320px. The current link has a border; the others have none. No disabled link. Focus and hover plus focus. The directory example has no `rel="prev"` link. Forced colours: the current link differs from the others.
+- **Table.** Header surface and label size, row rules, right-aligned tabular numeric cells (header too), the caption. `.g2-table-stacked`: at 1280px the parts are table elements; at 390px every part is `display: block`, the header row is 1px and clipped, each cell shows its `data-label`, and a numeric cell aligns left.
+  The Chrome accessibility tree is read through the DevTools protocol (`Accessibility.getFullAXTree`) at both widths, for a stacked table without roles and one with explicit roles: table, rowgroup, row, columnheader, rowheader and cell are present, and at 390px the cell name includes its label. `ariaSnapshot` agrees. `.g2-table-wrap`: `tabindex="0"`, `role="region"` and a name; a 900px table scrolls inside a 390px page without page overflow; the arrow key scrolls it; focus shows a yellow outline and an inner ring with no fill, also with hover.
+- **Summary list.** Wide: label and value share a line and the values align. At 320px: value under label, inside the viewport, a long value wraps. One rule between rows (none above the first). Label 14px and muted.
+- **Skip link.** First focusable element in the source and the first Tab stop; 1px and clipped before focus; with focus it is visible inside the viewport with the yellow fill (also with hover) and 4.5:1 text; it fits 320px; forced colours keep an outline. Enter moves focus to `main`, the hash changes, `main` has no fill, shadow or outline, and the next Tab leaves the link. Both example pages: Tab order is skip link, wordmark, four navigation links, first breadcrumb.
+- **The `tabindex="-1"` fix.** A `div` and a `section` with `tabindex="-1"` get no fill; a `button`, a `role="tab"` element and a `a[href]` with `tabindex="-1"` keep the yellow fill.
+- **Overflow.** The guide and both example pages, light and dark, at 320, 390, 768 and 1280px with every code block open, and with the root text at 200%: no horizontal page overflow.
+- **Contrast.** Every rendered text pair in the fixture (95 text nodes) and in the new guide section (185 text nodes with every code block open), in both schemes.
+- **Guide.** The demonstrations and the copy buttons; the 360px frame stacks the table and the markup carries explicit roles.
+- `tests/scheme.test.mjs` removes the new pieces and `mark` from both documents before it compares the guide, the fixture and the example pages with the 0.11.0 stylesheet; every other element must match.
+
 ## Manual checks
 
 ### Dark colour scheme
@@ -151,6 +172,13 @@ With `GUIDE_ARTIFACT_DIR` set, the sweep checks also save screenshots of the fix
 - Look at a long title that wraps to two or three lines on a narrow screen. The wordmark host is one block, so the band crosses every line at once. The heading host is inline and paints one strip across its line fragments, so the band crosses line 1, then line 2.
   This was looked at once, at 320px, and is not asserted.
 - A project that adopts the class lists both deviations in its accessibility statement. Check the wording with the owner of the statement.
+
+### Navigation and data components
+
+- A screen reader pass over the stacked table in Safari (VoiceOver) and Firefox (NVDA): the suite measures Chrome only. Without explicit roles, Safari and Firefox can drop the table semantics under `display: block`.
+- The skip link, the focused table wrapper and the breadcrumb separator (`content: "/" / ""`) in Safari and Firefox. A browser without the alternative-text syntax shows the same `/` and can announce it.
+- Real forced colours on Windows for the pagination and the `mark` colours.
+- The cell name in the stacked table repeats the label ("Posturi 12"): listen to how a screen reader reads it.
 
 ### Fonts
 
@@ -193,6 +221,11 @@ Do not infer success from `getComputedStyle()` alone. Hover is independently tes
 The automated suite does not establish full WCAG conformance. Record actual coverage and remaining gaps in `ACTIVITY.md`.
 
 ## Last recorded run
+
+2026-10-27 (brief 07), Chrome 156.0.8078.48 (installed Chrome):
+238 run, 237 passed, 0 failed, 1 skipped (the scrollbar check, overlay scrollbars), 0 TODO, 331.7 seconds. Before the change the suite had 204 checks; `navigation.test.mjs` has 34. Command: `PLAYWRIGHT_CHANNEL=chrome npm test`. The archive checksum is unchanged (`3cdbe56f…1952`).
+Measured: Chrome keeps the table semantics of the stacked table at 390px, with and without explicit roles; text on the highlight 18.01:1 (light) and 7.46:1 (dark); lowest rendered text 4.86:1 (fixture, light) and 6.21:1 (guide section, light).
+Reviewed by eye: the guide section 13 and both example pages at 1280 and 320px in both schemes. Not performed: every item under *Navigation and data components* in the manual checks, and a second browser engine.
 
 2026-10-27 (brief 06), Chrome 156.0.8078.48 (installed Chrome):
 212 run, 211 passed, 1 failed, 0 skipped, 0 TODO, 283.2 seconds, with `GUIDE_ARTIFACT_DIR` set (`guide.test.mjs` 60 checks, `foundation.test.mjs` 47, `fonts.test.mjs` 23, `scheme.test.mjs` 52, `sweep.test.mjs` 30).

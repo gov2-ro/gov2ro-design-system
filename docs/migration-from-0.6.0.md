@@ -380,6 +380,7 @@ The tests check these results:
 These results are also checked, so that the limits are known and not assumed.
 
 - A project rule in `app` that sets `background` or `color` on a focusable control overrides the gov2 focus colours.
+  A common case is a reset written in `app`, for example `button, select, input { font: inherit; color: inherit }`. It beats `.g2-btn` and `gov2.states`: a focused secondary button showed light text on yellow in the dark scheme (measured by org.gov2.ro). Put the reset in the `reset` layer, or exclude the DS controls: `:where(button, select, input):not(.g2-btn, .g2-input)`.
   For example, `.btn-promo { background: rgb(122 31 92); }` leaves the button without the yellow focus background.
   Keep the focus treatment with `:not(:focus-visible)`, as in the example above, or write a `:focus-visible` rule in the same layer.
 - A utility class in `utilities` that sets a colour on a focusable element has the same effect.
@@ -495,6 +496,16 @@ This change is **not breaking**. A page without the new attribute looks exactly 
 - A project that sets `color: #fff` or a similar literal for its own components keeps that literal in the dark scheme. Check these colours on a dark page before you opt in.
 
 To opt in: set `data-g2-scheme="auto"` on `<html>`, then check focus, hover plus focus, selection, disabled and error states in both schemes. `COMPONENTS.md`, *Colour scheme*, has the rules.
+
+## Changes after 0.13.0: navigation and data components
+
+This change is **not breaking**. It adds classes and one token. There is no migration step: no token or class is renamed or removed.
+
+- New classes, all opt-in: `.g2-breadcrumbs`, `.g2-pagination`, `.g2-table` with `.g2-table-wrap`, `.g2-table-stacked` and `.g2-cell-num`, `.g2-summary-list` and `.g2-skip-link`. `COMPONENTS.md` has the markup and the accessibility requirements of each.
+- New token, with no old name: `--g2-color-highlight-bg`. Light `#fff7bf`, dark `#5c4d00`.
+- New base rule: `mark` gets the highlight background and the text colour. A project that styles `mark` in its own `app` layer keeps its own style.
+- Changed behaviour: an element with `tabindex="-1"` that is not a control no longer gets the yellow focus fill. This fixes `<main tabindex="-1">` after a skip link. A project that relied on the fill for such an element adds its own indicator.
+- A project with a local version (`.st-crumbs`, `.st-pager`, `.st-table`, `.st-dl`, `.st-skip`, `.crumbs`, `ex-skip`) can replace it with the shared class and delete the local rule. The projects do this in their own repositories.
 
 ## Checklist
 

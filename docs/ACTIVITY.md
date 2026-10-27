@@ -1,5 +1,35 @@
 # Activity
 
+## 2026-10-27 — Navigation and data components (brief 07, 0.14.0)
+
+**Done**
+- `gov2.css` (version header unchanged, 0.13.0): one token and six pieces, no other token.
+  `--g2-color-highlight-bg` (light `#fff7bf`, dark `#5c4d00`, in `gov2.tokens` and in both dark blocks) and a `mark` rule in `gov2.base`.
+  In `gov2.components`: `.g2-skip-link` (a 1px clipped box until `:focus`), `.g2-breadcrumbs`, `.g2-pagination`, `.g2-table` with `.g2-table-wrap`, `.g2-table-stacked` (inside `@media(max-width:45em)`) and `.g2-cell-num`, `.g2-summary-list`.
+  In `gov2.states`: the `[tabindex="-1"]` focus fix, `.g2-table-wrap:focus-visible`, the current pagination link and its forced-colours rule.
+- Documents: `COMPONENTS.md` (six sections, the token row, *Not in the DS yet* keeps tabs), `GUIDELINES.md` (page structure bullets, review question 9), `CHANGELOG.md` (`## Unreleased`, Added, Changed, Fixed, no Breaking), `docs/migration-from-0.6.0.md` (*Changes after 0.13.0*), `docs/testing.md`, `docs/BACKLOG.md`.
+- Guide: section 13 (*Navigare, tabele și liste de date*) with a demonstration and copyable markup for each piece, a live stacked table and a 360px frame; a highlight row in the dark contrast table; the top skip link is `.g2-skip-link`; `guide-skip` removed. Sections 13 to 16 became 14 to 17.
+- Example pages: `.g2-skip-link`, breadcrumbs and `tabindex="-1"` on `main` in both; pagination (page 1 of 3, no previous link) and `mark` on the search word in the directory page; `.g2-summary-list` instead of `ex-facts` in the form page. `ex-skip` and `ex-facts` are gone from `examples.css`.
+- Tests: `tests/navigation.test.mjs` (34 checks) and the new pieces in `tests/contract.html`. Changed: `tests/foundation.test.mjs` (`.ex-skip` became `.g2-skip-link`; the tab order has the breadcrumb at stop 7), `tests/guide.test.mjs` (the token list; 17 sections), `tests/scheme.test.mjs` (a highlight text pair; the new pieces and `mark` are removed from both documents before the comparison with 0.11.0).
+- Not touched: `docs/decisions/`, `docs/briefs/`, `docs/compat-analysis.md`, `docs/connect-a-project.md`, `CLAUDE.md`, `AGENTS.md`, consumers, the archive (SHA-256 `3cdbe56f…1952`, checked at the end). No commit, no tag.
+
+**Hard**
+- Chrome 156.0.8078.48. Command: `PLAYWRIGHT_CHANNEL=chrome npm test`. Before: 204 checks. After: 238 run, 237 passed, 0 failed, 1 skipped (the scrollbar check, overlay scrollbars), 331.7s.
+- Stacked table semantics, measured with `Accessibility.getFullAXTree` and `ariaSnapshot`: Chrome 156 keeps table, rowgroup, row, columnheader, rowheader and cell at 390px under `display: block`, with and without explicit roles. The hidden header row stays in the tree. The cell name gains the label ("Posturi 3"). I did not measure Safari or Firefox; the documented markup carries explicit roles for them (an assumption).
+- Contrast: text on the highlight 18.01:1 (light) and 7.46:1 (dark); CIE76 distance from the focus yellow 60.8 (light) and 72.5 (dark). Rendered text, fixture: 95 text nodes, lowest 4.86:1 (light, "Șterge") and 6.24:1 (dark). Guide section 13 with every code block open: 185 text nodes, lowest 6.21:1 (light) and 6.24:1 (dark).
+- The comparison with the 0.11.0 stylesheet failed by design for the new pieces, and also changed the height of their parents (new rules change layout). Removing the pieces and `mark` from both documents before the fingerprint was the smallest change that keeps every other element compared. Alternative: skip only the elements, which would leave the parents' heights different.
+- Pre-existing overflow, found by the 200% check on the guide at 320px: an unbreakable word in the recovery link (348px) and `.guide-logo-slot` (332px). I fixed both in `docs/guide.css` (`overflow-wrap: break-word` on `.guide-main`, `flex-wrap` on `.guide-logo-slot`). They are not from this brief.
+- Wrong turn: the first breadcrumb check failed because the `ariaSnapshot` of a link contains `/url:`. The test now removes those lines before it looks for a separator.
+
+**Decided**
+- Maintainer review (Opus): accepted the CSS, the highlight dark value, the `tabindex="-1"` exclusion list and no indicator on a non-control container, the 45em stack width and the pagination markup. Added the org findings: the reset-in-`app` case to the migration document and a sticky-header note to `COMPONENTS.md`.
+- `[tabindex="-1"]` fix excludes links, buttons, fields, `summary`, `contenteditable` and widget roles (button, link, tab, menuitem, option, treeitem, gridcell, checkbox, radio, switch), so that roving-focus widgets keep an indicator. A blanket rule is simpler but removes the indicator of a roving widget. The fixed container shows no indicator at all (no outline): it is not a control, as GOV.UK does for `main`.
+- Dark highlight `#5c4d00`: 7.46:1 with the dark text, 2.35:1 against the dark page (visible), 6.2:1 against the focus yellow. `#3a3100` (the dark warning surface) was 1.51:1 against the page and almost invisible.
+- Summary list uses flex wrap (`dt` 14rem, `dd` basis 12rem), not a media query: it stacks when the list is narrow, whatever the viewport.
+- The stacked threshold is `45em` (720px at a 16px root), as in the issue. The guide frame is 360px.
+- Pagination markup is `<p>` position plus `<ul>` of links; the `<p>`-only form of issue #4 also works (links keep 44px).
+- The directory example page shows "Pagina 1 din 3" with 5 results, so its heading no longer says "5 rezultate" and the Bacău chip count is 12.
+
 ## 2026-10-27 — Tricolour title sweep (brief 06, 0.13.0)
 
 **Done**

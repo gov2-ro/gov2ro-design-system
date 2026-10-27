@@ -282,7 +282,7 @@ for (const { name, path } of pages) {
       await page.setViewportSize({ width, height: 900 });
       const state = await page.evaluate(() => {
         const client = document.documentElement.clientWidth;
-        const outside = [...document.querySelectorAll('body *')].filter(el => !el.classList.contains('ex-skip') && el.getClientRects().length && el.getBoundingClientRect().right > client + .5 && el.getBoundingClientRect().width > 0)
+        const outside = [...document.querySelectorAll('body *')].filter(el => !el.classList.contains('g2-skip-link') && el.getClientRects().length && el.getBoundingClientRect().right > client + .5 && el.getBoundingClientRect().width > 0)
           .map(el => `${el.tagName.toLowerCase()}.${el.className} ends at ${Math.round(el.getBoundingClientRect().right)}`);
         const hidden = [...document.querySelectorAll('header *, main *, footer *')].filter(el => !/^(INPUT|BUTTON|SELECT|TEXTAREA)$/.test(el.tagName) && /hidden|clip/.test(getComputedStyle(el).overflowX + getComputedStyle(el).overflowY)).map(el => el.className);
         const controls = [...document.querySelectorAll('a[href],button,input')].map(el => ({ label: (el.getAttribute('aria-label') || el.labels?.[0]?.textContent || el.textContent).trim().replace(/\s+/g, ' ').slice(0, 40), box: el.getBoundingClientRect().width > 0 && el.getBoundingClientRect().height > 0 }));
@@ -314,7 +314,7 @@ for (const { name, path } of pages) {
       const state = await page.evaluate(() => {
         const client = document.documentElement.clientWidth;
         const clipped = [...document.querySelectorAll('h1,h2,h3,.g2-label,.g2-hint,.g2-error-msg,.g2-btn,.g2-nav a,.g2-chip')].filter(el => el.getClientRects().length && getComputedStyle(el).display !== 'inline' && (el.scrollWidth > el.clientWidth + 1 || el.scrollHeight > el.clientHeight + 1)).map(el => el.className);
-        const outside = [...document.querySelectorAll('body *')].filter(el => !el.classList.contains('ex-skip') && el.getClientRects().length && el.getBoundingClientRect().right > client + .5).map(el => el.tagName.toLowerCase() + '.' + el.className);
+        const outside = [...document.querySelectorAll('body *')].filter(el => !el.classList.contains('g2-skip-link') && el.getClientRects().length && el.getBoundingClientRect().right > client + .5).map(el => el.tagName.toLowerCase() + '.' + el.className);
         return { scroll: document.documentElement.scrollWidth, client, clipped, outside, h1: parseFloat(getComputedStyle(document.querySelector('h1')).fontSize) };
       });
       assert.ok(state.scroll <= state.client, `horizontal overflow: ${state.scroll} > ${state.client}`);
@@ -372,12 +372,13 @@ test('foundation: raising the root text size scales the new type and spacing rol
 // ---- Keyboard, recovery and accessibility APIs ----
 for (const { name, path } of pages) {
   test(`example ${name}: the keyboard reaches the skip link, header, current link, content and footer in source order; disabled controls are skipped (acceptance 5)`, () => openPage(path, async page => {
-    assert.ok((await page.locator('.ex-skip').boundingBox()).y + (await page.locator('.ex-skip').boundingBox()).height <= 0, 'the skip link is off screen until focused');
+    assert.ok(await page.locator('.g2-skip-link').evaluate(el => { const r = el.getBoundingClientRect(); return r.width <= 1 && r.height <= 1 && getComputedStyle(el).clipPath !== 'none'; }), 'the skip link is invisible until focused');
     const { expected, actual, states } = await tabSequence(page);
     assert.deepEqual(actual, expected, 'the tab sequence follows the source order');
     assert.ok(states.every(s => s.visible && !s.disabled), 'each stop shows keyboard focus and none is disabled');
     assert.deepEqual(actual.slice(0, 2), ['a:Sari la conținut', 'a:exemplu.gov2.ro']);
     assert.deepEqual(actual.slice(2, 6), ['a:Căutare instituții', 'a:Propune o corecție', 'a:Ghidul de design', 'a:Sursa datelor și limitele lor']);
+    assert.equal(actual[6], 'a:Acasă', 'the breadcrumbs follow the header (brief 07, acceptance 4)');
     assert.ok(actual.length >= 14);
     if (name === 'form') {
       const wanted = [stop('a', 'Adresa de e-mail: scrieți o adresă completă, de exemplu nume@institutie.ro.'), stop('a', 'Data documentului: scrieți data în formatul zz.ll.aaaa, de exemplu 17.10.2026.'),
@@ -467,8 +468,8 @@ for (const { name, path } of pages) {
     const report = await contrastReport(page);
     assert.ok(report.text > 60 && report.boundaries >= 1, `checked ${report.text} text nodes and ${report.boundaries} field boundaries`);
     assert.deepEqual(report.problems, []);
-    const targets = name === 'form' ? ['.ex-skip', '.g2-wordmark', '.g2-nav a[aria-current]', '.ex-summary a', '#nume', '#email', 'button[type=submit]', 'a.g2-btn.g2-secondary', '.g2-footer a']
-      : ['.ex-skip', '.g2-wordmark', '.g2-nav a[aria-current]', '#q', 'button[type=submit]', '.g2-chip[aria-current]', 'a.g2-link-title', 'a.g2-link-quiet', '.g2-footer a'];
+    const targets = name === 'form' ? ['.g2-skip-link', '.g2-wordmark', '.g2-nav a[aria-current]', '.ex-summary a', '#nume', '#email', 'button[type=submit]', 'a.g2-btn.g2-secondary', '.g2-footer a']
+      : ['.g2-skip-link', '.g2-wordmark', '.g2-nav a[aria-current]', '#q', 'button[type=submit]', '.g2-chip[aria-current]', 'a.g2-link-title', 'a.g2-link-quiet', '.g2-footer a'];
     for (const selector of targets) {
       await keyboardFocus(page, first(selector));
       const focus = await page.locator(selector).first().evaluate(el => {

@@ -19,14 +19,22 @@
   <link rel="stylesheet" href="../gov2.css">
 </head>
 <body>
+  <a class="g2-skip-link" id="skip" href="#content">Sari la conținut</a>
   <header class="g2-header">
     <div class="g2-header-in g2-container" id="header-in">
       <a class="g2-wordmark" id="wordmark" href="#content">proiect<em>.gov2.ro</em></a>
       <nav class="g2-nav" aria-label="Principal"><a id="current" href="#content" aria-current="page">Acasă</a><a id="nav" href="#content">Despre</a></nav>
     </div>
   </header>
-  <main id="content">
+  <main id="content" tabindex="-1">
     <h1 class="g2-heading-page" id="heading-page">Contract: componente fără CSS de documentație</h1>
+    <nav class="g2-breadcrumbs" id="crumbs" aria-label="Navigare"><ol><li><a class="g2-link-quiet" id="crumb-home" href="#content">Acasă</a></li><li><a class="g2-link-quiet" href="#content">Surse</a></li><li id="crumb-current" aria-current="page">Comunicate de presă ale Înaltei Curți de Casație și Justiție privind hotărârile pronunțate în ședința de la sfârșitul lunii octombrie</li></ol></nav>
+    <nav class="g2-pagination" id="pagination" aria-label="Paginare"><p>Pagina <span class="g2-mono">2</span> din <span class="g2-mono">12</span></p><ul><li><a id="page-prev" rel="prev" href="#content">Înapoi</a></li><li><a href="#content" aria-label="Pagina 1">1</a></li><li><a id="page-current" href="#content" aria-current="page" aria-label="Pagina 2">2</a></li><li><a href="#content" aria-label="Pagina 3">3</a></li><li><a id="page-next" rel="next" href="#content">Înainte</a></li></ul></nav>
+    <dl class="g2-summary-list" id="summary"><div><dt>Cod înregistrare</dt><dd class="g2-mono">DEMO-BC-0156</dd></div><div><dt>Verificat la</dt><dd>17 octombrie 2026</dd></div><div><dt>Contact</dt><dd id="summary-long">secretariat.cjp.bacau.pentru.corectarea.datelor@casa-de-pensii-demo.example</dd></div></dl>
+    <div class="g2-table-wrap" id="table-wrap" role="region" aria-label="Instituții" tabindex="0"><table class="g2-table" id="table"><caption>Instituții și posturi (date demonstrative)</caption><thead><tr><th scope="col">Instituție</th><th scope="col" class="g2-cell-num">Posturi</th></tr></thead><tbody><tr><th scope="row">Casa de Pensii Bacău</th><td class="g2-cell-num" data-label="Posturi">3</td></tr><tr><th scope="row">Inspectoratul Școlar</th><td class="g2-cell-num" data-label="Posturi">1.204</td></tr></tbody></table></div>
+    <div class="g2-table-wrap" id="stacked-wrap" role="region" aria-label="Instituții, stivuit" tabindex="0"><table class="g2-table g2-table-stacked" id="stacked"><caption>Instituții și posturi, stivuit</caption><thead><tr><th scope="col">Instituție</th><th scope="col" class="g2-cell-num">Posturi</th></tr></thead><tbody><tr><th scope="row">Casa de Pensii Bacău</th><td class="g2-cell-num" data-label="Posturi">3</td></tr><tr><th scope="row">Inspectoratul Școlar</th><td class="g2-cell-num" data-label="Posturi">1.204</td></tr></tbody></table></div>
+    <div class="g2-table-wrap" id="stacked-roles-wrap" role="region" aria-label="Instituții, stivuit cu roluri" tabindex="0"><table class="g2-table g2-table-stacked" id="stacked-roles" role="table"><caption>Instituții și posturi, stivuit cu roluri</caption><thead role="rowgroup"><tr role="row"><th role="columnheader" scope="col">Instituție</th><th role="columnheader" scope="col" class="g2-cell-num">Posturi</th></tr></thead><tbody role="rowgroup"><tr role="row"><th role="rowheader" scope="row">Casa de Pensii Bacău</th><td role="cell" class="g2-cell-num" data-label="Posturi">3</td></tr></tbody></table></div>
+    <p id="mark-line">Casa de Pensii <mark id="mark">Bacău</mark> publică datele lunar.</p>
     <p><a id="plain" href="#content">Link în text</a> <a class="g2-link-title" id="title" href="#content">Titlul instituției</a> <a class="g2-link-quiet" id="quiet" href="#content">Metadate</a></p>
     <p><button class="g2-btn" id="primary" type="button">Caută</button> <a class="g2-btn" id="link-button" href="#content">Caută</a> <button class="g2-btn g2-secondary" id="secondary" type="button">Înapoi</button> <button class="g2-btn g2-danger" id="danger" type="button">Șterge</button> <button class="g2-btn" id="disabled" type="button" disabled>Indisponibil</button></p>
     <p><a class="g2-chip" id="chip" href="#content">Filtru <span class="g2-chip-count">76</span></a> <button class="g2-chip" id="chip-button" type="button" aria-pressed="false">Filtru</button> <a class="g2-chip" id="chip-current" href="#content" aria-current="true">Curent</a> <a class="g2-chip" id="chip-false" href="#content" aria-current="false">Fals</a> <a class="g2-chip" id="chip-empty" href="#content" aria-current="">Gol</a></p>

@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="examples.css">
 </head>
 <body>
-  <a class="ex-skip" href="#continut">Sari la conținut</a>
+  <a class="g2-skip-link" href="#continut">Sari la conținut</a>
   <header class="g2-header">
     <span class="g2-ro-corner" aria-hidden="true"></span>
     <div class="g2-header-in g2-container">
@@ -24,7 +24,13 @@
     </div>
   </header>
 
-  <main class="g2-container ex-main ex-stack" id="continut">
+  <main class="g2-container ex-main ex-stack" id="continut" tabindex="-1">
+    <nav class="g2-breadcrumbs" aria-label="Navigare">
+      <ol>
+        <li><a class="g2-link-quiet" href="../index.html#inceput">Acasă</a></li>
+        <li aria-current="page">Instituții publice din județul Bacău</li>
+      </ol>
+    </nav>
     <h1 class="g2-heading-page">Directorul instituțiilor publice din județul Bacău care publică date despre posturi vacante, achiziții și execuție bugetară</h1>
 
     <div class="g2-notice" role="region" aria-labelledby="demo-titlu">
@@ -51,7 +57,7 @@
         <p class="g2-label" id="judete-titlu">Județ</p>
         <ul class="ex-chips" aria-labelledby="judete-titlu">
           <li><a class="g2-chip" href="directory.html">Toate județele <span class="g2-chip-count">41</span></a></li>
-          <li><a class="g2-chip" href="directory.html?judet=bacau" aria-current="true">Bacău <span class="g2-chip-count">5</span></a></li>
+          <li><a class="g2-chip" href="directory.html?judet=bacau" aria-current="true">Bacău <span class="g2-chip-count">12</span></a></li>
           <li><a class="g2-chip" href="directory.html?judet=iasi">Iași <span class="g2-chip-count">12</span></a></li>
           <li><a class="g2-chip" href="directory.html?judet=suceava">Suceava <span class="g2-chip-count">9</span></a></li>
           <li><a class="g2-chip" href="directory.html?judet=vrancea">Vrancea <span class="g2-chip-count">6</span></a></li>
@@ -62,11 +68,12 @@
 
     <section class="ex-state ex-stack" aria-labelledby="rezultate-titlu">
       <p class="g2-text-meta g2-mono">Exemplu de stare 1 din 2 · cu rezultate</p>
-      <h2 class="g2-heading-section" id="rezultate-titlu">5 rezultate pentru „Bacău” în județul Bacău</h2>
+      <h2 class="g2-heading-section" id="rezultate-titlu">Rezultate pentru „Bacău” în județul Bacău</h2>
+      <p class="g2-text-meta">12 rezultate. Se afișează cele de pe pagina 1, câte 5 pe pagină. Cuvântul căutat este evidențiat.</p>
       <ol class="ex-results">
         <li class="ex-result">
           <article class="ex-stack ex-tight" aria-labelledby="r1">
-            <h3 class="g2-heading-item" id="r1"><a class="g2-link-title" href="form.html">Serviciul Public Comunitar Regim Permise de Conducere și Înmatriculare a Vehiculelor Bacău</a></h3>
+            <h3 class="g2-heading-item" id="r1"><a class="g2-link-title" href="form.html">Serviciul Public Comunitar Regim Permise de Conducere și Înmatriculare a Vehiculelor <mark>Bacău</mark></a></h3>
             <p><strong class="g2-tag" data-tone="success">Date verificate</strong></p>
             <dl class="ex-meta g2-text-meta">
               <div><dt>Tip</dt><dd>Serviciu public comunitar</dd></div>
@@ -79,7 +86,7 @@
         </li>
         <li class="ex-result">
           <article class="ex-stack ex-tight" aria-labelledby="r2">
-            <h3 class="g2-heading-item" id="r2"><a class="g2-link-title" href="form.html">Agenția Județeană pentru Ocuparea Forței de Muncă Bacău</a></h3>
+            <h3 class="g2-heading-item" id="r2"><a class="g2-link-title" href="form.html">Agenția Județeană pentru Ocuparea Forței de Muncă <mark>Bacău</mark></a></h3>
             <p><strong class="g2-tag" data-tone="success">Date verificate</strong></p>
             <dl class="ex-meta g2-text-meta">
               <div><dt>Tip</dt><dd>Agenție județeană</dd></div>
@@ -92,7 +99,7 @@
         </li>
         <li class="ex-result">
           <article class="ex-stack ex-tight" aria-labelledby="r3">
-            <h3 class="g2-heading-item" id="r3"><a class="g2-link-title" href="form.html">Inspectoratul Școlar Județean Bacău</a></h3>
+            <h3 class="g2-heading-item" id="r3"><a class="g2-link-title" href="form.html">Inspectoratul Școlar Județean <mark>Bacău</mark></a></h3>
             <p><strong class="g2-tag" data-tone="progress">Verificare în curs</strong></p>
             <dl class="ex-meta g2-text-meta">
               <div><dt>Tip</dt><dd>Inspectorat școlar</dd></div>
@@ -105,7 +112,7 @@
         </li>
         <li class="ex-result">
           <article class="ex-stack ex-tight" aria-labelledby="r4">
-            <h3 class="g2-heading-item" id="r4"><a class="g2-link-title" href="form.html">Casa Județeană de Pensii Bacău</a></h3>
+            <h3 class="g2-heading-item" id="r4"><a class="g2-link-title" href="form.html">Casa Județeană de Pensii <mark>Bacău</mark></a></h3>
             <p><strong class="g2-tag" data-tone="warning">Date incomplete</strong></p>
             <dl class="ex-meta g2-text-meta">
               <div><dt>Tip</dt><dd>Casă de pensii</dd></div>
@@ -119,7 +126,7 @@
         </li>
         <li class="ex-result">
           <article class="ex-stack ex-tight" aria-labelledby="r5">
-            <h3 class="g2-heading-item" id="r5"><a class="g2-link-title" href="form.html">Direcția Generală de Asistență Socială și Protecția Copilului Bacău</a></h3>
+            <h3 class="g2-heading-item" id="r5"><a class="g2-link-title" href="form.html">Direcția Generală de Asistență Socială și Protecția Copilului <mark>Bacău</mark></a></h3>
             <p><strong class="g2-tag" data-tone="success">Date verificate</strong></p>
             <dl class="ex-meta g2-text-meta">
               <div><dt>Tip</dt><dd>Direcție generală</dd></div>
@@ -131,7 +138,16 @@
           </article>
         </li>
       </ol>
-      <p class="g2-text-meta">Exemplul are o singură pagină de detaliu, <a class="g2-link-quiet" href="form.html">Casa Județeană de Pensii Bacău</a>. Fiecare titlu de mai sus duce la ea.</p>
+      <nav class="g2-pagination" aria-label="Paginare rezultate">
+        <p>Pagina <span class="g2-mono">1</span> din <span class="g2-mono">3</span></p>
+        <ul>
+          <li><a href="directory.html" aria-current="page" aria-label="Pagina 1">1</a></li>
+          <li><a href="directory.html?pagina=2" aria-label="Pagina 2">2</a></li>
+          <li><a href="directory.html?pagina=3" aria-label="Pagina 3">3</a></li>
+          <li><a rel="next" href="directory.html?pagina=2">Înainte</a></li>
+        </ul>
+      </nav>
+      <p class="g2-text-meta">Exemplul are o singură pagină de rezultate și o singură pagină de detaliu, <a class="g2-link-quiet" href="form.html">Casa Județeană de Pensii Bacău</a>. Fiecare titlu de mai sus duce la ea, iar linkurile de paginare duc înapoi la această pagină. Pe prima pagină nu există link „Înapoi”: un link absent se omite.</p>
     </section>
 
     <section class="ex-state ex-stack" aria-labelledby="gol-titlu">
