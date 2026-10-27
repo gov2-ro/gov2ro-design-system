@@ -58,6 +58,15 @@ The session read the project only and changed no files. The report targets the 0
 | Tricolour title treatment | M | Issue #2 (`ds-proposal`), opened 2026-10-26. Conflicts with "tricolour is never text" |
 | Patterns: choropleth and legend, multi-select filter, responsive filter bar, tree, breadcrumbs, tabs, data table, source badges, detail dialog | L | Contributed candidates for `patterns/`. Breadcrumbs and tables now have two projects (stiri, org) |
 
+### Update to 0.14.0 (2026-10-27)
+
+Relayed by the g2-org session. org commit `4b68227`, tag `v0.19.0`. Not published; the owner reviews first.
+
+- Replaced local versions with `.g2-breadcrumbs` (3 trails), `.g2-table` (list and tree tables, `scope="col"`, `aria-label`) and `.g2-summary-list` (record dialog). Added `.g2-skip-link` to `<main tabindex="-1">`.
+- 20 view combinations: no errors, no overflow, 0 contrast failures. Skip link 155x50px with the yellow focus; focused `main` has no fill. Breadcrumb steps 39px high. The summary list stacks at 375px. Measured.
+- Finding: org's breadcrumb steps are `<button>` elements, because they change in-page state with no URL for each step. `.g2-breadcrumbs` pads only `a`, so org adds a local rule.
+  DS decision: a breadcrumb step is a link. Give each in-page state a URL (query or hash), so that the trail can be shared and reloaded, and the browser Back button works. The DS does not style buttons in breadcrumbs. Document this in `COMPONENTS.md` after brief 08.
+
 ### Adoption of 0.13.0 (2026-10-27)
 
 Relayed by the g2-org session. Commit `36c089f`, tag `v0.16.0` in `institutii-publice`. Not published; the owner reviews first.
