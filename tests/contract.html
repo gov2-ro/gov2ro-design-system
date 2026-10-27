@@ -63,6 +63,32 @@
         <p class="g2-hint" id="field-disabled-hint">Completat automat; nu se poate modifica.</p>
         <input class="g2-input" id="field-disabled" type="text" value="DEMO-BC-0127" aria-describedby="field-disabled-hint" disabled>
       </div>
+      <div class="g2-field" id="select-row">
+        <label class="g2-label" for="sel">Județ</label>
+        <p class="g2-hint" id="sel-hint">Alegeți un județ din listă.</p>
+        <select class="g2-input" id="sel" name="judet" aria-describedby="sel-hint"><option value="">Toate județele</option><option>Bacău</option><option>Iași</option><option>Un nume de județ foarte lung, care nu încape într-un câmp îngust de 320 de pixeli</option></select>
+      </div>
+      <div class="g2-field" id="select-text-row">
+        <label class="g2-label" for="sel-text">Localitate</label>
+        <input class="g2-input" id="sel-text" type="text" value="Onești">
+      </div>
+      <div class="g2-field g2-field-error" id="select-invalid">
+        <label class="g2-label" for="sel-bad">Județ de reședință</label>
+        <p class="g2-error-msg" id="sel-bad-error">Eroare: alegeți un județ.</p>
+        <select class="g2-input" id="sel-bad" aria-describedby="sel-bad-error" aria-invalid="true"><option value="">Alegeți</option><option>Bacău</option></select>
+      </div>
+      <div class="g2-field" id="select-off">
+        <label class="g2-label" for="sel-off">Județ fixat</label>
+        <select class="g2-input" id="sel-off" disabled><option>Bacău</option></select>
+      </div>
+      <div class="g2-field" id="select-multi">
+        <label class="g2-label" for="sel-multi">Județe (mai multe)</label>
+        <select class="g2-input" id="sel-multi" multiple size="4"><option>Bacău</option><option>Iași</option><option>Suceava</option><option>Vrancea</option><option>Neamț</option></select>
+      </div>
+      <div class="g2-field" id="select-size">
+        <label class="g2-label" for="sel-size">Județ (listă)</label>
+        <select class="g2-input" id="sel-size" size="3"><option>Bacău</option><option>Iași</option><option>Suceava</option><option>Vrancea</option></select>
+      </div>
     </div>
     <div class="g2-ro-bar" id="ro-bar" aria-hidden="true"></div>
     <div class="g2-header" id="marks">

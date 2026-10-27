@@ -271,7 +271,8 @@ const fixtureStates = ['#wordmark', '#current', '#nav', '#plain', '#title', '#qu
   '#input', '#invalid', '#field-input', '#field-bad', '#field-disabled', '#inverse', '#notice-link', '#notice-bar button', '#footer-link'];
 // Brief 07: the 0.11.0 stylesheet has no rule for the six new pieces or for <mark>, so they render differently by design (and change the height of their parents).
 // Both documents lose them before the comparison; every other element, and the page around them, must still match.
-const newPieces = '.g2-skip-link, .g2-breadcrumbs, .g2-pagination, .g2-table-wrap, .g2-table, .g2-summary-list, mark';
+// Brief 08: `select` joins them, because the 0.11.0 stylesheet has no rule for `.g2-input` on a select.
+const newPieces = '.g2-skip-link, .g2-breadcrumbs, .g2-pagination, .g2-table-wrap, .g2-table, .g2-summary-list, mark, select';
 async function collect(page, path) {
   await page.evaluate(selector => document.querySelectorAll(selector).forEach(el => el.remove()), newPieces);
   // The code blocks of the guide are closed by default: open them, so that their copy buttons are visible and checked.

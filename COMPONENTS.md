@@ -84,7 +84,7 @@ The default is the light scheme. A page opts in to the dark scheme with one attr
 - Any other value gives the light scheme.
 - The dark values are in `gov2.css`, in the `gov2.tokens` layer, after the light values. The component rules do not change for a scheme: they read the tokens. A project does not write dark values for the colour tokens.
 - The dark values are written twice: for `:root[data-g2-scheme=dark]`, and for `:root[data-g2-scheme=auto]` inside `@media (prefers-color-scheme: dark)`. CSS cannot share one rule between these two. A test checks that the two blocks are equal.
-- `color-scheme` is `light` on `:root` and `dark` in the dark blocks. A native `select`, `textarea` or date field, and the scrollbars, follow it. They have no DS class: `color-scheme` is the only dark styling that they get.
+- `color-scheme` is `light` on `:root` and `dark` in the dark blocks. A native `textarea` or date field, and the scrollbars, follow it. They have no DS class: `color-scheme` is the only dark styling that they get. A `select` has `.g2-input`, so it follows the tokens.
 - The core has no toggle and no script. A project that lets the reader choose sets the attribute itself and stores the choice.
 - These colour tokens keep their light value in both schemes: the header group (`--g2-color-header-bg`, `--g2-color-on-header`, `--g2-color-on-header-muted`, `--g2-color-header-accent`), the focus pair, the three tricolour colours and `--g2-color-ro-blue-ring`.
   The header is dark in both schemes. The dark page has the colour of the header, so the brand band separates them.
@@ -392,7 +392,7 @@ The destructive button `.g2-btn.g2-danger` uses the same name as the `danger` st
 | `.g2-field` | Stacks the parts of one field: label, hint, error message and control. The gap is `--g2-space-1`. A direct `.g2-input` fills the width of the field. A word that is wider than the field breaks (`overflow-wrap: anywhere`), so that a long address or code does not overflow a narrow screen. The field sets no outer margin: the form sets the space between fields with the spacing tokens. |
 | `.g2-label` | The field label. Block, `--g2-font-size-label`, semibold. Use `<label for="…">`. |
 | `.g2-hint` | Help before the control: format, example, why the field is locked. Muted, `--g2-font-size-meta`. Connect it with `aria-describedby`. |
-| `.g2-input` | The text control: at least 40px high, 2px border (`--g2-color-control-border`), background `--g2-color-control-bg`, text at `--g2-font-size-body`. The focus style is in `gov2.states`. |
+| `.g2-input` | The text control, also a native `<select>`: at least 40px high, 2px border (`--g2-color-control-border`), background `--g2-color-control-bg`, text at `--g2-font-size-body`. The focus style is in `gov2.states`. |
 | `.g2-field-error` | Wraps a field that has an error. It adds a red bar on the left and makes the input border red. The input keeps the red border on hover and on focus. |
 | `.g2-error-msg` | The error text, red and bold. Start it with "Eroare:", so that the colour does not carry the meaning. |
 
@@ -402,7 +402,11 @@ The destructive button `.g2-btn.g2-danger` uses the same name as the `danger` st
 - `.g2-input` works for `type="text"`, `"email"` and `"search"`. A project decides the width of a field with its own rule in the `app` layer.
 - Disabled: the native `disabled` attribute. The control shows the sunken surface and muted text, it is not focusable, and it is skipped by Tab. The rule is in `gov2.states`.
   A disabled control is not submitted. Say in the hint why the value is locked. Use `readonly` when the reader must be able to select the value.
-- `textarea`, `select`, checkboxes and radios are outside this slice. They have no DS class and no documented sizing. Use the native controls and keep your own styles local.
+- Select: `.g2-input` on a native `<select>`. There is no `.g2-select` class. It has the same height, border, font, focus treatment, disabled state and error state as a text input. Put it in a `.g2-field` with a `<label for="…">`.
+  A drop-down (no `multiple`, `size` absent or 1) drops the native look and draws an arrow in CSS from `--g2-color-text` (`--g2-color-text-muted` when disabled). In forced colours, Chrome drops gradient backgrounds, so the select returns to `appearance: auto` and shows the native arrow in system colours. A disabled select has `opacity: 1`, because the browser default of 0.7 would make it differ from a disabled text input. It leaves 2.5rem at the right for the arrow, clips a long option with an ellipsis and stays inside its container. The native popup and keyboard use stay.
+  A `multiple` select, or a `size` greater than 1, keeps the native list with no arrow. The class gives it the border, font, background, padding and `max-width: 100%`; the height follows `size`.
+  The arrow is two gradients, so it follows the colour scheme with no image and no new token. The `.g2-input` background rules of the focus state do not remove it.
+- `textarea`, checkboxes and radios are outside this slice. They have no DS class and no documented sizing. Use the native controls and keep your own styles local.
   Do not apply `.g2-input` to them and expect a complete result.
 
 ### Recovery from an error
@@ -478,6 +482,7 @@ A link, a button, a field, `summary` and a `contenteditable` element keep the st
 ```
 
 `.g2-breadcrumbs` goes on a `<nav>` that contains an `<ol>`. Give the `<nav>` an accessible name.
+Each step is a link (`<a href>`). When the steps change in-page state, give each state its own URL (a query or a hash), so that the trail can be shared and reloaded, and Back works. The DS does not style buttons in breadcrumbs.
 
 - The current item has `aria-current="page"` and is not a link. It is bold. A long current item wraps; the component never truncates it.
 - The separator is `/` in `--g2-color-text-faint`. It is generated content with an empty text alternative (`content: "/" / ""`), so a screen reader does not announce it. A browser without the alternative syntax shows the same `/` and may announce it.
@@ -556,7 +561,7 @@ The base rule for `mark` needs no class: background `--g2-color-highlight-bg`, t
 These parts are missing. Build a local version with the project prefix, and open a `ds-proposal` issue when another project needs it too.
 
 - A grid inside the container (columns, sidebars).
-- Classes for `textarea`, `select`, checkboxes and radios. They are outside the page-foundation slice.
+- Classes for `textarea`, checkboxes and radios. They are outside the page-foundation slice.
 - Tabs.
 - A core error summary. The example form has a local composition.
 - Icon buttons, complex filters and charts.

@@ -507,6 +507,15 @@ This change is **not breaking**. It adds classes and one token. There is no migr
 - Changed behaviour: an element with `tabindex="-1"` that is not a control no longer gets the yellow focus fill. This fixes `<main tabindex="-1">` after a skip link. A project that relied on the fill for such an element adds its own indicator.
 - A project with a local version (`.st-crumbs`, `.st-pager`, `.st-table`, `.st-dl`, `.st-skip`, `.crumbs`, `ex-skip`) can replace it with the shared class and delete the local rule. The projects do this in their own repositories.
 
+## Changes after 0.14.0: select control
+
+This change is **not breaking**. It adds no class and no token. There is no migration step.
+
+- `.g2-input` now works on a native `<select>`. There is no `.g2-select` class. A project that copied `.g2-input` rules onto its own select class can put `.g2-input` on the `<select>` and delete the copy.
+- A drop-down select (no `multiple`, `size` absent or 1) gets `appearance: none`, a CSS arrow drawn from `--g2-color-text`, 2.5rem of right padding and an ellipsis for a long option. In forced colours it returns to the native appearance. A disabled select has `opacity: 1`.
+- A `multiple` select, or a `size` greater than 1, keeps the native list with no arrow.
+- No existing element computes a different style. Only `<select class="g2-input">` is new.
+
 ## Checklist
 
 1. `grep -rn 'data-skin' <project>` finds nothing outside archived files.

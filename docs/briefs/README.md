@@ -57,7 +57,7 @@ Brief 04 is implemented in 0.9.0. Brief 03 is ready.
 5. `05-dark-scheme.md` — **Implemented (0.12.0):** opt-in dark values for the colour tokens (ADR 0009, issue #1).
 6. `06-tricolour-title-sweep.md` — **Implemented (0.13.0):** `.g2-ro-sweep`, with two deliberate WCAG deviations (ADR 0010, issue #2).
 7. `07-navigation-and-data-components.md` — **Implemented (0.14.0):** breadcrumbs, pagination, table, summary list, skip link and highlight (issues #3–#8, approved 2026-10-27).
-8. `08-select-control.md` — **Ready:** `.g2-input` on native `<select>` (issue #10, approved 2026-10-27).
+8. `08-select-control.md` — **Implemented (0.15.0):** `.g2-input` on native `<select>` (issue #10, approved 2026-10-27).
 
 The owner requested package 02 first. Its guide, fixtures and test runner now exist.
 Package 01 migrated those files and turned the two TODOs into real assertions. Do not create a second fixture framework.

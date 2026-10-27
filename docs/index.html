@@ -767,7 +767,62 @@
 <button class="guide-copy" type="button" data-copy="code-9" hidden>Copiază codul</button>
 </details>
 <p class="guide-help">Formularul demonstrează semantica nativă și revine la această secțiune; nu caută într-o bază de date. Clasele <code>guide-*</code> descriu amplasarea exemplelor, nu API-ul DS. Spațiul dintre câmpuri îl stabilește formularul, nu câmpul.</p>
-<p class="guide-help">Textarea, select, checkbox și radio nu fac parte din această etapă: nu au încă un contract vizual în DS. Controalele native rămân native.</p>
+<h3>Listă de selecție</h3>
+<p>Aceeași clasă <code>g2-input</code> merge pe un <code>&lt;select&gt;</code> nativ. Nu există o clasă <code>g2-select</code>. Săgeata este desenată din CSS, cu culoarea textului, și urmează schema de culori.</p>
+<div class="guide-demo">
+<div class="guide-stack">
+<div class="g2-field">
+  <label class="g2-label" for="county">Județ</label>
+  <p class="g2-hint" id="county-hint">Alegeți județul în care se află instituția.</p>
+  <select class="g2-input" id="county" name="county" aria-describedby="county-hint">
+    <option value="">Toate județele</option>
+    <option>Bacău</option>
+    <option>Iași</option>
+    <option>Suceava</option>
+  </select>
+</div>
+<div class="g2-field g2-field-error">
+  <label class="g2-label" for="county-bad">Județ de reședință</label>
+  <p class="g2-error-msg" id="county-bad-error">Eroare: alegeți un județ.</p>
+  <select class="g2-input" id="county-bad" name="county-bad" aria-describedby="county-bad-error" aria-invalid="true">
+    <option value="">Alegeți</option>
+    <option>Bacău</option>
+  </select>
+</div>
+<div class="g2-field">
+  <label class="g2-label" for="county-off">Județ fixat</label>
+  <select class="g2-input" id="county-off" name="county-off" disabled>
+    <option>Bacău</option>
+  </select>
+</div>
+<div class="g2-field">
+  <label class="g2-label" for="counties">Județe (mai multe)</label>
+  <select class="g2-input" id="counties" name="counties" multiple size="4">
+    <option>Bacău</option>
+    <option>Iași</option>
+    <option>Suceava</option>
+    <option>Vrancea</option>
+  </select>
+</div>
+</div>
+<p class="guide-caption">Normal, cu eroare, dezactivat și cu selecție multiplă. Controlul nativ rămâne nativ: tastatura și lista se comportă ca în browser.</p>
+</div>
+<details class="guide-code">
+<summary>Markup HTML</summary>
+<pre>
+<code id="code-select">&lt;div class=&quot;g2-field&quot;&gt;
+  &lt;label class=&quot;g2-label&quot; for=&quot;county&quot;&gt;Județ&lt;/label&gt;
+  &lt;p class=&quot;g2-hint&quot; id=&quot;county-hint&quot;&gt;Alegeți județul în care se află instituția.&lt;/p&gt;
+  &lt;select class=&quot;g2-input&quot; id=&quot;county&quot; name=&quot;county&quot; aria-describedby=&quot;county-hint&quot;&gt;
+    &lt;option value=&quot;&quot;&gt;Toate județele&lt;/option&gt;
+    &lt;option&gt;Bacău&lt;/option&gt;
+  &lt;/select&gt;
+&lt;/div&gt;</code>
+</pre>
+<button class="guide-copy" type="button" data-copy="code-select" hidden>Copiază codul</button>
+</details>
+<p class="guide-help">Lista are aceeași înălțime, același chenar, același font și aceeași stare de focus și de eroare ca un câmp de text. Starea dezactivată folosește suprafața înfundată și textul estompat, săgeata devine estompată. O listă derulantă lasă 2,5rem în dreapta pentru săgeată, taie cu „…” o opțiune prea lungă și nu depășește câmpul. Cu <code>multiple</code> sau <code>size</code> mai mare de 1, clasa dă doar chenarul, fontul, fundalul și umplerea: lista rămâne cea nativă și nu are săgeată. În culori forțate, browserul elimină fundalurile cu gradient, așa că lista revine la aspectul nativ, cu săgeata nativă în culorile sistemului. Lista dezactivată are <code>opacity: 1</code>, ca să arate la fel ca un câmp de text dezactivat.</p>
+<p class="guide-help">Textarea, checkbox și radio nu fac parte din această etapă: nu au încă un contract vizual în DS. Controalele native rămân native.</p>
 </section>
 <section class="guide-section" id="panouri" aria-labelledby="title-panouri">
 <span class="guide-number">10</span>

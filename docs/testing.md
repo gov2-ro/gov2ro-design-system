@@ -18,7 +18,7 @@ Open `http://127.0.0.1:4173/docs/`.
 If Chrome is already installed, use `PLAYWRIGHT_CHANNEL=chrome npm test` instead of downloading Chromium.
 Generate review screenshots with `GUIDE_ARTIFACT_DIR=/tmp/gov2-guide PLAYWRIGHT_CHANNEL=chrome npm test`.
 The tests start their own server on a free local port and close it when finished.
-`npm test` runs every `tests/*.test.mjs` file: `guide.test.mjs` (guide, contract, layers, migration), `foundation.test.mjs` (page foundations and the example pages), `fonts.test.mjs` (local fonts and file delivery), `scheme.test.mjs` (the dark colour scheme) and `sweep.test.mjs` (the title sweep) and `navigation.test.mjs` (navigation and data components).
+`npm test` runs every `tests/*.test.mjs` file: `guide.test.mjs` (guide, contract, layers, migration), `foundation.test.mjs` (page foundations and the example pages), `fonts.test.mjs` (local fonts and file delivery), `scheme.test.mjs` (the dark colour scheme) and `sweep.test.mjs` (the title sweep) and `navigation.test.mjs` (navigation and data components) and `select.test.mjs` (the select control) and `select.test.mjs` (the select control).
 `tests/helpers.mjs` holds the shared set-up: server, browser, page openers, the contrast and focus helpers, `tokenBlocks` (the light and the dark token values read from `gov2.css`), `setScheme` and `contrastReport`. `tests/woff2.mjs` reads the `cmap`, `fvar` and `name` tables of a WOFF2 file with Node's built-in Brotli. Neither is a test file.
 With `GUIDE_ARTIFACT_DIR` set, the example-page reflow checks also save full-page screenshots at 1280, 390 and 320px (`example-directory-1280.png`, and so on).
 The scheme checks also save the guide and both example pages in the light and the dark scheme at 1280 and 320px, in chunks of 3000px (`scheme-guide-dark-320-01.png`, and so on). Each chunk is checked against its expected size: a single full-page capture of a very tall page can repeat content.
@@ -152,6 +152,19 @@ Browser checks:
 - **Guide.** The demonstrations and the copy buttons; the 360px frame stacks the table and the markup carries explicit roles.
 - `tests/scheme.test.mjs` removes the new pieces and `mark` from both documents before it compares the guide, the fixture and the example pages with the 0.11.0 stylesheet; every other element must match.
 
+### Select control (`tests/select.test.mjs`)
+
+Brief 08 (issue #10). The raw fixture `tests/contract.html` has a drop-down, an error select, a disabled select, a `multiple` select and a `size` select, in the light and the dark scheme (`?scheme=`). The changelog entry is found by its first line ("Brief 08 (select control)."), not by a version number.
+
+- **Static.** No `.g2-select` class; the select rules have no colour literal, no `url(` and no `data:`; the arrow reads `--g2-color-text` and `--g2-color-text-muted`; the arrow rules are in `gov2.states`, the layout rules in `gov2.components` and no component rule of the select sets a background; no new token; the select appears in `COMPONENTS.md`, the guide, the fixture and the directory example.
+- **Equality.** A select and a text input in one flex row have the same height (40px), border width, style and colour, font, background, text colour and radius, at 1280 and 320px, in both schemes.
+- **Arrow and text.** The padding leaves room for an arrow of 1rem plus 0.9em; a long option is clipped with an ellipsis and does not widen the select. The arrow is measured from rendered pixels (the screenshot drawn on a canvas): the strongest pixel against the select background.
+- **Disabled, error and focus.** The disabled select equals the disabled text input (colours, cursor, font, `opacity`), the error select equals the error text input, and the focus outline and ring equal those of a text input. The focus rules do not remove the arrow.
+- **Native use.** The label names the select (`combobox "Județ"` in the accessibility tree). Type-ahead changes the value of a closed select. A `multiple` and a `size` select keep the native appearance, show several rows, have no arrow, and select options by keyboard. `size="1"` is a drop-down; `size="2"` is a list.
+- **Forced colours.** Chrome emulation drops the gradients, so the select returns to `appearance: auto` and the native arrow shows. The arrow is measured in system colours.
+- **Reflow.** No select reaches past the viewport in the fixture, the guide and the directory page at 320px with root text 100% and 200%, and at 1280px with 200%. The guide and the directory page have no horizontal overflow. The raw fixture itself overflows at 200% for pieces other than selects (a table, bare inputs): it is not checked as a whole.
+- `tests/scheme.test.mjs` removes `select` from both documents before it compares with the 0.11.0 stylesheet.
+
 ## Manual checks
 
 ### Dark colour scheme
@@ -220,7 +233,18 @@ Do not infer success from `getComputedStyle()` alone. Hover is independently tes
 
 The automated suite does not establish full WCAG conformance. Record actual coverage and remaining gaps in `ACTIVITY.md`.
 
+### Select control
+
+- Open a drop-down in Safari, Firefox and on a phone: the native popup is not styled by the DS. In the dark scheme the popup follows `color-scheme` and the select colours; this is not measured outside Chrome.
+- Real forced colours on Windows: the select returns to the native look; look at the arrow and the disabled state.
+- A screen reader reads the label, the hint and the error with the select (only the Chrome accessibility tree is measured).
+
 ## Last recorded run
+
+2026-10-27 (brief 08), Chrome 156.0.8078.48 (installed Chrome):
+258 run, 257 passed, 0 failed, 1 skipped (the scrollbar check, overlay scrollbars), 0 TODO, 385.1 seconds. Before the change the suite had 238 checks; `select.test.mjs` has 20. Command: `PLAYWRIGHT_CHANNEL=chrome npm test`. The archive checksum is unchanged (`3cdbe56f…1952`).
+Measured: select text 19.59:1 (light) and 17.52:1 (dark); arrow 19.59:1 and 17.52:1; border 19.59:1 and 17.52:1 (the control border is the text colour); disabled arrow 6.33:1 and 7.51:1; native arrow in forced colours 21.00:1.
+Reviewed by eye: the fixture block, the guide demonstration and the directory search row at 1280 and 320px in both schemes. Not performed: every item under *Select control* in the manual checks, and a second browser engine.
 
 2026-10-27 (brief 07), Chrome 156.0.8078.48 (installed Chrome):
 238 run, 237 passed, 0 failed, 1 skipped (the scrollbar check, overlay scrollbars), 0 TODO, 331.7 seconds. Before the change the suite had 204 checks; `navigation.test.mjs` has 34. Command: `PLAYWRIGHT_CHANNEL=chrome npm test`. The archive checksum is unchanged (`3cdbe56f…1952`).

@@ -1,6 +1,6 @@
 # Brief 08: Select control
 
-Status: Ready for implementation. The owner approved issue #10 on 2026-10-27.
+Status: Implemented in 0.15.0. The owner approved issue #10 on 2026-10-27.
 
 ## Problem and outcome
 

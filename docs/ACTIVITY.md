@@ -1,5 +1,35 @@
 # Activity
 
+## 2026-10-27 — Select control (brief 08, 0.15.0)
+
+**Done**
+- `gov2.css` (version header unchanged, 0.14.0): `.g2-input` on a native `<select>`, no new class and no new token.
+  `gov2.components`, after `.g2-input`: `select.g2-input:not([multiple],[size]:not([size="1"]))` gets `appearance: none`, `max-width: 100%`, `padding-right: 2.5rem` and `text-overflow: ellipsis`; `select.g2-input:is([multiple],[size]:not([size="1"]))` gets `max-width: 100%`; in `@media(forced-colors:active)` the drop-down returns to `appearance: auto`.
+  `gov2.states`, after the field error rule: `select.g2-input:disabled{opacity:1}` and two gradient arrow rules (text colour; muted when disabled). Their selectors outrank the focus rules, which reset the `background` shorthand.
+- Documents: `COMPONENTS.md` (*Fields*: the select bullet, the table row, the dark-scheme note, *Not in the DS yet*), `CHANGELOG.md` (`## Unreleased`), `docs/migration-from-0.6.0.md` (*Changes after 0.14.0: select control*), `docs/testing.md`, `docs/BACKLOG.md`.
+- Guide: a *Listă de selecție* subsection in section 09 (normal, error, disabled, multiple; copyable markup). Directory example: a *Sortare* select in the search row. Fixture: five selects.
+- Tests: `tests/select.test.mjs` (20 checks). Changed: `tests/scheme.test.mjs` (`select` joins the elements removed before the 0.11.0 comparison).
+- Not touched: `docs/decisions/`, `docs/briefs/`, `docs/compat-analysis.md`, `CLAUDE.md`, `AGENTS.md`, consumers, the archive (SHA-256 `3cdbe56f…1952`, checked at the end). No commit, no tag.
+
+**Hard**
+- Chrome 156.0.8078.48. Command: `PLAYWRIGHT_CHANNEL=chrome npm test`. Before: 238 checks. After: 258 run, 257 passed, 0 failed, 1 skipped (the scrollbar check), 385.1s.
+- Contrast, from rendered pixels: text 19.59:1 (light) and 17.52:1 (dark); arrow the same; border the same (the control border is the text colour). Disabled arrow 6.33:1 and 7.51:1. Native arrow in forced colours 21.00:1.
+- Select height 40px, equal to the text input, at 1280 and 320px in both schemes; widths equal in a row of two fields.
+- Wrong turn 1: the arrow disappeared in forced colours. Chrome reports `background-image: none, none` for a gradient under forced colours, and my `CanvasText` gradient rules had no effect. I measured it (`getComputedStyle`), then replaced those rules with `appearance: auto` in forced colours. The native arrow measures 21.00:1 there. Alternative: `forced-color-adjust: none` with system colours, which would also override the border and the text colours of the select.
+- Wrong turn 2: the disabled arrow measured 3.20:1 (light) instead of about 6.3:1. Cause: Chrome's default `select:disabled{opacity:.7}`. A disabled text input has no such default, so the select differed from it. Fixed with `opacity: 1`; the test now compares `opacity`.
+- The first arrow rules sat in `gov2.components`. The focus rules in `gov2.states` set the `background` shorthand and removed the arrow on focus, so the arrow rules moved to `gov2.states` (specificity 0,2,1 against 0,1,1).
+- The raw fixture overflows at 320px with root text 200% for reasons other than the selects (a table 412px wide, bare inputs 402 and 422px). It overflowed before this change. The test checks the selects there, and the whole page for the guide and the directory page.
+- Keyboard test: `ArrowDown` opens the popup on macOS, so the test uses type-ahead to change a closed select.
+
+**Decided**
+- Maintainer review (Opus): accepted the CSS and the four open choices. The native arrow in forced colours keeps the system colours; `forced-color-adjust:none` would override them. Added the breadcrumb rule from the org update: each step is a link with its own URL.
+- The arrow is two 0.45em gradient halves at `1rem` from the right edge, from `--g2-color-text`: no image, no colour literal, no token. It scales with the font size. Alternative: an inline SVG data URI needs a colour literal or a mask, which the brief rules out.
+- `size="1"` counts as a drop-down: the list case is `multiple` or `size` greater than 1. The class on a list gives border, font, background, padding and `max-width: 100%` only; height follows `size`.
+- Forced colours: the native appearance returns (see wrong turn 1).
+- Padding is `2.5rem` on the right: 1rem offset plus 0.9em arrow plus a gap. At 200% root text it scales with the root.
+- The directory example gets a *Sortare* select, because a sort order fits a result list. It sits in the existing search row.
+- Open for the maintainer: whether the 2.5rem padding and the `.45em` arrow suit the design; the `opacity: 1` reset is in `gov2.states` and applies to a multiple select too.
+
 ## 2026-10-27 — Navigation and data components (brief 07, 0.14.0)
 
 **Done**

@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.15.0 — 2026-10-27 (proposal, untested)
+
+Brief 08 (select control). Issue #10, approved by the owner. Nothing here is a breaking change: no token or class is renamed or removed, and no existing element computes a different style.
+
+**Added**
+- `.g2-input` works on a native `<select>`, with no new class and no new token. A drop-down select has the same height, border, font, focus treatment, disabled state and error state as a text input.
+- A CSS-only arrow, drawn from `--g2-color-text` (`--g2-color-text-muted` when disabled), 2.5rem of right padding so that the text never runs under it, and an ellipsis for a long option. In forced colours Chrome drops gradient backgrounds, so the select returns to `appearance: auto` with the native arrow. A disabled select has `opacity: 1` (the browser default is 0.7), so that it matches a disabled text input.
+- A `multiple` select, or a `size` greater than 1, keeps the native list with no arrow. The class gives it the border, font, background and padding.
+- A guide demonstration (normal, error, disabled, multiple), a section in `COMPONENTS.md`, a select in the raw fixture and a sort select in the directory example page.
+- `tests/select.test.mjs`.
+
+**Changed**
+- `COMPONENTS.md` no longer lists `select` under *Not in the DS yet*.
+
 ## 0.14.0 — 2026-10-27 (proposal, untested)
 
 Brief 07 (navigation and data components). Issues #3 to #8, approved by the owner. Nothing here is a breaking change: no token or class is renamed or removed, and no existing element computes a different style (the one exception is the deliberate fix under **Fixed**).
