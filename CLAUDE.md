@@ -79,7 +79,9 @@ The DS is at 0.x: a proposal, not tested yet. Before 1.0.0:
 
 **Versions follow the work.** The project is spec-driven (SDD), so documentation is also a deliverable. A spec, an ADR, a decision that changes a spec, a set of named tests and a measured spike are deliverables. After each committed chunk, check what changed since the last tag (`git log $(git describe --tags --abbrev=0)..HEAD`). For a deliverable or a structural change, bump the minor version. For a correction only, bump the patch version. Then commit and tag the commit. Do this without asking, and say when you did it.
 
-**Publishing a release is separate, and happens only when asked.** Publishing includes `git push`, a GitHub release, a deploy to gov2.ro or ui.gov2.ro, and a message to the projects.
+**Push after every release.** The owner gave standing permission on 2026-10-27: after you tag a release, run `git push origin main --tags`. Projects then find the latest tag on GitHub.
+
+**Other publishing happens only when asked.** This includes a GitHub release, a deploy to gov2.ro or ui.gov2.ro, and a message to the projects.
 
 ## Tone of voice
 
