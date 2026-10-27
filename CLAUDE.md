@@ -30,7 +30,7 @@ The suite runs the code blocks marked `<!-- example: … -->` in `docs/migration
 `tests/contract.html` tests raw components without documentation CSS. Extend the same suite for later briefs.
 The live guide replaces the historical bundle. The owner requested preserving that bundle in `docs/archive/` for reference.
 Keep the archived snapshot byte-for-byte unchanged; record provenance in its README. Do not migrate its tokens or embedded runtime.
-No hosted guide or CDN is configured.
+No hosted guide is configured. In development, projects can load tagged files from jsDelivr (`README.md`, *Dev mode*); production uses a copy.
 
 ## Logos
 
@@ -43,7 +43,7 @@ No hosted guide or CDN is configured.
 
 - **Only one version exists: the latest.** There are no release branches and no backports.
 - **Projects may include a copy of the files.** The consumer chooses its own asset path. A project with a copy stays on that version until it updates. When it updates, it goes to the latest version and reads `CHANGELOG.md` back to its old version. The project copies the file as it is and does not edit the copy.
-- **Quick projects will load the files from gov2.ro or ui.gov2.ro.** This is not set up yet. CDN delivery is not set up either.
+- **Projects in development can load tagged files from jsDelivr** (the repository is public). Quick projects will later load the files from gov2.ro or ui.gov2.ro; this is not set up yet.
 - A project keeps its own styles in its own file, with its own class prefix. Prefer shared components where they fit. Document useful local variations and retain accessible behaviour. The customization contract is accepted in ADR 0004 and specified for implementation in `docs/briefs/01-shared-css-contract.md`.
 
 ## Shared system boundary

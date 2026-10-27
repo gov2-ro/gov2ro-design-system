@@ -61,7 +61,21 @@ To update, run the same command with a newer tag, then read `CHANGELOG.md` back 
 - A page that links `fonts.css` needs `style-src 'self'` and `font-src 'self'` in its Content-Security-Policy, if it serves the files itself.
 - `gov2.css` alone makes no font request and works offline. Without `fonts.css`, the page falls back to the system fonts in `--g2-font-sans` and `--g2-font-mono`.
   Skip `fonts.css` only for a quick one-off project that accepts system fonts, or when the project already serves Inter and Fragment Mono itself.
-- No public CDN or hosted guide is configured. Do not link to one.
+- No hosted guide is configured.
+
+### Dev mode: load the files from jsDelivr
+
+While a project is in development, it can load the DS from jsDelivr instead of a copy. jsDelivr serves the files of this public repository.
+
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/gov2-ro/gov2ro-design-system@vX.Y.Z/gov2.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/gov2-ro/gov2ro-design-system@vX.Y.Z/fonts.css">
+```
+
+- Use an exact tag. Do not use `@main`: jsDelivr caches a branch for up to 12 hours, and a branch changes under the page.
+- The fonts load from the same tag, because `fonts.css` finds `fonts/` with relative URLs. jsDelivr sends `Access-Control-Allow-Origin: *`, so the fonts load from another origin.
+- A jsDelivr link is a third-party request. For production, copy the files from a tag (above). Do not ship a jsDelivr link in production.
+- Request a tag only after it is pushed. jsDelivr caches a failed request, and the URL can stay 404 for hours.
 
 Loading the stylesheet applies the base styles to the whole page. No activation attribute or wrapper is needed.
 The page is light by default. To opt in to the dark scheme, set `data-g2-scheme="auto"` (follows the reader's setting) or `data-g2-scheme="dark"` on `<html>`.

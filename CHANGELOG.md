@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.17.0 — 2026-10-27 (proposal, untested)
+
+**Added**
+- Dev mode: the repository is public, so a project in development can load `gov2.css` and `fonts.css` from jsDelivr with an exact tag. `README.md`, *Dev mode*, has the links and the limits. Production still uses a copy from a tag.
+
+**Changed**
+- `CLAUDE.md` and `AGENTS.md`: the maintainer pushes after every release (owner's standing permission).
+
 ## 0.16.0 — 2026-10-27 (proposal, untested)
 
 The civtech sweep.

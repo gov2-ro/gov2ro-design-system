@@ -1,5 +1,16 @@
 # Activity
 
+## 2026-10-27 — Dev mode via jsDelivr (0.17.0)
+
+**Done**
+- The owner made the repository public and gave standing permission to push after every release. Documented jsDelivr dev links in `README.md`, the project block, `CLAUDE.md`, `AGENTS.md` and the guide.
+
+**Hard**
+- jsDelivr cached the 404 of `@v0.16.0`, requested while the repository was still private. A purge did not clear it: `@v0.16.0/gov2.css` stayed 404, while `@v0.15.0`, the full commit SHA and `@main` returned 200 `text/css`. A font file returned 200 `font/woff2` with `Access-Control-Allow-Origin: *`. Measured 2026-10-27.
+
+**Decided**
+- Dev mode only, with exact tags. A jsDelivr link is a third-party request, and org and stiri ship no third-party requests. Production keeps the copy from a tag.
+
 ## 2026-10-27 — The civtech sweep (tests and documents; ADR 0010 amendment, 0.16.0)
 
 **Done**

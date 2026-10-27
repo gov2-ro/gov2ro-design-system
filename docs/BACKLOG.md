@@ -159,7 +159,7 @@ Defects found during brief 01. They existed in 0.7.0. The migration did not chan
 
 ## Delivery
 
-- [ ] Set up file delivery from gov2.ro or ui.gov2.ro for quick projects. It must serve `gov2.css`, `fonts.css` and `fonts/` together, with `font/woff2` for the files. A second origin for the fonts also needs `Access-Control-Allow-Origin` and `font-src` (untested). Hosting is a separate decision.
+- [~] Set up file delivery for quick projects. Dev mode uses jsDelivr from 0.17.0 (the repository is public). gov2.ro or ui.gov2.ro is not set up. It must serve `gov2.css`, `fonts.css` and `fonts/` together, with `font/woff2` for the files. A second origin for the fonts also needs `Access-Control-Allow-Origin` and `font-src` (untested). Hosting is a separate decision.
 - [ ] `docs/connect-a-project.md` still says that `gov2.css` loads Google Fonts (the *Google Fonts* line and the prompt 1 hint). The maintainer updates that file: brief 03 did not edit it.
 - [~] Update the copy in posturi.gov.ro (`webapp-php/static/skins/gov2.css`). The owner copied 0.4.0, and the block says 0.4.0. Not committed in posturi yet.
 
