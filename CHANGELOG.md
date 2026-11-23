@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.17.5 — 2026-11-23 (proposal, untested)
+
+**Fixed**
+- `README.md`, *Projects that use the DS*: link to the project prompts in `docs/connect-a-project.md`.
+
 ## 0.17.4 — 2026-11-23 (proposal, untested)
 
 **Fixed**
