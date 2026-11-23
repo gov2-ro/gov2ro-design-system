@@ -87,6 +87,21 @@ The stylesheet declares the layers `reset, gov2, utilities, app`. Put your reset
 Read [COMPONENTS.md](COMPONENTS.md) for the API and [GUIDELINES.md](GUIDELINES.md) for design defaults and accessibility.
 A project that uses 0.6.0 or 0.7.0 reads [the migration guide](docs/migration-from-0.6.0.md): old and new names, loading examples and the layer limits.
 
+## Projects that use the DS
+
+Checked on 2026-11-23 in the `gov2-ro` GitHub organisation (default branches) and in the local `~/devbox/gov2/` folders.
+Each project keeps a copy of `gov2.css`. No project loads the DS from jsDelivr.
+
+| Project | Repository | Copy of `gov2.css` | Version |
+|---|---|---|---|
+| gov2.ro | `gov2-ro/gov2-alpha-sunrise` | `assets/gov2/gov2.css` | 0.17.1 |
+| posturi.gov2.ro | `gov2-ro/posturi.gov.ro` | `webapp-php/static/gov2/gov2.css` | 0.17.1 |
+| org.gov2.ro | `gov2-ro/institutii-publice` | `explorer/assets/gov2/gov2.css` | 0.16.0 |
+| awesome-jurnalism-investigatie | `gov2-ro/awesome-jurnalism-investigatie` | `site/vendor/gov2-ds/gov2.css` | 0.9.1 |
+| stiri.gov2.ro | `gov2-ro/stiri` | `site/static/gov2.css` | 0.6.0 |
+
+The version comes from the header comment of each copy. When a project adopts or updates the DS, update this table.
+
 ## Preview and check the guide
 
 The guide is plain HTML. Editing `gov2.css` changes its examples immediately; no build is required.

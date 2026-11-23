@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.17.2 — 2026-11-23 (proposal, untested)
+
+**Fixed**
+- `README.md`: new section *Projects that use the DS*. It lists the five consumer repos, the path of each copy and its version, checked on GitHub and locally.
+
 ## 0.17.1 — 2026-10-27 (proposal, untested)
 
 **Fixed**
