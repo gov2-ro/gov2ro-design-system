@@ -191,6 +191,7 @@ The owner chose the header background, the title shadow and the corner mark on 2
 - [ ] Test the title shadow with `text-shadow` and with `filter: drop-shadow` on `.g2-ro-sweep`, and capture the sweep in the middle of the title. ADR 0011, amendment.
 - [ ] Decide the pattern on narrow screens, where the wrapped navigation sits on the dense end. ADR 0011, open point 5.
 - [ ] Write brief 09 for the header background after the owner answers the open points: tokens for the gradient, the SVG pattern and its delivery, the glitter, the title shadow, the corner mark, the dark scheme, the tests. Opus writes it; Sonnet implements it.
+- [ ] Owner: choose the geometry of the corner mark and the signature characters next to the title. The canvas has nine geometry variants (the oblique lines are the owner's idea) and six signatures of plain characters. Until then the mark is V1b (ADR 0011, amendment). A choice amends ADR 0011.
 - [ ] Draw the logo as a monochrome SVG for `logo/`. gov2.ro uses a PNG (`assets/g2-0.png`); `logo/` holds only its README.
 - [ ] After the implementation, change the description of the look in `README.md`, `CLAUDE.md`, `AGENTS.md` and the header comment of `gov2.css`, and tell the projects.
 
@@ -202,6 +203,8 @@ The owner chose the header background, the title shadow and the corner mark on 2
 
 ## Verified limits
 
+- [-] Use `#` as a brand sign (on the tricolour corner, next to a title, in a favicon). Rejected by the owner on 2026-11-24: it reads as the sign of the Legionary Movement (the grid of the Iron Guard), most of all as a grid on the tricolour colours. Do not propose it again.
+- [-] Draw signs (`+`, `*`) on the colours of `.g2-ro-corner`. Rejected by the owner on 2026-11-24: no variant looked right. Measured in a render: at colours 8px high a sign is 5px high and reads as a speck; a single sign in the middle has the layout of a flag with an emblem.
 - [-] Ship Fragment Mono with the cedilla t (Ţ ţ, U+0162 and U+0163). Dead end: the Fragment Mono 1.011 files do not contain them (read from the `cmap` of both shipped files); the comma-below forms Ț ț are there. The required Romanian letters are all covered. Text that uses Ţ ţ in monospace falls back for those two letters. Inter has all four cedilla and comma-below forms.
 - [-] Ship Inter as four static weights. Not chosen: 240,272 bytes in 8 files against 133,324 bytes in 2 variable files (measured, `fonts/README.md`). The variable file covers 100 to 900.
 - [-] Make the gov2 focus unbreakable by layers alone. Dead end: a rule in `utilities`, in `app` or outside every layer that sets `background` or `color` on a focusable control replaces `gov2.states`. Measured in the suite (*documented limits*). The documented mitigation is to change colours only with `:not(:focus-visible)`, or to repeat the focus rule in the same layer.

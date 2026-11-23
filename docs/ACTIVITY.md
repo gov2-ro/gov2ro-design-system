@@ -1,5 +1,22 @@
 # Activity
 
+## 2026-11-24 — Signs on the tricolour: dead ends (0.19.1)
+
+**Done**
+- The owner asked for a small change to the tricolour corner, so that nobody takes it for an official mark, and for a signature next to each title. I drew signs on the colours in the canvas (`+`, `*`, and `# + *`), and the same three signs as three coloured squares next to the title or the logo.
+- The owner rejected all of them. I then drew a second round: nine geometry variants of the mark with no sign (oblique lines at 15, 30 and 45 degrees, an angle, a parallelogram, steps, unequal widths, a cut corner), and six signatures made of plain characters next to the name. The owner has not chosen yet.
+- `docs/BACKLOG.md`: two dead ends under *Verified limits*, and one open item under *Identity*. ADR 0011 did not change: the corner mark is still V1b.
+
+**Hard**
+- Wrong turn: I proposed `#` as a brand sign. The owner rejected it: it reads as the sign of the Legionary Movement (the grid of the Iron Guard). I drew it as a white grid on the blue of the tricolour, which makes the likeness stronger. I did not check the sign against Romanian political symbols before I drew it.
+- Rendered in Chromium outside the canvas: at the chosen height (colours 8px high) a sign on a colour is 5px high and reads as a speck. A sign needs colours about 12px high.
+- A single sign in the middle of the tricolour has the layout of a flag with an emblem in the centre.
+
+**Decided**
+- `#` is not used in gov2 branding, in any form. Rationale from the owner: the likeness to a far-right symbol. Cost: none; other signs are available.
+- No sign is drawn on the tricolour colours. Rationale from the owner: no variant looked right.
+- Still open: the geometry of the mark, and the signature characters.
+
 ## 2026-11-24 — The owner accepted the typefaces (ADR 0012, 0.19.0)
 
 **Done**

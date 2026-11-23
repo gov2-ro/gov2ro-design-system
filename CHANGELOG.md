@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.19.1 — 2026-11-24 (proposal, untested)
+
+**Fixed**
+- `docs/BACKLOG.md`, *Verified limits*: two dead ends from the identity work. `#` is not used as a brand sign, and no sign is drawn on the tricolour colours. `docs/ACTIVITY.md` records the wrong turn.
+
 ## 0.19.0 — 2026-11-24 (proposal, untested)
 
 **Added**
