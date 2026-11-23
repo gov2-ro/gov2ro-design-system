@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.18.0 — 2026-11-24 (proposal, untested)
+
+**Added**
+- ADR 0011 (`docs/decisions/0011-header-background.md`): the owner chose the header background. It is a gradient from `#0b3d91` to `#3e3d6c`, with a grid that becomes punch-card perforations and a slow glitter. The title and the tricolour corner do not change. Not implemented: `gov2.css` is the same as in 0.17.5.
+- ADR 0011, amendment: the title has a small dark shadow, and the tricolour corner has a new drawing (58px by 9px, 1px light lines between the colours and on three sides, a small shadow). Not implemented.
+- ADR 0012 (`docs/decisions/0012-typeface-direction.md`), proposed: IBM Plex Sans and IBM Plex Mono in place of Inter and Fragment Mono. The owner has not confirmed it.
+- `docs/BACKLOG.md`: new section *Identity*, with the open points of both ADRs.
+
 ## 0.17.5 — 2026-11-23 (proposal, untested)
 
 **Fixed**

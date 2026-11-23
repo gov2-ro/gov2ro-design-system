@@ -175,9 +175,25 @@ Brief 06 follow-ups (measured in `ACTIVITY.md`):
 - [ ] Manual checks not done for brief 06: Safari and Firefox (the technique, the `@supports` fallback, selection), a screen reader on the title link, real forced colours on Windows, a real print or PDF, and a real project header. See `testing.md`.
 - [ ] `docs/migration-from-0.6.0.md` (token table rows for `--c-ro-blue`, `--c-ro-yellow`, `--c-ro-red`) still says "Decorative only, never text." The file is outside the scope of brief 06. Update the three rows to name the exception, or leave them: they describe the 0.6.0 tokens.
 
+## Identity (ADR 0011, ADR 0012)
+
+The owner chose the header background, the title shadow and the corner mark on 2026-11-24 (ADR 0011 and its amendment, released as 0.18.0). The type direction is proposed (ADR 0012).
+
+- [ ] Owner: confirm or reject ADR 0012 (IBM Plex Sans and IBM Plex Mono in place of Inter and Fragment Mono).
+- [ ] Owner: accept or reject the glitter as a WCAG 2.2.2 deviation, as for the sweep in ADR 0010. The alternatives are a stop after 5 seconds, or a pause control. ADR 0011, open point 1.
+- [ ] Measure `.g2-ro-sweep` on the new background in a browser. Computed: blue 1.27:1 and red 1.79:1, against 1.54:1 and 3.48:1 on black. Then decide the sweep colours for this header. ADR 0011, open point 2.
+- [ ] Decide the bottom band: colour, height, or no band. `--g2-color-brand` is the left colour of the gradient, so the current band is not visible there. ADR 0011, open point 3.
+- [x] Decide the blue third of `.g2-ro-corner` on the new background (computed 1.27:1). Closed 2026-11-24: the mark has a 1px light edge on three sides (ADR 0011, amendment).
+- [ ] Decide if the new drawing of `.g2-ro-corner` (58px by 9px, lines, edge, shadow) applies to every header or only to the new background. ADR 0011, amendment.
+- [ ] Test the title shadow with `text-shadow` and with `filter: drop-shadow` on `.g2-ro-sweep`, and capture the sweep in the middle of the title. ADR 0011, amendment.
+- [ ] Decide the pattern on narrow screens, where the wrapped navigation sits on the dense end. ADR 0011, open point 5.
+- [ ] Write brief 09 for the header background after the owner answers the open points: tokens for the gradient, the SVG pattern and its delivery, the glitter, the title shadow, the corner mark, the dark scheme, the tests. Opus writes it; Sonnet implements it.
+- [ ] Draw the logo as a monochrome SVG for `logo/`. gov2.ro uses a PNG (`assets/g2-0.png`); `logo/` holds only its README.
+- [ ] After the implementation, change the description of the look in `README.md`, `CLAUDE.md`, `AGENTS.md` and the header comment of `gov2.css`, and tell the projects.
+
 ## Later: explorations requested by the owner
 
-- [ ] **Skins.** Explore different styles and colours with the same structure: the same `.g2-*` classes and markup, with other token values (palette, type, density). Decide how a skin is delivered (a token file loaded after `gov2.css`, or an attribute like `data-g2-scheme`) and how it combines with the light and dark schemes. Needs an ADR. Owner request, 2026-10-27.
+- [ ] **Skins.** Explore different styles and colours with the same structure: the same `.g2-*` classes and markup, with other token values (palette, type, density). Decide how a skin is delivered (a token file loaded after `gov2.css`, or an attribute like `data-g2-scheme`) and how it combines with the light and dark schemes. Needs an ADR. Owner request, 2026-10-27. Note 2026-11-24: ADR 0011 changes the default header; it is not a skin. This item stays open.
 - [ ] **Rotating title text for civtech.** A component that changes the title text with transitions, like the civtech `.brand-name` (several effects, `data-fx`). First try CSS only: stack the variants in one grid cell (`grid-area:1/1`, so the box takes the widest), and give each the same keyframes with a staggered `animation-delay` (`calc(var(--i) * …)`). Known limits of CSS only: the number of items and the timing are fixed in the markup or the CSS; there is no random effect choice; screen readers find every variant (give the variants `aria-hidden` and keep one real title); reduced motion shows the first variant only. Check WCAG 2.2.2 (moving content). Owner request, 2026-10-27.
 - [ ] **Assets library for optional scripts.** JavaScript is not part of the core system. When a component needs a script (for example the civtech effect choice), build an optional assets library: start it in this repository, in its own folder, separate from `gov2.css`, with its own version notes. Move it to its own repository only if it grows. Owner direction, 2026-10-27.
 

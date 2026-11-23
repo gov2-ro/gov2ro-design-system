@@ -1,5 +1,50 @@
 # Activity
 
+## 2026-11-24 — Title shadow and corner mark chosen (ADR 0011 amendment, 0.18.0)
+
+**Done**
+- The owner asked for a dark shadow on the title and for a finer tricolour corner. I drew four variants in the canvas: V1 (shadow, lines between the colours, shadow on the mark), V2 (V1 with a relief gradient), V1a (weaker shadows, a light edge on three sides) and V1b (V1a, 8px high).
+- The owner chose V1b. ADR 0011 has an amendment with all values. Open point 4 (the blue third of the mark) is closed.
+- Released 0.18.0: this entry and the entry below, ADR 0011, ADR 0012 (proposed), `docs/BACKLOG.md`, `docs/briefs/README.md`, `CHANGELOG.md`, and the version in the header comment of `gov2.css`. No rule and no token in `gov2.css` changed.
+
+**Hard**
+- Computed (WCAG formula, not measured in a browser): the edge of the mark (white at 45% on `#3e3d6c`) is `#9594ae`; 3.41:1 against the background, 4.31:1 against the blue third, 2.00:1 against the yellow, 1.91:1 against the red.
+- Rendered in Chromium outside the canvas at 1320px and 390px wide: no horizontal overflow. The first version of the detail tiles overflowed at 390px; the wrappers needed `max-width: 100%`.
+- I did not capture a frame with the sweep in the middle of the title. So I do not know how much the shadow helps the blue and red parts of the sweep (ADR 0011, open point 2).
+- I did not run `npm test` for this release: the session shell has no browser for Playwright. The release changes documents and one comment line in `gov2.css`.
+- The owner asked if this work needs a branch. It does not: the DS has one version and no release branches, and this release has no CSS change. The implementation brief can use the same flow.
+
+**Decided**
+- V1b: title shadow `0 1px 1px` black at 35%; corner mark 58px by 9px with 1px white lines at 45% between the colours and on the left, right and bottom, and a shadow `0 1px 2px` black at 30%. Rationale from the owner: the first shadows were too strong; the edge must not close the top; a taller mark is easier to see. Cost of the alternative V2: a glossy element on a flat page.
+- Not decided: if the new drawing of `.g2-ro-corner` applies to every header or only to the new background (ADR 0011, amendment, *Still open*).
+
+## 2026-11-24 — Identity exploration: header background chosen (ADR 0011), type direction proposed (ADR 0012)
+
+**Done**
+- The owner asked for an identity that differs from other GOV.UK copies. I surveyed the live projects, then drew options in a design canvas (not in this repository): four identity directions, five header studies, eight background textures, ten variants on indigo, and a final header with glitter controls.
+- The owner chose the header background named T9e. ADR 0011 records it with all values. `gov2.css` did not change.
+- ADR 0012 records the type direction (IBM Plex Sans and IBM Plex Mono) as proposed. The owner leans to it and has not confirmed it.
+- `docs/BACKLOG.md` (new section *Identity*), `CHANGELOG.md` (`## Unreleased`), `docs/briefs/README.md` (decisions D7 and D8).
+- Not committed at that time: the session shell had no git identity and no key for the remote. Committed in 0.18.0, with the entry above.
+
+**Hard**
+- Measured 2026-11-23 in a browser on the live sites: posturi, org, stiri and gov2.ro/liste/jurnalism use `.g2-header` (background `rgb(11, 12, 12)`, bottom border 8px `rgb(11, 61, 145)`, 60px high). The three sites without the DS header have a light header: civtech (white at 94%, 3px rule `rgb(11, 61, 145)`), ins (`rgba(248, 249, 251, .85)`, 1px rule), lab.gov2.ro/ro-alert (`rgb(250, 248, 241)`).
+- Measured on civtech: `--font-head` Instrument Sans, `--font-body` IBM Plex Sans, `--font-mono` JetBrains Mono, `--accent` `#1d4ed8`, `--radius` 5px.
+- gov2.ro shows the logo as a PNG (`assets/g2-0.png`, 980 by 980). `logo/` in this repository holds only its README.
+- GOV.UK changed its header to blue in June 2025; GOV.UK Frontend 6 removes the black header. Source: the GOV.UK brand guidelines and the Frontend 6 pre-release notes.
+- Computed (WCAG formula, not measured in a browser) for the chosen gradient `#0b3d91` to `#3e3d6c`: white text 10.04:1 to 10.24:1; muted `#cccccc` 6.25:1 to 6.38:1; sweep blue `#002b7f` 1.24:1 to 1.27:1; sweep red `#ce1126` 1.79:1 to 1.82:1; band `#1d4ed8` 1.50:1 to 1.53:1. On the black header ADR 0010 measured 1.54:1 for blue and 3.48:1 for red.
+- Rendered the canvas pages in Chromium outside the canvas, with the real font files, at 1320px and 390px wide: no horizontal overflow. With the first glitter set at 50% of a white overlay (the chosen value is 55%) and speed 1, about 0.5% of the header pixels changed between frames 3.5 s apart (706 to 766 of 148,800). I did not repeat this measurement at speed 2.5 or with the yellow pulses. With `prefers-reduced-motion: reduce` the glitter layers have no animation and opacity 0.
+- I did not test the canvas controls in the canvas editor. The owner used them and reported the values.
+- Wrong turn: I recommended direction D (double rule, indigo accent) and then the single-hue gradient T9f. The owner chose direction C and the blue-to-indigo gradient T9e.
+- Wrong turn: I advised against a saturated header, because the blue third of the corner mark is weak on blue. The owner chose a blue header. The problem is real (1.27:1) and is open point 4 in ADR 0011.
+- Correction: I told the owner that 27 perforations can pulse yellow. The number is 29.
+
+**Decided**
+- The header background is T9e: the gradient, the grid that becomes punch-card perforations, and the glitter with the owner's values (strength 0.5, glitter 1.1, speed 2.5×, frequency 4, saturation 1). Rationale from the owner: a filled header carries the brand and is easy to remember; the random, graded perforations are better than a constant pattern. Cost of the alternatives: a light header (the studies H1, H3, H5) removes the surface that the owner wants for the brand.
+- The decision is about the background only. The title stays as on posturi and org, with `.g2-ro-sweep`. Cost: the sweep has less contrast on the new background than on black; this is open point 2 in ADR 0011.
+- The tricolour corner stays.
+- Not decided: the glitter as a WCAG 2.2.2 deviation, the bottom band, narrow screens, delivery and token names (ADR 0011, *Open points*); the fonts (ADR 0012).
+
 ## 2026-10-27 — Dev mode via jsDelivr (0.17.0)
 
 **Done**
