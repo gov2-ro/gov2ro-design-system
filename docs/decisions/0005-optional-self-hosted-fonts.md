@@ -42,3 +42,9 @@ The installation guidance changes: every project copies and links `fonts.css` an
 Only a quick one-off project skips them and uses the system fallback stacks.
 A project that already self-hosts the same families can keep its own files.
 Documentation does not describe the local fonts as the optional, minority choice.
+
+## Amendment (2026-11-24): the families change (ADR 0012)
+
+ADR 0012 replaces Inter with IBM Plex Sans and Fragment Mono with IBM Plex Mono.
+The delivery rule of this ADR does not change: local files, no remote font request, notices with the files.
+Until ADR 0012 is implemented, `fonts.css` and `fonts/` supply Inter and Fragment Mono.

@@ -1,5 +1,21 @@
 # Activity
 
+## 2026-11-24 — The owner accepted the typefaces (ADR 0012, 0.19.0)
+
+**Done**
+- The owner confirmed ADR 0012: IBM Plex Sans and IBM Plex Mono replace Inter and Fragment Mono. The ADR status is now Accepted. ADR 0005 has an amendment that points to it.
+- Released 0.19.0: the two ADRs, `docs/BACKLOG.md`, `docs/briefs/README.md`, `CHANGELOG.md`, and the version in the header comment of `gov2.css`. No rule, no token and no font file changed.
+
+**Hard**
+- Nothing measured for the new families. The measurements are in ADR 0012, *To measure in the brief*: the Romanian letters in both subsets, file sizes, text width against Inter, the fallback stack.
+- `tests/fonts.test.mjs` checks the current families and files. The implementation changes this test together with `fonts/`.
+- The session shell cannot reach github.com (name resolution failed on 2026-11-24). 0.18.0 and 0.19.0 are committed and tagged locally. The owner pushes them.
+- I did not run `npm test`: the session shell has no browser for Playwright.
+
+**Decided**
+- IBM Plex Sans for text and headings, IBM Plex Mono for numbers, codes, metadata and short uppercase labels. Rationale from the owner: direction C (a registry look) fits the projects; civtech already uses IBM Plex Sans for text. Cost of the alternatives: Inter is the usual substitute in GOV.UK copies (no identity); a serif for headings (direction B) is heavy in dense lists.
+- Not decided: the accent `#1d4ed8` and the flat button from direction C (ADR 0012, *Not part of this decision*).
+
 ## 2026-11-24 — Title shadow and corner mark chosen (ADR 0011 amendment, 0.18.0)
 
 **Done**

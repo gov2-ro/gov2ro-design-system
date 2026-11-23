@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.19.0 — 2026-11-24 (proposal, untested)
+
+**Added**
+- ADR 0012 is accepted: IBM Plex Sans and IBM Plex Mono replace Inter and Fragment Mono. ADR 0005 has an amendment that points to it. Not implemented: this release ships Inter and Fragment Mono, as 0.18.0 does. The implementation will be a **Breaking** change for projects with a copy (two token values and the font files).
+
 ## 0.18.0 — 2026-11-24 (proposal, untested)
 
 **Added**

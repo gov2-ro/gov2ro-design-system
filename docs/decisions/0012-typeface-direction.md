@@ -1,7 +1,8 @@
-# ADR 0012: Typeface direction — IBM Plex Sans and IBM Plex Mono
+# ADR 0012: Typefaces — IBM Plex Sans and IBM Plex Mono
 
 Date: 2026-11-24
-Status: Proposed. The owner said on 2026-11-23 that they lean to this direction. The owner has not confirmed it as final.
+Status: Accepted by the owner in this session on 2026-11-24. Not implemented.
+The owner said on 2026-11-23 that they lean to this direction, and confirmed it on 2026-11-24: IBM Plex Sans and IBM Plex Mono replace Inter and Fragment Mono.
 
 ## Context
 
@@ -19,7 +20,7 @@ The owner compared four directions in a design canvas on 2026-11-23:
 The owner chose to continue with C · Registru. All later header studies used IBM Plex Sans and IBM Plex Mono.
 civtech.gov2.ro already uses IBM Plex Sans for text (with Instrument Sans for headings and JetBrains Mono).
 
-## Proposed decision
+## Decision
 
 - `--g2-font-sans` names IBM Plex Sans, for text and for headings.
 - `--g2-font-mono` names IBM Plex Mono, for numbers, codes and metadata.
@@ -29,7 +30,7 @@ civtech.gov2.ro already uses IBM Plex Sans for text (with Instrument Sans for he
 The delivery rule of ADR 0005 does not change: the files are local, `gov2.css` makes no font request, and the notices stay with the files.
 This ADR changes only the two families that ADR 0005 names. Fragment Mono and Inter leave `fonts/` when this is implemented.
 
-## Not part of this proposal
+## Not part of this decision
 
 The canvas drew other parts of direction C. The owner has not chosen them:
 
@@ -37,7 +38,7 @@ The canvas drew other parts of direction C. The owner has not chosen them:
 - the header of direction C (white, with a blue rule). ADR 0011 replaces it;
 - the title as a path, `gov2.ro / posturi`. ADR 0011 keeps the current title.
 
-## To measure before acceptance
+## To measure in the brief
 
 - The Romanian letters ă, â, î, ș, ț and their capitals in both families, in the `latin` and `latin-ext` subsets.
 - File sizes. The current fonts are 172,660 bytes in 4 files (`fonts/README.md`). Check if a variable IBM Plex Sans file exists and compare it with four static weights (400, 500, 600, 700).
@@ -46,6 +47,7 @@ The canvas drew other parts of direction C. The owner has not chosen them:
 
 ## Consequences
 
-This is a breaking change for projects with a copy: two token values and the font files change. The owner approves it in an issue.
+This is a breaking change for projects with a copy: two token values and the font files change. The owner approved it in this session.
+`gov2.css`, `fonts.css` and `fonts/` do not change with this ADR. Until the implementation, the DS ships Inter and Fragment Mono.
 `docs/migration-from-0.6.0.md`, `fonts/README.md`, `COMPONENTS.md` and the guide change with the implementation.
 civtech comes closer to the DS for text. Its heading and mono families stay local until civtech adopts the DS.

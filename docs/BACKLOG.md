@@ -177,9 +177,12 @@ Brief 06 follow-ups (measured in `ACTIVITY.md`):
 
 ## Identity (ADR 0011, ADR 0012)
 
-The owner chose the header background, the title shadow and the corner mark on 2026-11-24 (ADR 0011 and its amendment, released as 0.18.0). The type direction is proposed (ADR 0012).
+The owner chose the header background, the title shadow and the corner mark on 2026-11-24 (ADR 0011 and its amendment, released as 0.18.0). The owner accepted the typefaces on 2026-11-24 (ADR 0012, released as 0.19.0).
 
-- [ ] Owner: confirm or reject ADR 0012 (IBM Plex Sans and IBM Plex Mono in place of Inter and Fragment Mono).
+- [x] Owner: confirm or reject ADR 0012 (IBM Plex Sans and IBM Plex Mono in place of Inter and Fragment Mono). Confirmed 2026-11-24.
+- [ ] Write brief 10 for the typefaces (ADR 0012): the measurements, `fonts.css` and `fonts/` with licences and checksums, the two font tokens, the uppercase mono labels, `tests/fonts.test.mjs`, the migration document, and the **Breaking** entry. Opus writes it; Sonnet implements it.
+- [ ] Owner: decide the accent `#1d4ed8` and the flat primary button from direction C. ADR 0012, *Not part of this decision*.
+- [ ] Push 0.18.0 and 0.19.0 (`git push origin main --tags`). The session shell could not reach github.com.
 - [ ] Owner: accept or reject the glitter as a WCAG 2.2.2 deviation, as for the sweep in ADR 0010. The alternatives are a stop after 5 seconds, or a pause control. ADR 0011, open point 1.
 - [ ] Measure `.g2-ro-sweep` on the new background in a browser. Computed: blue 1.27:1 and red 1.79:1, against 1.54:1 and 3.48:1 on black. Then decide the sweep colours for this header. ADR 0011, open point 2.
 - [ ] Decide the bottom band: colour, height, or no band. `--g2-color-brand` is the left colour of the gradient, so the current band is not visible there. ADR 0011, open point 3.

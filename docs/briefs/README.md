@@ -26,7 +26,7 @@ See ADR 0001 in `../decisions/0001-shared-system-boundary.md`.
 | D5 | Guide and verification | Editable live guide loading shipped CSS, with browser checks and separate manual procedures | Accepted; ADR 0006; implemented against the current API | 02 |
 | D6 | Next component scope | Container, spacing, type, responsive header/footer and field examples, checked through directory/results and form/detail pages | Accepted; ADR 0007 | 04 |
 | D7 | Header background | Gradient `#0b3d91` to `#3e3d6c`, grid that becomes punch-card perforations, slow glitter; the title stays and gets a small shadow; the tricolour corner stays and gets a new drawing | Accepted; ADR 0011 and its amendment; open points wait for the owner | 09 (not written) |
-| D8 | Typefaces | IBM Plex Sans and IBM Plex Mono in place of Inter and Fragment Mono | Proposed; ADR 0012; the owner has not confirmed it | — |
+| D8 | Typefaces | IBM Plex Sans and IBM Plex Mono in place of Inter and Fragment Mono | Accepted; ADR 0012; not implemented | 10 (not written) |
 
 All decisions above are accepted. Each implementation brief describes its scope and acceptance checks.
 
