@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.17.3 — 2026-11-23 (proposal, untested)
+
+**Fixed**
+- `README.md`, *Projects that use the DS*: new *Candidates* list with civtech.gov2.ro and ins.gov2.ro. Neither project uses `gov2.css` yet.
+- `docs/BACKLOG.md`: the ins.gov2.ro repo is `tempo-ins-dump`; civtech findings measured.
+
 ## 0.17.2 — 2026-11-23 (proposal, untested)
 
 **Fixed**
