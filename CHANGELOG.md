@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.17.4 — 2026-11-23 (proposal, untested)
+
+**Fixed**
+- `README.md`, *Candidates*: civtech has two local classes with the DS prefix, not four.
+
 ## 0.17.3 — 2026-11-23 (proposal, untested)
 
 **Fixed**

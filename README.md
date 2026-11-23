@@ -106,7 +106,7 @@ The version comes from the header comment of each copy. When a project adopts or
 
 | Project | Repository | State on 2026-11-23 |
 |---|---|---|
-| civtech.gov2.ro | `gov2-ro/awesome-civtech-ro` (local `awesome-civetch`) | Own `site/style.css` with own tokens. The DS took its sweep and dark look from civtech. Four local classes use the DS prefix (`.g2-mark`, `.g2-by`). |
+| civtech.gov2.ro | `gov2-ro/awesome-civtech-ro` (local `awesome-civetch`) | Own `site/style.css` with own tokens. The DS took its sweep and dark look from civtech. Two local classes use the DS prefix (`.g2-mark`, `.g2-by`). |
 | ins.gov2.ro | `gov2-ro/tempo-ins-dump` | No reference to the DS. To be analysed. |
 
 ## Preview and check the guide
