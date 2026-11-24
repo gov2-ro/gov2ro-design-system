@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.19.2 — 2026-11-24 (proposal, untested)
+
+**Fixed**
+- `docs/BACKLOG.md` and `docs/ACTIVITY.md`: the best proposal for the corner mark is two lines that lean 15 degrees. It is not decided; the mark stays as in ADR 0011. Extra characters next to the title are dropped for now.
+
 ## 0.19.1 — 2026-11-24 (proposal, untested)
 
 **Fixed**

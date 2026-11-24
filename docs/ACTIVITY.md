@@ -1,5 +1,20 @@
 # Activity
 
+## 2026-11-24 — Corner mark: oblique lines at 15 degrees are the best proposal (0.19.2)
+
+**Done**
+- The owner looked at the nine geometry variants of the corner mark and at the six signatures of plain characters in the canvas.
+- Recorded as a proposal, not as a decision: `docs/BACKLOG.md` (*Identity*), this entry, `CHANGELOG.md`. ADR 0011 did not change: the corner mark is still V1b, with vertical lines.
+
+**Hard**
+- The proposal (variant O1 in the canvas): the two light lines between the colours lean 15 degrees from the vertical, with the top to the right. The mark keeps its size (58px by 9px), its colours, its edge and its shadow. Over the 8px height of the colours a line moves 2.14px sideways.
+- Rendered in Chromium outside the canvas at real size and at 6 times: the lean at 15 degrees is small at real size. At 30 degrees a line moves 4.62px, and at 45 degrees it moves 8px.
+- My recommendation was 30 degrees with `//` before the name. The owner prefers 15 degrees and no extra characters.
+
+**Decided**
+- Nothing is decided for the mark. The owner said that 15 degrees is the best proposal and is not sure about it yet.
+- Extra characters next to the name are dropped for now. Rationale from the owner: not now. The six variants stay in the canvas as an archive.
+
 ## 2026-11-24 — Signs on the tricolour: dead ends (0.19.1)
 
 **Done**

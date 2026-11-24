@@ -191,7 +191,8 @@ The owner chose the header background, the title shadow and the corner mark on 2
 - [ ] Test the title shadow with `text-shadow` and with `filter: drop-shadow` on `.g2-ro-sweep`, and capture the sweep in the middle of the title. ADR 0011, amendment.
 - [ ] Decide the pattern on narrow screens, where the wrapped navigation sits on the dense end. ADR 0011, open point 5.
 - [ ] Write brief 09 for the header background after the owner answers the open points: tokens for the gradient, the SVG pattern and its delivery, the glitter, the title shadow, the corner mark, the dark scheme, the tests. Opus writes it; Sonnet implements it.
-- [ ] Owner: choose the geometry of the corner mark and the signature characters next to the title. The canvas has nine geometry variants (the oblique lines are the owner's idea) and six signatures of plain characters. Until then the mark is V1b (ADR 0011, amendment). A choice amends ADR 0011.
+- [ ] Owner: decide the geometry of the corner mark. Best proposal on 2026-11-24, not decided: the two lines between the colours lean 15 degrees from the vertical (variant O1 in the canvas; the oblique lines are the owner's idea). Until a decision the mark is V1b, with vertical lines (ADR 0011, amendment). A decision amends ADR 0011.
+- [ ] Later, if the owner asks: signature characters next to the title. Dropped for now on 2026-11-24. The canvas keeps six variants of plain characters (`*`, `+*`, `//`, `~`, `§`); `#` is excluded (see *Verified limits*).
 - [ ] Draw the logo as a monochrome SVG for `logo/`. gov2.ro uses a PNG (`assets/g2-0.png`); `logo/` holds only its README.
 - [ ] After the implementation, change the description of the look in `README.md`, `CLAUDE.md`, `AGENTS.md` and the header comment of `gov2.css`, and tell the projects.
 
